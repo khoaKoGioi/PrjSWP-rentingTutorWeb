@@ -1,18 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import logo from "../assets/logo.png";
-import {
-  Card,
-  Input,
-  Checkbox,
-  Button,
-  Typography,
-} from "@material-tailwind/react";
-import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx';
+import { Input, Checkbox, Typography } from "@material-tailwind/react";
+import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
     rememberMe: false,
   });
 
@@ -20,7 +14,7 @@ const Login = () => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -28,22 +22,22 @@ const Login = () => {
     e.preventDefault();
     // Implement the form submission logic, e.g., using fetch or axios
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
+      const response = await fetch("/api/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
       if (response.ok) {
         // Handle success, such as redirecting the user
-        console.log('Login successful');
+        console.log("Login successful");
       } else {
         // Handle errors
-        console.log('Login failed');
+        console.log("Login failed");
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     }
   };
 
@@ -72,7 +66,10 @@ const Login = () => {
         </p>
       </div>
       <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 mt-8">
-        <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96" onSubmit={handleSubmit}>
+        <form
+          className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96"
+          onSubmit={handleSubmit}
+        >
           <div className="mb-1 flex flex-col gap-6">
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Your Email <span className="text-red-500 ml-1">*</span>
@@ -87,10 +84,8 @@ const Login = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              
-              
             />
-            
+
             <Typography variant="h6" color="blue-gray" className="-mb-3">
               Password <span className="text-red-500 ml-1">*</span>
             </Typography>
@@ -105,10 +100,9 @@ const Login = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              
             />
           </div>
-          <div className="mt-6 flex items-center justify-between">  
+          <div className="mt-6 flex items-center justify-between">
             <Checkbox
               label={
                 <Typography
@@ -133,7 +127,7 @@ const Login = () => {
                 Forgot your password?
               </a>
             </div>
-          </div>  
+          </div>
           <div className="mt-6">
             <span className="block w-full rounded-md shadow-sm">
               <button
