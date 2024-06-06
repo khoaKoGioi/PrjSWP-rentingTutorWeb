@@ -8,5 +8,21 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+  require('tailwindcss'),
+  require('autoprefixer'),
+],
 };
+const withMT = require("@material-tailwind/react/utils/withMT");
+const { nextui } = require("@nextui-org/react");
+module.exports = withMT({
+  content: [
+    "./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [nextui()],
+});
+

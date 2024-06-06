@@ -1,31 +1,18 @@
+import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx';
+
+
+
 const HomePage = () => {
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-blue-600 text-white py-4">
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Tutor Renting Website</h1>
-          <nav className="space-x-4">
-            <a href="#tutors" className="hover:underline">
-              Tutor List
-            </a>
-            <a href="#students" className="hover:underline">
-              Student List
-            </a>
-            <a href="#classes" className="hover:underline">
-              Classes
-            </a>
-            <a href="/login" className="hover:underline">
-              Login
-            </a>
-            <a href="/register" className="hover:underline">
-              Register
-            </a>
-          </nav>
-        </div>
+    
+      
+  <div className="min-h-screen bg-gray-100">
+      <header>
+        <MegaMenuWithHover/>  
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        <section className="text-center py-20 bg-blue-500 text-white rounded-lg mb-8">
+      <main className="container mx-auto px-4 py-20">
+        <section className="text-center py-10 bg-blue-500 text-white rounded-lg mb-8">
           <h2 className="text-4xl font-bold mb-4">Find Your Perfect Tutor</h2>
           <p className="text-xl mb-8">
             Connecting students with experienced tutors for personalized
@@ -106,6 +93,7 @@ const HomePage = () => {
         </div>
       </footer>
     </div>
+      
   );
 };
 
