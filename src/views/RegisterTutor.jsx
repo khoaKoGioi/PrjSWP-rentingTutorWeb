@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import logo from "../assets/logo.png";
 import { DatePicker } from "@nextui-org/react";
-import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx';
-import { Input, ThemeProvider, Textarea } from "@material-tailwind/react";
+import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
+import { Input, Textarea } from "@material-tailwind/react";
 import { Password } from "../components/Password.jsx";
-import ImageUploader from '../components/ImageUploader.jsx';
-import '../styles/custom.css';
+import ImageUploader from "../components/ImageUploader.jsx";
+import "../styles/custom.css";
 
 const RegisterTutor = () => {
   const [formData, setFormData] = useState({
@@ -21,7 +21,7 @@ const RegisterTutor = () => {
     degreeFiles: [],
     photoId: [],
     listOfSubjects: "",
-    description: ""
+    description: "",
   });
 
   const handleChange = (e) => {
@@ -63,19 +63,19 @@ const RegisterTutor = () => {
     }
     // Implement the form submission logic, e.g., using fetch or axios
     try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
+      const response = await fetch("/api/register", {
+        method: "POST",
         body: formDataObj,
       });
       if (response.ok) {
         // Handle success
-        console.log('Form submitted successfully!');
+        console.log("Form submitted successfully!");
       } else {
         // Handle errors
-        console.error('Error submitting form:', response.statusText);
+        console.error("Error submitting form:", response.statusText);
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     }
   };
 
@@ -107,31 +107,64 @@ const RegisterTutor = () => {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form method="POST" onSubmit={handleSubmit}>
             <div className="mt-6 w-full">
-              <Input label="Fullname" name="fullname" onChange={handleChange} required />
+              <Input
+                label="Fullname"
+                name="fullname"
+                onChange={handleChange}
+                required
+              />
             </div>
 
             <div className="mt-6 w-full">
-              <Input label="Username" name="username" onChange={handleChange} required />
+              <Input
+                label="Username"
+                name="username"
+                onChange={handleChange}
+                required
+              />
             </div>
 
             <div className="mt-6 w-full">
-              <Input label="Email address" name="email" onChange={handleChange} required />
+              <Input
+                label="Email address"
+                name="email"
+                onChange={handleChange}
+                required
+              />
             </div>
 
             <div className="mt-6 w-full">
-              <Input label="Phone number" name="phone" onChange={handleChange} required />
+              <Input
+                label="Phone number"
+                name="phone"
+                onChange={handleChange}
+                required
+              />
             </div>
 
             <div className="mt-6 w-full">
-              <Input label="Home address" name="address" onChange={handleChange} required />
+              <Input
+                label="Home address"
+                name="address"
+                onChange={handleChange}
+                required
+              />
             </div>
 
             <div className="mt-6 flex space-x-4">
-              <Input label="Workplace" name="workplace" onChange={handleChange} required />
+              <Input
+                label="Workplace"
+                name="workplace"
+                onChange={handleChange}
+                required
+              />
             </div>
 
             <div className="mt-6">
-              <label htmlFor="date" className="block text-sm font-medium leading-5 text-gray-700">
+              <label
+                htmlFor="date"
+                className="block text-sm font-medium leading-5 text-gray-700"
+              >
                 Date of birth
               </label>
               <div className="mt-1">
@@ -147,9 +180,11 @@ const RegisterTutor = () => {
 
             <div className="mt-6 w-full">
               <label className="block text-sm font-medium leading-5 text-gray-700">
-                Upload photo ID 
+                Upload photo ID
               </label>
-              <small className="text-red-500 block">*Please upload 1 picture of your full face.</small>
+              <small className="text-red-500 block">
+                *Please upload 1 picture of your full face.
+              </small>
               <ImageUploader
                 onUpload={handlePhotoIdUpload}
                 maxFiles={1}
@@ -161,7 +196,10 @@ const RegisterTutor = () => {
               <label className="block text-sm font-medium leading-5 text-gray-700">
                 Upload Credential
               </label>
-              <small className="text-red-500 block">*Please upload both two pictures of both sides of your Credential.</small>
+              <small className="text-red-500 block">
+                *Please upload both two pictures of both sides of your
+                Credential.
+              </small>
               <ImageUploader
                 onUpload={handleCredentialUpload}
                 maxFiles={2}
@@ -173,23 +211,32 @@ const RegisterTutor = () => {
               <label className="block text-sm font-medium leading-5 text-gray-700">
                 Upload Degree
               </label>
-              <small className="text-red-500 block">You can upload up to 4 degrees.</small>
-              <ImageUploader
-                onUpload={handleDegreeUpload}
-                maxFiles={4}
+              <small className="text-red-500 block">
+                You can upload up to 4 degrees.
+              </small>
+              <ImageUploader onUpload={handleDegreeUpload} maxFiles={4} />
+            </div>
+
+            <div className="mt-6 w-full">
+              <Textarea
+                label="List of subjects"
+                name="listOfSubjects"
+                onChange={handleChange}
+                required
+                placeholder="List of subjects which you want to teach"
+                className="custom-placeholder"
               />
             </div>
 
             <div className="mt-6 w-full">
-              <Textarea label="List of subjects" name="listOfSubjects" onChange={handleChange} required 
-              placeholder="List of subjects which you want to teach"
-              className="custom-placeholder"/>
-            </div>
-
-            <div className="mt-6 w-full">
-              <Textarea label="Description" name="description" onChange={handleChange} required 
-              placeholder="Give some more information about your backgroud and advantages "
-              className="custom-placeholder"/>
+              <Textarea
+                label="Description"
+                name="description"
+                onChange={handleChange}
+                required
+                placeholder="Give some more information about your backgroud and advantages "
+                className="custom-placeholder"
+              />
             </div>
 
             <Password onChange={handleChange} required />

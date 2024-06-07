@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./views/HomePage";
 import Login from "./views/Login";
-import Register from "./views/RegisterStudent";
+import RegisterStudent from "./views/RegisterStudent";
 import RegisterTutor from "./views/RegisterTutor";
 const App = () => {
   return (
@@ -9,7 +9,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<RegisterStudent />} />
         <Route path="/registerTutor" element={<RegisterTutor />} />
       </Routes>
     </Router>

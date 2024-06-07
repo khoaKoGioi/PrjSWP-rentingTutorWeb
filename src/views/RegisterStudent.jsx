@@ -1,9 +1,9 @@
 import logo from "../assets/logo.png";
 import { DatePicker } from "@nextui-org/react";
-import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx';
-import React, { useState } from 'react';
+import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
+import { useState } from "react";
 import { GradePick } from "../components/GradePick.jsx";
-import { Input, ThemeProvider } from "@material-tailwind/react";
+import { Input } from "@material-tailwind/react";
 import { Password } from "../components/Password.jsx";
 
 const Register = () => {
@@ -34,10 +34,10 @@ const Register = () => {
     e.preventDefault();
     // Implement the form submission logic, e.g., using fetch or axios
     try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
+      const response = await fetch("/api/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -47,7 +47,7 @@ const Register = () => {
         // Handle errors
       }
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     }
   };
 
@@ -79,24 +79,48 @@ const Register = () => {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form method="POST" onSubmit={handleSubmit}>
             <div className="mt-6 w-full">
-              <Input label="Fullname" name="fullname" onChange={handleChange} required />
+              <Input
+                label="Fullname"
+                name="fullname"
+                onChange={handleChange}
+                required
+              />
             </div>
 
             <div className="mt-6 w-full">
-              <Input label="Username" name="username" onChange={handleChange} required />
+              <Input
+                label="Username"
+                name="username"
+                onChange={handleChange}
+                required
+              />
             </div>
 
             <div className="mt-6 w-full">
-              <Input label="Email address" name="email" onChange={handleChange} required />
+              <Input
+                label="Email address"
+                name="email"
+                onChange={handleChange}
+                required
+              />
             </div>
 
             <div className="mt-6 w-full">
-              <Input label="Phone number" name="phone" onChange={handleChange} />
+              <Input
+                label="Phone number"
+                name="phone"
+                onChange={handleChange}
+              />
             </div>
 
             <div className="mt-6 flex space-x-4">
               <div className="w-2/3 box-border">
-                <Input label="School" name="school" onChange={handleChange} required />
+                <Input
+                  label="School"
+                  name="school"
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <div className="w-1/3 box-border">
@@ -105,7 +129,10 @@ const Register = () => {
             </div>
 
             <div className="mt-6">
-              <label htmlFor="date" className="block text-sm font-medium leading-5 text-gray-700">
+              <label
+                htmlFor="date"
+                className="block text-sm font-medium leading-5 text-gray-700"
+              >
                 Date of birth
               </label>
               <div className="mt-1">

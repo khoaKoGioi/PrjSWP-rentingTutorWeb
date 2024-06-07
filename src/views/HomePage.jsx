@@ -1,14 +1,10 @@
-import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx';
-
-
+import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
 
 const HomePage = () => {
   return (
-    
-      
-  <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100">
       <header>
-        <MegaMenuWithHover/>  
+        <MegaMenuWithHover />
       </header>
 
       <main className="container mx-auto px-4 py-20">
@@ -93,7 +89,6 @@ const HomePage = () => {
         </div>
       </footer>
     </div>
-      
   );
 };
 
