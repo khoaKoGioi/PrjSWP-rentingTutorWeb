@@ -15,7 +15,7 @@ const HomePage = () => {
             learning.
           </p>
           <a
-            href="#tutors"
+            href="/ClassList"
             className="px-6 py-3 bg-white text-blue-500 rounded-lg hover:bg-gray-200 transition duration-300"
           >
             Get Started
