@@ -11,7 +11,7 @@ const PriceRangeSlider = ({ onChange }) => {
 
   return (
     <Slider
-      label="Price Range"
+      label="Price Range / perhour"
       
       step={10}
       minValue={0}
