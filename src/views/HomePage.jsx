@@ -1,5 +1,5 @@
 import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
-import Hero from "../assets/image.png";
+import Hero from "../assets/hero.png";
 const HomePage = () => {
   return (
     <div className="min-h-screen">

@@ -5,11 +5,21 @@ import ClassCard from '../components/ClassCard.jsx';
 import { Pagination } from "@nextui-org/react";
 import BreadcrumbsWithIcon from '../components/BreadCrumb.jsx';
 import PriceRangeSlider from "../components/PriceRangeSlider.jsx"; // Import the PriceRangeSlider component
+const getRandomRating = () => (Math.random() * 4 + 1).toFixed(1); // Generates a random rating between 1.0 and 5.0
 
-const data = Array.from({ length: 15 }, (_, index) => ({
+// Function to generate a random price between $10 and $100 per hour
+const getRandomPrice = () => (Math.random() * 90 + 10).toFixed(2);
+
+const getlectures = () => Math.floor(Math.random() * 90 + 10);
+
+const data = Array.from({ length: 30 }, (_, index) => ({
+  id: index + 1, // Add an id field
   imageLink: `https://picsum.photos/200/300?random=${index + 1}`,
   title: `Card Title ${index + 1}`,
   description: `Description for card ${index + 1}`,
+  rating: getRandomRating(), // Generate random rating
+  price: getRandomPrice(), // Generate random price
+  lectures: getlectures(), // Generate random lectures
 }));
 
 const itemsPerPage = 12; // 4 rows with 3 items each
@@ -39,7 +49,7 @@ const ClassList = () => {
       
       <div className="w-3/4 p-4 flex justify-between">
         <div>
-          <BreadcrumbsWithIcon pathnames={['ClassList']} />
+          <BreadcrumbsWithIcon pathnames={['Home', 'ClassList']} />
           <Typography variant="h3" className="mt-2">Filters by</Typography>
         </div>
         <div className="flex items-end pl-10">
@@ -111,12 +121,17 @@ const ClassList = () => {
         </aside>
         <main className="w-3/4 p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20">
-            {currentData.map((item, index) => (
+            {currentData.map((item) => (
               <ClassCard
-                key={index}
+                key={item.id}
+                id={item.id}
                 imageLink={item.imageLink}
                 title={item.title}
+                tutor={item.title}
                 description={item.description}
+                rating={item.rating}
+                price={item.price}
+                lectures={item.lectures}
               />
             ))}
           </div>
@@ -136,3 +151,4 @@ const ClassList = () => {
 };
 
 export default ClassList;
+
