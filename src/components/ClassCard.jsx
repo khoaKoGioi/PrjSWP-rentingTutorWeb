@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Card,
   CardHeader,
@@ -6,7 +5,7 @@ import {
   CardFooter,
   Typography,
   Button,
-} from '@material-tailwind/react';
+} from "@material-tailwind/react";
 
 const ClassCard = ({ imageLink, title, description }) => {
   return (
@@ -22,9 +21,7 @@ const ClassCard = ({ imageLink, title, description }) => {
         <Typography variant="h5" color="blue-gray" className="mb-2">
           {title}
         </Typography>
-        <Typography>
-          {description}
-        </Typography>
+        <Typography>{description}</Typography>
       </CardBody>
       <CardFooter className="pt-0">
         <Button>Read More</Button>

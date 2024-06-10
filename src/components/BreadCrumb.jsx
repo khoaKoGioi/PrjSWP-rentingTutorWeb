@@ -1,6 +1,5 @@
-import React from 'react';
 import { Breadcrumbs } from "@material-tailwind/react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const BreadcrumbsWithIcon = ({ pathnames }) => {
   return (
@@ -16,7 +15,7 @@ const BreadcrumbsWithIcon = ({ pathnames }) => {
         </svg>
       </Link>
       {pathnames.map((value, index) => {
-        const to = `/${pathnames.slice(0, index + 1).join('/')}`;
+        const to = `/${pathnames.slice(0, index + 1).join("/")}`;
 
         return index === pathnames.length - 1 ? (
           <span key={to}>{value}</span>
