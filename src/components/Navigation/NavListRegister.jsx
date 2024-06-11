@@ -1,25 +1,15 @@
 import React from "react";
 import {
-  
   Collapse,
   Typography,
-  
   ListItem,
   Menu,
   MenuHandler,
   MenuList,
   MenuItem,
 } from "@material-tailwind/react";
-import {
-  ChevronDownIcon,
- 
-} from "@heroicons/react/24/outline";
-import {
-  AcademicCapIcon,
-  
-  UserGroupIcon,
-} from "@heroicons/react/24/solid";
-
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { AcademicCapIcon, UserGroupIcon } from "@heroicons/react/24/solid";
 
 const navListMenuItems = [
   {
@@ -34,16 +24,15 @@ const navListMenuItems = [
     icon: AcademicCapIcon,
     path: "/registerTutor",
   },
- 
 ];
 function NavListRegister() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const renderItems = navListMenuItems.map(
-    ({ icon, title, description,path }, key) => (
+    ({ icon, title, description, path }, key) => (
       <a href={path} key={key}>
         <MenuItem className="flex items-center gap-3 rounded-lg">
-          <div className="flex items-center justify-center rounded-lg !bg-blue-gray-50 p-2 ">
+          <div className="flex items-center justify-center rounded-lg bg-blue-gray-50 p-2 ">
             {" "}
             {React.createElement(icon, {
               strokeWidth: 2,
@@ -67,9 +56,9 @@ function NavListRegister() {
           </div>
         </MenuItem>
       </a>
-    ),
+    )
   );
- 
+
   return (
     <React.Fragment>
       <Menu
@@ -80,9 +69,9 @@ function NavListRegister() {
         allowHover={true}
       >
         <MenuHandler>
-          <Typography as="div" variant="small" className="font-medium">
+          <Typography as="div" variant="small">
             <ListItem
-              className="flex items-center gap-2 py-2 pr-4 font-medium text-white "
+              className="flex items-center gap-2 py-2 pr-4 text-lg text-white bg-gradient-to-r font-extrabold from-orange-500 to-orange-800  "
               selected={isMenuOpen || isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
             >

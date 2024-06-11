@@ -5,7 +5,13 @@ const Pricing = () => {
   return (
     <div className="mt-20">
       <h2 className="text-3xl sm:text-5xl lg:text-6xl text-center my-8 tracking-wide">
-        Pricing
+        Tutor's {""}
+        <span
+          className=" font-bold 
+        bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text"
+        >
+          Subcription
+        </span>
       </h2>
       <div className="flex flex-wrap">
         {pricingOptions.map((option, index) => (
