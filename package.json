@@ -17,8 +17,12 @@
     "@mui/material": "^5.15.19",
     "@nextui-org/react": "^2.4.1",
     "@nextui-org/tabs": "^2.0.31",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "express": "4.19.2",
     "framer-motion": "^11.2.10",
     "lucide-react": "^0.394.0",
+    "mssql": "^10.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1"
