@@ -1,5 +1,4 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -7,27 +6,60 @@ import {
   CardFooter,
   Typography,
   Button,
-} from '@material-tailwind/react';
+} from "@material-tailwind/react";
 
-const ClassCard = ({ id, imageLink, title, tutor, description, lectures, rating, price }) => {
+const ClassCard = ({
+  id,
+  imageLink,
+  title,
+  tutor,
+  description,
+  lectures,
+  rating,
+  price,
+}) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate(`/card/${id}`, { state: { id, imageLink, title, tutor, description, lectures, rating, price } });
+    navigate(`/card/${id}`, {
+      state: {
+        id,
+        imageLink,
+        title,
+        tutor,
+        description,
+        lectures,
+        rating,
+        price,
+      },
+    });
   };
 
   return (
-    <Card className="mt-6 w-80 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl" onClick={handleCardClick}>
+    <Card className="mt-6 w-80 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
       <CardHeader color="blue-gray" className="relative h-48">
-        <img src={imageLink} alt="card-image" className="h-full w-full object-cover" />
+        <img
+          src={imageLink}
+          alt="card-image"
+          className="h-full w-full object-cover"
+        />
       </CardHeader>
       <CardBody>
-        <Typography variant="h5" color="blue-gray">{title}</Typography>
-        <Typography className="mb-3">{description}</Typography>
-        <Typography color="blue-gray" className="flex items-center gap-1.5 font-normal">
-          <Typography>Tutor:</Typography>{tutor}
+        <Typography variant="h5" color="blue-gray">
+          {title}
         </Typography>
-        <Typography color="blue-gray" className="flex items-center gap-1.5 font-normal">
+        <Typography className="mb-3">{description}</Typography>
+        <Typography
+          color="blue-gray"
+          className="flex items-center gap-1.5 font-normal"
+        >
+          <Typography>Tutor:</Typography>
+          {tutor}
+        </Typography>
+        <Typography
+          color="blue-gray"
+          className="flex items-center gap-1.5 font-normal"
+        >
           <Typography>Rating:</Typography>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -43,14 +75,21 @@ const ClassCard = ({ id, imageLink, title, tutor, description, lectures, rating,
           </svg>
           {rating}
         </Typography>
-        <Typography color="blue-gray" className="flex items-center gap-1.5 font-normal">
+        <Typography
+          color="blue-gray"
+          className="flex items-center gap-1.5 font-normal"
+        >
           <Typography>Available:</Typography>/{lectures} lectures
         </Typography>
       </CardBody>
       <CardFooter className="pt-0 flex items-center justify-between">
-        <Button>Enroll</Button>
-        <Typography color="blue-gray" className="flex items-center gap-1.5 font-normal">
-          <Typography>Price per hour:</Typography>{`$${price}`}
+        <Button onClick={handleCardClick}>Enroll</Button>
+        <Typography
+          color="blue-gray"
+          className="flex items-center gap-1.5 font-normal"
+        >
+          <Typography>Price per hour:</Typography>
+          {`$${price}`}
         </Typography>
       </CardFooter>
     </Card>
