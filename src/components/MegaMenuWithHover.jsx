@@ -1,7 +1,7 @@
 import React from "react";
 import Logo from "../assets/logoNav.png";
 import NavListRegister from "./Navigation/NavListRegister.jsx";
-
+import { Link } from 'react-router-dom';
 import {
   Button,
   Input,
@@ -212,23 +212,7 @@ function NavList() {
 export function MegaMenuWithHover() {
   const [openNav, setOpenNav] = React.useState(false);
 
-  const theme = {
-    select: {
-      styles: {
-        base: {
-          input: {
-            borderWidth: "placeholder-shown:border",
-            borderColor:
-              "placeholder-shown:border-white placeholder-shown:border-t-white",
-            floated: {
-              borderWidth: "border focus:border-10", // Adjusted focus border width
-              borderColor: "border-t-transparent focus:border-t-transparent",
-            },
-          },
-        },
-      },
-    },
-  };
+  
 
   React.useEffect(() => {
     window.addEventListener(
@@ -240,8 +224,9 @@ export function MegaMenuWithHover() {
   return (
     <div className="block shadow-md backdrop-saturate-200 backdrop-blur-2xl text-white w-full fixed top-0 left-0 right-0 px-0 py-0 bg-orange-300  z-50">
       <div className="flex items-center justify-between text-white py-2 px-4">
+      <Link to="/">
         <img className="h-16 min-w-11 ml-6" src={Logo} />
-
+        </Link>
         <div className="relative flex w-full gap-2 md:w-max">
           <Input
             type="search"
