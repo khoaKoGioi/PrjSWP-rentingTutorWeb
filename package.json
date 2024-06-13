@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "node src/server.js",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
@@ -19,7 +20,8 @@
     "@nextui-org/tabs": "^2.0.31",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
-    "express": "4.19.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
     "framer-motion": "^11.2.10",
     "mssql": "^10.0.2",
     "react": "^18.2.0",
