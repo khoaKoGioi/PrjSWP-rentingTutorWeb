@@ -1,12 +1,9 @@
 import React from "react";
-
-import NavListRegister from './Navigation/NavListRegister.jsx';
-
+import Logo from "../assets/logoNav.png";
+import NavListRegister from "./Navigation/NavListRegister.jsx";
+import { Link } from 'react-router-dom';
 import {
- 
-  
   Button,
-  
   Input,
   Collapse,
   Typography,
@@ -17,7 +14,6 @@ import {
   MenuHandler,
   MenuList,
   MenuItem,
-  ThemeProvider,
 } from "@material-tailwind/react";
 import {
   ChevronDownIcon,
@@ -35,7 +31,7 @@ import {
   TagIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/solid";
- 
+
 const navListMenuItems = [
   {
     title: "Products",
@@ -115,9 +111,9 @@ function NavListMenu() {
           </div>
         </MenuItem>
       </a>
-    ),
+    )
   );
- 
+
   return (
     <React.Fragment>
       <Menu
@@ -130,7 +126,7 @@ function NavListMenu() {
         <MenuHandler>
           <Typography as="div" variant="small" className="font-medium">
             <ListItem
-              className="flex items-center gap-2 py-2 pr-4 font-medium text-white "
+              className="flex items-center gap-2 py-2 pr-4 text-lg text-white font-extrabold"
               selected={isMenuOpen || isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
             >
@@ -162,10 +158,10 @@ function NavListMenu() {
     </React.Fragment>
   );
 }
- 
+
 function NavList() {
   return (
-    <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1">
+    <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1 gap-2">
       <Typography
         as="a"
         href="/"
@@ -173,7 +169,9 @@ function NavList() {
         color="white"
         className="font-medium"
       >
-        <ListItem className="flex items-center gap-2 py-2 pr-4">Home</ListItem>
+        <ListItem className="flex items-center text-lg gap-2 py-2 pr-4 font-extrabold">
+          Home
+        </ListItem>
       </Typography>
 
       <Typography
@@ -183,11 +181,13 @@ function NavList() {
         color="white"
         className="font-medium"
       >
-        <ListItem className="flex items-center gap-2 py-2 pr-4">Choose your classes</ListItem>
+        <ListItem className="flex items-center text-lg gap-2 py-2 pr-4 font-extrabold">
+          Choose your classes
+        </ListItem>
       </Typography>
 
       <NavListMenu />
-      
+
       <Typography
         as="a"
         href="/login"
@@ -195,41 +195,24 @@ function NavList() {
         color="white"
         className="font-medium"
       >
-        <ListItem className="flex items-center gap-2 py-2 pr-4">
-          
-          Login
-            
+        <ListItem className="flex items-center text-lg gap-2 py-2 pr-4 font-extrabold bg-white">
+          <span className="bg-gradient-to-r from-orange-500 to-orange-800 bg-clip-text text-transparent">
+            Login
+          </span>
         </ListItem>
       </Typography>
 
-    <div>
-      <NavListRegister/>
-    </div>
-      
-
+      <div>
+        <NavListRegister />
+      </div>
     </List>
   );
 }
- 
+
 export function MegaMenuWithHover() {
   const [openNav, setOpenNav] = React.useState(false);
+
   
-  const theme = {
-    select: {
-      styles: {
-        base: {
-          input: {
-            borderWidth: "placeholder-shown:border",
-            borderColor: "placeholder-shown:border-white placeholder-shown:border-t-white",
-            floated: {
-              borderWidth: "border focus:border-10", // Adjusted focus border width
-              borderColor: "border-t-transparent focus:border-t-transparent",
-            },
-          },
-        },
-      },
-    },
-  };
 
   React.useEffect(() => {
     window.addEventListener(
@@ -239,63 +222,52 @@ export function MegaMenuWithHover() {
   }, []);
 
   return (
-    
-      <div className="block shadow-md backdrop-saturate-200 backdrop-blur-2xl text-white w-full fixed top-0 left-0 right-0 px-0 py-0 bg-blue-500 z-50">
-        <div className="flex items-center justify-between text-white py-4 px-4">
-          <Typography
-            as="a"
-            href="./"
-            variant="h6"
-            className="text-3xl font-bold"
-          >
-            Tutor Renting Website
-          </Typography>
-
-          <div className="relative flex w-full gap-2 md:w-max">
-            
-             <Input
-              type="search"
-              color="blue-gray"
-              
-              labelProps={{
-                className: "before:content-none after:content-none", // Add your class here for label styling
-              }}
-              className="pr-20 border-white blue-gray bg-white focus:!border-transparent"
-              containerProps={{
-                className: "min-w-[500px] border-white",
-              }}
-            /> 
-            
-            
-            <Button
-              size="sm"
-              color="blue"
-              className="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-2 px-3 bg-blue-500 text-white shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none !absolute right-1 top-1 rounded "
-            >
-              Search
-            </Button>
-          </div>
-
-          <div className="hidden lg:block">
-            <NavList />
-          </div>
-          <IconButton
-            variant="text"
+    <div className="block shadow-md backdrop-saturate-200 backdrop-blur-2xl text-white w-full fixed top-0 left-0 right-0 px-0 py-0 bg-orange-300  z-50">
+      <div className="flex items-center justify-between text-white py-2 px-4">
+      <Link to="/">
+        <img className="h-16 min-w-11 ml-6" src={Logo} />
+        </Link>
+        <div className="relative flex w-full gap-2 md:w-max">
+          <Input
+            type="search"
             color="blue-gray"
-            className="lg:hidden"
-            onClick={() => setOpenNav(!openNav)}
+            labelProps={{
+              className: "before:content-none after:content-none", // Add your class here for label styling
+            }}
+            className="pr-20 border-white blue-gray bg-white focus:!border-transparent"
+            containerProps={{
+              className: "min-w-[500px] border-white",
+            }}
+          />
+
+          <Button
+            size="sm"
+            color="blue"
+            className="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-2 px-3 bg-gradient-to-r from-orange-500 to-orange-800 text-white shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none !absolute right-1 top-1 rounded "
           >
-            {openNav ? (
-              <XMarkIcon className="h-6 w-6" strokeWidth={2} />
-            ) : (
-              <Bars3Icon className="h-6 w-6" strokeWidth={2} />
-            )}
-          </IconButton>
+            Search
+          </Button>
         </div>
-        <Collapse open={openNav}>
+
+        <div className="hidden lg:block">
           <NavList />
-        </Collapse>
+        </div>
+        <IconButton
+          variant="text"
+          color="blue-gray"
+          className="lg:hidden"
+          onClick={() => setOpenNav(!openNav)}
+        >
+          {openNav ? (
+            <XMarkIcon className="h-6 w-6" strokeWidth={2} />
+          ) : (
+            <Bars3Icon className="h-6 w-6" strokeWidth={2} />
+          )}
+        </IconButton>
       </div>
-    
+      <Collapse open={openNav}>
+        <NavList />
+      </Collapse>
+    </div>
   );
 }
