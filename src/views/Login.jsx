@@ -1,14 +1,20 @@
-import { useState } from "react";
+import React, { useState, useContext } from "react";
 import logo from "../assets/logo.png";
 import { Input, Checkbox, Typography } from "@material-tailwind/react";
 import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
+import AuthContext from "../contexts/JWTAuthContext"; // Import AuthContext
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    rememberMe: false,
+    rememberMe: true,
   });
+  const [errorMessage, setErrorMessage] = useState(""); // Error state
+
+  const { login } = useContext(AuthContext); // Consume login function from AuthContext
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -20,30 +26,20 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement the form submission logic, e.g., using fetch or axios
+    setErrorMessage(""); // Reset error message
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        // Handle success, such as redirecting the user
-        console.log("Login successful");
-      } else {
-        // Handle errors
-        console.log("Login failed");
-      }
+      await login(formData.email, formData.password, formData.rememberMe); // Use login function from AuthContext
+      navigate("/"); // Redirect after successful login
     } catch (error) {
-      console.error("Error submitting form:", error);
+      setErrorMessage(
+        error.message || "Invalid email or password"
+      ); // Set error message
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center py-12 sm:px-6 lg:px-8 px-6">
-      <header className="absolute top-0 w-full">
+      <header>
         <MegaMenuWithHover />
       </header>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -128,6 +124,13 @@ const Login = () => {
               </a>
             </div>
           </div>
+
+          {errorMessage && (
+            <Typography color="error" className="mt-4 text-red-500">
+              {errorMessage}
+            </Typography>
+          )}
+
           <div className="mt-6">
             <span className="block w-full rounded-md shadow-sm">
               <button
