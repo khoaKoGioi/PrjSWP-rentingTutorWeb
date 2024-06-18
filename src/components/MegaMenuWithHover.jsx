@@ -240,7 +240,9 @@ export function MegaMenuWithHover() {
   return (
     <div className="block shadow-md backdrop-saturate-200 backdrop-blur-2xl text-white w-full fixed top-0 left-0 right-0 px-0 py-0 bg-orange-300  z-50">
       <div className="flex items-center justify-between text-white py-2 px-4">
-        <img className="h-16 min-w-11 ml-6" src={Logo} />
+        <a href="/">
+          <img className="h-16 min-w-11 ml-6" src={Logo} />
+        </a>
 
         <div className="relative flex w-full gap-2 md:w-max">
           <Input

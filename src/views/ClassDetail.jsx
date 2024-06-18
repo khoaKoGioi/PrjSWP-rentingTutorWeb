@@ -1,4 +1,3 @@
-import React from "react";
 import { useLocation } from "react-router-dom";
 import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
 import { Typography, Card, CardBody } from "@material-tailwind/react";
@@ -37,7 +36,9 @@ const ClassDetail = () => {
                 {description}
               </Typography>
               <Typography variant="body2" className="mb-2">
-                <strong>Tutor:</strong> {tutor}
+                <a href="/ViewTutorProfile">
+                  <strong>Tutor:</strong> {tutor}
+                </a>
               </Typography>
               <Typography variant="body2" className="mb-2">
                 <strong>Rating:</strong> {rating}

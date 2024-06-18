@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
-import { Typography } from '@material-tailwind/react';
-import ClassCard from '../components/ClassCard.jsx';
+import { Typography } from "@material-tailwind/react";
+import ClassCard from "../components/ClassCard.jsx";
 import { Pagination } from "@nextui-org/react";
-import BreadcrumbsWithIcon from '../components/BreadCrumb.jsx';
+import BreadcrumbsWithIcon from "../components/BreadCrumb.jsx";
 import PriceRangeSlider from "../components/PriceRangeSlider.jsx"; // Import the PriceRangeSlider component
 const getRandomRating = () => (Math.random() * 4 + 1).toFixed(1); // Generates a random rating between 1.0 and 5.0
 
@@ -46,22 +46,33 @@ const ClassList = () => {
       <header>
         <MegaMenuWithHover />
       </header>
-      
+
       <div className="w-3/4 p-4 flex justify-between">
         <div>
-          <BreadcrumbsWithIcon pathnames={['Home', 'ClassList']} />
-          <Typography variant="h3" className="mt-2">Filters by</Typography>
+          <BreadcrumbsWithIcon pathnames={["Home", "ClassList"]} />
+          <Typography variant="h3" className="mt-2">
+            Filters by
+          </Typography>
         </div>
         <div className="flex items-end pl-10">
-          <Typography variant="h3" className="mt-2">3,423 results for "react"</Typography>
+          <Typography variant="h3" className="mt-2">
+            {/*eslint-disable-next-line react/no-unescaped-entities */}
+            3,423 results for "react"
+          </Typography>
         </div>
+        <a href="/userProfile" color="white" className="font-medium">
+          User Profile
+        </a>
+        <a href="/tutorProfile" color="white" className="font-medium">
+          Tutor Profile
+        </a>
       </div>
-      
+
       <div className="flex">
         <aside className="w-1/4 p-4">
           {/* Include the PriceRangeSlider component */}
           <PriceRangeSlider onChange={(value) => console.log(value)} />
-          
+
           <div className="mb-6">
             <Typography variant="h6">Filter by Rating</Typography>
             <div>
@@ -135,7 +146,7 @@ const ClassList = () => {
               />
             ))}
           </div>
-          
+
           <div className="flex justify-center mt-8">
             <Pagination
               showControls
@@ -151,4 +162,3 @@ const ClassList = () => {
 };
 
 export default ClassList;
-
