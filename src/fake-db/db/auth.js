@@ -1,9 +1,9 @@
 import MockAdapter from 'axios-mock-adapter'
 import axios from 'axios'
-//import { sql, poolPromise } from '../../services/database.services'
+//import databaseService from '../../services/database.services'
 
 const mock = new MockAdapter(axios)
-//const pool = dbService.connect()
+//const pool = databaseService.connect()
 
 const userList = [
   {

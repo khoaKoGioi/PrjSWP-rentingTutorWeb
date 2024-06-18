@@ -1,31 +1,37 @@
-import sql from 'mssql'
-import dotenv from 'dotenv'
-dotenv.config()
+const sql = require('mssql')
+const { config } = require('dotenv')
+config()
 
-const config = {
+const dbConfig = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   server: process.env.DB_SERVER,
-  database: process.env.DB_NAME,
+  database: process.env.DB_DATABASE,
   options: {
-    encrypt: true,
-    trustServerCertificate: true,
+    encrypt: true, // Use true if you're using encryption
+    trustServerCertificate: true, // Accept self-signed certificates
     enableArithAbort: true
-  }
+  },
+  port: parseInt(process.env.DB_PORT, 10)
 }
 
-const poolPromise = new sql.ConnectionPool(config)
-  .connect()
-  .then((pool) => {
-    console.log('Connected to MSSQL')
-    return pool
-  })
-  .catch((err) => {
-    console.error('Database Connection Failed! Bad Config: ', err)
-    console.error('Error Code:', err.code)
-    console.error('Error Message:', err.message)
-    console.error('Original Error:', err.originalError)
-    return null
-  })
+class DatabaseService {
+  constructor() {
+    this.pool = new sql.ConnectionPool(dbConfig)
+  }
 
-export { sql, poolPromise }
+  async connect() {
+    try {
+      await this.pool.connect()
+      console.log('Successfully connected to MS SQL database!')
+    } catch (error) {
+      console.log('Error during the process of connecting to MS SQL', error)
+      throw error
+    }
+  }
+
+  // Add other methods to interact with the database as needed
+}
+
+const databaseService = new DatabaseService()
+export default databaseService
