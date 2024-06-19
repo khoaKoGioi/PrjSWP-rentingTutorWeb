@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Menu,
@@ -15,12 +16,13 @@ import {
   PowerIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import AuthContext from "../contexts/JWTAuthContext"; // Import your authentication context
+import AuthContext from "../contexts/JWTAuthContext";
 
 const profileMenuItems = [
   {
     label: "My Profile",
     icon: UserCircleIcon,
+    action: "profile", // Add action type for profile
   },
   {
     label: "Edit Profile",
@@ -37,21 +39,24 @@ const profileMenuItems = [
   {
     label: "Sign Out",
     icon: PowerIcon,
-    action: "logout", // Add action type for logout
+    action: "logout",
   },
 ];
 
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, logout } = useContext(AuthContext); // Assuming you have a user object with an avatar property in your AuthContext
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate(); // Use useNavigate for navigation
 
   const closeMenu = () => setIsMenuOpen(false);
 
   const handleMenuItemClick = (action) => {
     if (action === "logout") {
-      logout(); // Call your logout function here
+      logout();
+    } else if (action === "profile") {
+      navigate("/profile"); // Navigate to the profile page
     }
-    closeMenu(); // Always close the menu after handling action
+    closeMenu();
   };
 
   return (
@@ -63,7 +68,7 @@ function ProfileMenu() {
           className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
         >
           <Typography variant="small" color="gray" className="font-normal">
-            Hi, {user ? user.username : "Guest"} {/* Display username */}
+            Hi, {user ? user.username : "Guest"}
           </Typography>
           <ChevronDownIcon
             strokeWidth={2.5}
@@ -87,18 +92,13 @@ function ProfileMenu() {
           <MenuItem
             key={label}
             onClick={() => handleMenuItemClick(action)}
-            className={`flex items-center gap-2 rounded hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10`}
+            className="flex items-center gap-2 rounded hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
           >
             {React.createElement(icon, {
-              className: `h-4 w-4`,
+              className: "h-4 w-4",
               strokeWidth: 2,
             })}
-            <Typography
-              as="span"
-              variant="small"
-              className="font-normal"
-              color={"inherit"}
-            >
+            <Typography as="span" variant="small" className="font-normal" color="inherit">
               {label}
             </Typography>
           </MenuItem>

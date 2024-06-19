@@ -7,6 +7,8 @@ import RegisterStudent from "./views/RegisterStudent";
 import RegisterTutor from "./views/RegisterTutor";
 import ClassList from "./views/ClassList";
 import ClassDetail from "./views/ClassDetail";
+import UserProfile from "./views/UserProfile";
+import ViewTutorProfile from "./views/ViewTutorProfile";
 
 import AuthGuard from "./auth/AuthGuard";
 import "./fake-db";
@@ -22,13 +24,23 @@ const App = () => {
           <Route path="/register" element={<RegisterStudent />} />
           <Route path="/registerTutor" element={<RegisterTutor />} />
           <Route path="/ClassList" element={<ClassList />} />
-          
+          <Route path="/card/:id"element={<ClassDetail />}
+          />
           {/* Protected routes */}
+          
           <Route
-            path="/card/:id"
+            path="/profile"
             element={
               <AuthGuard>
-                <ClassDetail />
+                <UserProfile />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/tutor-profile"
+            element={
+              <AuthGuard>
+                <ViewTutorProfile />
               </AuthGuard>
             }
           />

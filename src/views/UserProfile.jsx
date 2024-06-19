@@ -1,5 +1,4 @@
-// src/UserProfile.jsx
-import { useState } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
 import {
   FaEnvelope,
@@ -8,31 +7,49 @@ import {
   FaBirthdayCake,
   FaGraduationCap,
   FaUser,
+  FaRegEdit,
 } from "react-icons/fa";
+import AuthContext from "../contexts/JWTAuthContext";
+import "../styles/profileStyle.css"; // Import the CSS file
 
 const UserProfile = () => {
-  const [user, setUser] = useState({
-    avatar:
-      "https://i.pinimg.com/originals/b5/d9/f6/b5d9f6262c408ee0fdd6ce12f2e6e1b9.jpg",
-    name: "Khoa cute",
-    email: "khoaDeThuong@gmail.com",
-    phone: "0900090090",
-    school: "FPT University",
-    dob: "2004-01-01",
-    grade: "A",
-  });
+  const { user } = useContext(AuthContext);
+  const [userData, setUserData] = useState(user || {});
+  const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    setUserData(user);
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser({
-      ...user,
+    setUserData({
+      ...userData,
       [name]: value,
     });
   };
 
   const handleUpdate = () => {
-    // Here you would typically handle the update, e.g., send the updated data to a server
-    console.log("User updated:", user);
+    // Handle update, e.g., send the updated data to a server
+    console.log("User updated:", userData);
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setUserData({
+          ...userData,
+          avatar: e.target.result,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -44,28 +61,37 @@ const UserProfile = () => {
       </div>
       <div className="flex flex-col items-center p-6 bg-white shadow-lg rounded-lg max-w-2xl mx-auto my-5">
         <div className="font-extrabold bg-gradient-to-r from-orange-500 to-orange-800 bg-clip-text text-transparent text-2xl py-5">
-          {/*eslint-disable-next-line react/no-unescaped-entities */}
-          {user.name}'s Profile
+          {userData.name}'s Profile
         </div>
         <div className="flex items-center w-full mb-4">
-          <div className="w-24 h-24 flex-shrink-0">
+          <div className="avatar-container w-24 h-24 flex-shrink-0 relative cursor-pointer" onClick={handleAvatarClick}>
             <img
-              className="rounded-full w-full h-full object-cover"
-              src={user.avatar}
+              className="avatar-image rounded-full w-full h-full object-cover"
+              src={userData.avatar}
               alt="User Avatar"
             />
+            <div className="avatar-overlay absolute inset-0 bg-black opacity-50 flex justify-center items-center rounded-full">
+              <FaRegEdit className="edit-icon text-white" />
+            </div>
           </div>
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            accept="image/*"
+            onChange={handleFileChange}
+          />
           <div className="ml-6 flex-1">
             <div className="flex items-center">
               <FaUser className="mr-2 text-gray-600" />
               <label className="flex-1">
                 <span className="block text-sm font-medium text-gray-700">
-                  Name
+                  User Name
                 </span>
                 <input
                   type="text"
                   name="name"
-                  value={user.name}
+                  value={userData.username}
                   onChange={handleChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                 />
@@ -83,7 +109,7 @@ const UserProfile = () => {
               <input
                 type="email"
                 name="email"
-                value={user.email}
+                value={userData.email}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />
@@ -98,7 +124,7 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="phone"
-                value={user.phone}
+                value={userData.phone}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />
@@ -113,7 +139,7 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="school"
-                value={user.school}
+                value={userData.school}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />
@@ -128,7 +154,7 @@ const UserProfile = () => {
               <input
                 type="date"
                 name="dob"
-                value={user.dob}
+                value={userData.dob}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />
@@ -143,7 +169,7 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="grade"
-                value={user.grade}
+                value={userData.grade}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />
