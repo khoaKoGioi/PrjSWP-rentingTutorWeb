@@ -9,13 +9,16 @@ const userList = [
   {
     id: 1,
     role: 'SA',
-    name: 'Jason Alexander',
-    username: 'jason_alexander',
-    email: 'jason@ui-lib.com',
-    password: '123',
     avatar:
-      'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80',
-    age: 25
+    "https://i.pinimg.com/originals/b5/d9/f6/b5d9f6262c408ee0fdd6ce12f2e6e1b9.jpg",
+    username: "Khoa cute",
+    name: "Anh Khoa",
+    email: "khoaDeThuong@gmail.com",
+    phone: "0900090090",
+    school: "FPT University",
+    dob: "2004-01-01",
+    grade: "12",
+    password:"123",
   }
 ]
 

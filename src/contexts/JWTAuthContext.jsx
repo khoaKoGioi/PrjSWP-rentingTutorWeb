@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  if (!state.isInitialized) return null;
+  if (!state.isInitialized) return <div>Loading...</div>;;
 
   return (
     <AuthContext.Provider

@@ -25,8 +25,8 @@ const TutorProfile = () => {
     dob: "2004-01-01",
     subjects: "Math, Science, English",
     description:
-      "handsome, well-known for having a deep knowledge and good teaching technique",
-  });
+      "Experienced in English and Math with over 10 years of teaching",
+    });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
