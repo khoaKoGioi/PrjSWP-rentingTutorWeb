@@ -32,7 +32,6 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement the form submission logic, e.g., using fetch or axios
     try {
       const response = await fetch("/api/register", {
         method: "POST",
@@ -42,9 +41,20 @@ const Register = () => {
         body: JSON.stringify(formData),
       });
       if (response.ok) {
-        // Handle success
+        const result = await response.json();
+        alert("Student registered successfully");
+        setFormData({
+          fullName: "",
+          username: "",
+          email: "",
+          phone: "",
+          address: "",
+          dateOfBirth: "",
+          password: "",
+        });
       } else {
-        // Handle errors
+        const error = await response.json();
+        alert(`Error: ${error.message || response.statusText}`);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
