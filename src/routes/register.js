@@ -19,9 +19,8 @@ const registerUser = async (userDetails, res, role) => {
     request.input('address', sql.NVarChar, userDetails.address);
     request.input('dateOfBirth', sql.Date, userDetails.dateOfBirth);
     request.input('role', sql.Int, role);
-    request.input('emailVerifyToken', sql.NVarChar, '');
-    request.input('forgotPasswordToken', sql.NVarChar, '');
-    request.input('verify', sql.Int, 0); // Assuming 0 is the default verify status
+    request.input('emailVerifyToken', sql.NVarChar, ''); // Assuming default empty string
+    request.input('forgotPasswordToken', sql.NVarChar, ''); // Assuming default empty string
 
     if (role === 2) { // Additional fields for tutors
       request.input('workplace', sql.NVarChar, userDetails.workplace);
@@ -34,12 +33,12 @@ const registerUser = async (userDetails, res, role) => {
 
     const query = role === 1 
       ? `
-        INSERT INTO Users (fullName, email, passwordHash, phone, address, dateOfBirth, role, emailVerifyToken, forgotPasswordToken, verify)
-        VALUES (@fullName, @email, @passwordHash, @phone, @address, @dateOfBirth, @role, @emailVerifyToken, @forgotPasswordToken, @verify)
+        INSERT INTO Users (fullName, email, passwordHash, phone, address, dateOfBirth, role, emailVerifyToken, forgotPasswordToken)
+        VALUES (@fullName, @email, @passwordHash, @phone, @address, @dateOfBirth, @role, @emailVerifyToken, @forgotPasswordToken)
       `
       : `
-        INSERT INTO Users (fullName, email, passwordHash, phone, address, dateOfBirth, workplace, listOfSubjects, description, credentialFiles, degreeFiles, photoId, role, emailVerifyToken, forgotPasswordToken, verify)
-        VALUES (@fullName, @email, @passwordHash, @phone, @address, @dateOfBirth, @workplace, @listOfSubjects, @description, @credentialFiles, @degreeFiles, @photoId, @role, @emailVerifyToken, @forgotPasswordToken, @verify)
+        INSERT INTO Users (fullName, email, passwordHash, phone, address, dateOfBirth, workplace, listOfSubjects, description, credentialFiles, degreeFiles, photoId, role, emailVerifyToken, forgotPasswordToken)
+        VALUES (@fullName, @email, @passwordHash, @phone, @address, @dateOfBirth, @workplace, @listOfSubjects, @description, @credentialFiles, @degreeFiles, @photoId, @role, @emailVerifyToken, @forgotPasswordToken)
       `;
 
     await request.query(query);
