@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
 import {
   FaStar,
@@ -7,8 +7,13 @@ import {
   FaCertificate,
   FaInfoCircle,
 } from "react-icons/fa";
+import BreadcrumbsWithIcon from "../components/BreadCrumb.jsx"; // Adjust path as per your project structure
+import { useLocation } from "react-router-dom";
 
 const ViewTutorProfile = () => {
+  const location = useLocation();
+  const { id } = location.state || {};
+
   const [tutor] = useState({
     avatar:
       "https://i.pinimg.com/originals/b5/d9/f6/b5d9f6262c408ee0fdd6ce12f2e6e1b9.jpg",
@@ -40,12 +45,21 @@ const ViewTutorProfile = () => {
   };
 
   return (
-    <div>
-      <div className="container mx-auto p-4 pt-16 mt-16">
+    <div className="min-h-screen bg-gray-100 p-4">
+      <div className="container mx-auto pt-16 ">
         <header>
           <MegaMenuWithHover />
         </header>
       </div>
+      <div className="container mx-auto pl-4 flex flex-col md:flex-row gap-8">
+        <div className="w-full md:w-3/4 mb-4 flex flex-col">
+       <BreadcrumbsWithIcon  
+        pathnames={["Home", "ClassList", `ClassDetail ${id}`, tutor.name]} // Update pathnames as per your breadcrumb requirements
+        />  
+        </div>
+      </div>
+      
+     
       <div className="flex flex-col items-center p-6 bg-white shadow-lg rounded-lg max-w-2xl mx-auto">
         <div className="font-extrabold bg-gradient-to-r mb-7 from-orange-500 to-orange-800 bg-clip-text text-transparent text-2xl py-5">
           {/*eslint-disable-next-line react/no-unescaped-entities */}
@@ -78,7 +92,7 @@ const ViewTutorProfile = () => {
               <p>{tutor.certificate}</p>
             </div>
             <div className="mb-4 flex items-center">
-              <FaStar className="mr-2 text-gray-600 text-yellow-600" />
+              <FaStar className="mr-2 text-yellow-600" />
               <p>{tutor.rating} / 5.0</p>
             </div>
           </div>

@@ -1,25 +1,27 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation, NavLink } from "react-router-dom";
 import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
 import { Typography, Card, CardBody, Button } from "@material-tailwind/react";
 import BreadcrumbsWithIcon from "../components/BreadCrumb.jsx";
-import user1 from "../assets/profile-pictures/user1.jpg";
-import RatingWithComment from "../components/Rating.jsx";
 
-export function CircularImg() {
-  return (
-    <img
-      className="h-32 w-32 rounded-full object-cover object-center"
-      src={user1}
-      alt="Tutor Profile"
-    />
-  );
-}
+import RatingWithComment from "../components/Rating.jsx";
+import { CircularImg } from "../components/CircularImg.jsx"; // Assuming CircularImg is in the same directory
 
 const ClassDetail = () => {
   const location = useLocation();
-  const { id, imageLink, title, tutor, description, lectures, rating, price } =
-    location.state;
+  const { id, imageLink, title, description, lectures, rating, price } = location.state;
+
+  // Tutor information using useState
+  const [tutor] = useState({
+    avatar:
+      "https://i.pinimg.com/originals/b5/d9/f6/b5d9f6262c408ee0fdd6ce12f2e6e1b9.jpg",
+    name: "Khoa cute",
+    description:
+      "Experienced in English and Math with over 10 years of teaching",
+    subjects: "Math, Science, Physics, Chemistry",
+    rating: 4.5,
+  });
+
   const otherClasses = [
     {
       id: 1,
@@ -41,13 +43,15 @@ const ClassDetail = () => {
     },
     // Add more classes here...
   ];
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <header>
         <MegaMenuWithHover />
       </header>
-      <div className="container mx-auto pl-4  flex flex-col md:flex-row gap-8">
-        <div className=" w-full md:w-3/4 mb-4 flex flex-col  pt-16 ">
+      
+      <div className="container mx-auto pl-4 flex flex-col md:flex-row gap-8">
+        <div className="w-full md:w-3/4 mb-4 flex flex-col pt-16">
           <BreadcrumbsWithIcon
             pathnames={["Home", "ClassList", `ClassDetail ${id}`]}
           />
@@ -73,10 +77,10 @@ const ClassDetail = () => {
                   {description}
                 </Typography>
                 <Typography variant="body2" className="mb-2">
-                  <strong>Tutor:</strong> {tutor}
+                  <strong>Tutor:</strong> {tutor.name}
                 </Typography>
                 <Typography variant="body2" className="mb-2">
-                  <strong>Rating:</strong> {rating}
+                  <strong>Rating:</strong> {tutor.rating}
                 </Typography>
                 <Typography variant="body2" className="mb-2">
                   <strong>Available:</strong> Mon-Thu-Sat
@@ -96,37 +100,41 @@ const ClassDetail = () => {
               <Typography variant="h3" className="mb-2">
                 All reviews
               </Typography>
-
               <RatingWithComment />
             </CardBody>
           </Card>
         </div>
         <div className="w-full md:w-1/4 pb-4">
-          <Card className="shadow-lg h-full flex flex-col ">
+          <Card className="shadow-lg h-full flex flex-col">
             <CardBody className="flex flex-col items-center p-6 flex-grow">
-              <CircularImg />
+              <CircularImg avatar={tutor.avatar} />
               <Typography variant="h5" className="mb-2">
-                {tutor}
+                {tutor.name}
               </Typography>
               <Typography variant="body1" className="text-center">
-                {description}
+                {tutor.description}
               </Typography>
               <Typography variant="body2" className="mt-4">
-                <strong>Rating:</strong> {rating}
+                <strong>Rating:</strong> {tutor.rating}
               </Typography>
               <Typography variant="body2">
-                <strong>Lectures:</strong> {lectures}
+                <strong>Subjects:</strong> {tutor.subjects}
               </Typography>
-             
-              <Button className="w-50 ">Request now</Button>
-              <Typography variant="h5">More classes with {tutor}</Typography>
+              
+              <NavLink
+                  to="/tutor-profile"
+                  className="w-50 bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 transition duration-300"
+                >
+                  Request now
+                </NavLink>
+              <Typography className="p-5"variant="h5">More classes with {tutor.name}</Typography>
               <Card className="shadow-lg w-full max-h-80 overflow-y-auto">
                 <CardBody>
                   {otherClasses.map((otherClass) => (
                     <Card key={otherClass.id} className="flex mb-4">
                       <div className="flex-none w-32">
                         <img
-                          src={imageLink}
+                          src={otherClass.imageLink}
                           alt={otherClass.name}
                           className="w-full h-24 object-cover"
                         />
