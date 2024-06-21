@@ -3,7 +3,6 @@ import axios from 'axios'
 //import databaseService from '../../services/database.services'
 
 const mock = new MockAdapter(axios)
-//const pool = databaseService.connect()
 
 const userList = [
   {
