@@ -11,7 +11,7 @@ import UserProfile from "./views/UserProfile";
 import ViewTutorProfile from "./views/ViewTutorProfile";
 
 import AuthGuard from "./auth/AuthGuard";
-import "./fake-db";
+
 
 const App = () => {
   

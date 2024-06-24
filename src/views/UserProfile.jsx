@@ -10,28 +10,38 @@ import {
   FaRegEdit,
 } from "react-icons/fa";
 import AuthContext from "../contexts/JWTAuthContext";
-import "../styles/profileStyle.css"; // Import the CSS file
+
 
 const UserProfile = () => {
   const { user } = useContext(AuthContext);
-  const [userData, setUserData] = useState(user || {});
+  const [userData, setUserData] = useState({});
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    setUserData(user);
+    if (user) {
+      setUserData(user);
+    }
   }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserData({
-      ...userData,
+    setUserData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
   };
 
-  const handleUpdate = () => {
-    // Handle update, e.g., send the updated data to a server
+  const handleUpdate = async () => {
+    // Implement the update logic here
     console.log("User updated:", userData);
+    try {
+      // Send updated data to the server
+      // await updateUserProfile(userData);
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      alert("Failed to update profile. Please try again.");
+    }
   };
 
   const handleAvatarClick = () => {
@@ -43,10 +53,10 @@ const UserProfile = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setUserData({
-          ...userData,
+        setUserData((prevData) => ({
+          ...prevData,
           avatar: e.target.result,
-        });
+        }));
       };
       reader.readAsDataURL(file);
     }
@@ -61,13 +71,13 @@ const UserProfile = () => {
       </div>
       <div className="flex flex-col items-center p-6 bg-white shadow-lg rounded-lg max-w-2xl mx-auto my-5">
         <div className="font-extrabold bg-gradient-to-r from-orange-500 to-orange-800 bg-clip-text text-transparent text-2xl py-5">
-          {userData.name}'s Profile
+          {userData.name || userData.username}'s Profile
         </div>
         <div className="flex items-center w-full mb-4">
           <div className="avatar-container w-24 h-24 flex-shrink-0 relative cursor-pointer" onClick={handleAvatarClick}>
             <img
               className="avatar-image rounded-full w-full h-full object-cover"
-              src={userData.avatar}
+              src={userData.avatar || "default-avatar.png"} // Provide a default avatar if none is set
               alt="User Avatar"
             />
             <div className="avatar-overlay absolute inset-0 bg-black opacity-50 flex justify-center items-center rounded-full">
@@ -90,8 +100,8 @@ const UserProfile = () => {
                 </span>
                 <input
                   type="text"
-                  name="name"
-                  value={userData.username}
+                  name="username"
+                  value={userData.username || ""}
                   onChange={handleChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                 />
@@ -109,7 +119,7 @@ const UserProfile = () => {
               <input
                 type="email"
                 name="email"
-                value={userData.email}
+                value={userData.email || ""}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />
@@ -124,7 +134,7 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="phone"
-                value={userData.phone}
+                value={userData.phone || ""}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />
@@ -139,7 +149,7 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="school"
-                value={userData.school}
+                value={userData.school || ""}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />
@@ -154,7 +164,7 @@ const UserProfile = () => {
               <input
                 type="date"
                 name="dob"
-                value={userData.dob}
+                value={userData.dob || ""}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />
@@ -169,7 +179,7 @@ const UserProfile = () => {
               <input
                 type="text"
                 name="grade"
-                value={userData.grade}
+                value={userData.grade || ""}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               />

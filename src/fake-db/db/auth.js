@@ -1,7 +1,7 @@
 import MockAdapter from 'axios-mock-adapter'
 import axios from 'axios'
 //import { sql, poolPromise } from '../../services/database.services'
-
+import user1 from "../../assets/profile-pictures/user1.jpg";
 const mock = new MockAdapter(axios)
 //const pool = dbService.connect()
 
@@ -19,6 +19,20 @@ const userList = [
     dob: "2004-01-01",
     grade: "12",
     password:"123",
+  },
+  {
+    id: 2,
+    role: 'STUDENT',
+    avatar:"../../assets/profile-pictures/user2.jpg",
+    
+    username: "Student user",
+    name: "Student user",
+    email: "snoopwee@gmail.com",
+    phone: "0900090090",
+    school: "FPT University",
+    dob: "2004-01-01",
+    grade: "12",
+    password:"1234",
   }
 ]
 

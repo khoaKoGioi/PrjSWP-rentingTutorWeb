@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import logo from "../assets/logo.png";
 import { Input, Checkbox, Typography } from "@material-tailwind/react";
 import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
-import AuthContext from "../contexts/JWTAuthContext"; // Import AuthContext
+import AuthContext from "../contexts/JWTAuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -31,9 +31,7 @@ const Login = () => {
       await login(formData.email, formData.password, formData.rememberMe); // Use login function from AuthContext
       navigate("/"); // Redirect after successful login
     } catch (error) {
-      setErrorMessage(
-        error.message || "Invalid email or password"
-      ); // Set error message
+      setErrorMessage(error.message || "Invalid email or password"); // Set error message
     }
   };
 
