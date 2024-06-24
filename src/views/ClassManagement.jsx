@@ -25,7 +25,7 @@ const ClassManagement = () => {
 
   const loadClasses = () => {
     axios
-      .get('https://6676c5c6145714a1bd72bec9.mockapi.io/swp/class')
+      .get(apiUrl)
       .then((response) => setClasses(response.data))
       .catch((error) => console.log(error))
   }
@@ -33,7 +33,7 @@ const ClassManagement = () => {
   const addClass = (e) => {
     e.preventDefault()
     axios
-      .post('https://6676c5c6145714a1bd72bec9.mockapi.io/swp/class', newClass)
+      .post(apiUrl, newClass)
       .then(() => {
         loadClasses()
         setNewClass({
