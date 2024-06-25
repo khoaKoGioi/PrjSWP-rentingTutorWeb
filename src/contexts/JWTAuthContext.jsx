@@ -1,10 +1,12 @@
-import { createContext, useEffect, useReducer } from 'react'
-import axios from 'axios'
+// AuthContext.js
+
+import React, { createContext, useEffect, useReducer } from 'react'
+import { loginUser, registerUser, fetchUserProfile } from '../apiService/api'
 
 const initialState = {
   user: null,
-  isInitialized: false,
-  isAuthenticated: false
+  isAuthenticated: false,
+  isInitialized: false
 }
 
 const reducer = (state, action) => {
@@ -14,17 +16,17 @@ const reducer = (state, action) => {
       return { ...state, isAuthenticated, isInitialized: true, user }
     }
     case 'LOGIN': {
-      const { user } = action.payload
-      localStorage.setItem('user', JSON.stringify(user)) // Store user data in localStorage
+      const { token, user } = action.payload
+      localStorage.setItem('token', token) // Store token in localStorage
       return { ...state, isAuthenticated: true, user }
     }
     case 'LOGOUT': {
-      localStorage.removeItem('user') // Remove user data from localStorage on logout
+      localStorage.removeItem('token') // Remove token from localStorage on logout
       return { ...state, isAuthenticated: false, user: null }
     }
     case 'REGISTER': {
-      const { user } = action.payload
-      localStorage.setItem('user', JSON.stringify(user)) // Store user data in localStorage
+      const { token, user } = action.payload
+      localStorage.setItem('token', token) // Store token in localStorage
       return { ...state, isAuthenticated: true, user }
     }
     default:
@@ -32,9 +34,9 @@ const reducer = (state, action) => {
   }
 }
 
-const AuthContext = createContext({
+export const AuthContext = createContext({
   ...initialState,
-  method: 'LocalStorage', // Indicate the storage method in the context
+  method: 'BackendAPI', // Indicate the storage method in the context
   login: () => {},
   serverLogin: () => {},
   logout: () => {},
@@ -46,11 +48,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password, rememberMe) => {
     try {
-      const response = await axios.post('/api/auth/login', { email, password })
-      // const response = await axios.post(config)
-      const { user } = response.data
-
-      const result = await dispatch({ type: 'LOGIN', payload: { user } })
+      const { token, user } = await loginUser(email, password)
+      dispatch({ type: 'LOGIN', payload: { token, user } })
 
       if (rememberMe) {
         localStorage.setItem('rememberMe', 'true')
@@ -97,13 +96,8 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (email, username, password) => {
     try {
-      const response = await axios.post('/api/auth/register', {
-        email,
-        username,
-        password
-      })
-      const { user } = response.data
-      dispatch({ type: 'REGISTER', payload: { user } })
+      const { token, user } = await registerUser(email, username, password)
+      dispatch({ type: 'REGISTER', payload: { token, user } })
 
       localStorage.setItem('rememberMe', 'true') // Always remember after registration
     } catch (error) {
@@ -112,28 +106,35 @@ export const AuthProvider = ({ children }) => {
   }
 
   const logout = () => {
-    localStorage.removeItem('user') // Remove user data from localStorage on logout
-    localStorage.removeItem('rememberMe') // Remove rememberMe flag on logout
+    localStorage.removeItem('token')
+    localStorage.removeItem('user') // Remove token from localStorage on logout
     dispatch({ type: 'LOGOUT' })
   }
 
   useEffect(() => {
-    const userData = localStorage.getItem('user')
-    const rememberMe = localStorage.getItem('rememberMe') === 'true'
+    const fetchUser = async () => {
+      const token = localStorage.getItem('token')
 
-    if (userData && rememberMe) {
-      const parsedUser = JSON.parse(userData)
-      dispatch({ type: 'INIT', payload: { isAuthenticated: true, user: parsedUser } })
-    } else {
-      localStorage.removeItem('user') // Clear user data if rememberMe is false or null
-      dispatch({ type: 'INIT', payload: { isAuthenticated: false, user: null } })
+      if (token) {
+        try {
+          const { user } = await fetchUserProfile(token)
+          dispatch({ type: 'INIT', payload: { isAuthenticated: true, user } })
+        } catch (error) {
+          console.error(error)
+          dispatch({ type: 'INIT', payload: { isAuthenticated: false, user: null } })
+        }
+      } else {
+        dispatch({ type: 'INIT', payload: { isAuthenticated: false, user: null } })
+      }
     }
+
+    fetchUser()
   }, [])
 
   if (!state.isInitialized) return <div>Loading...</div>
 
   return (
-    <AuthContext.Provider value={{ ...state, method: 'LocalStorage', login, serverLogin, logout, register }}>
+    <AuthContext.Provider value={{ ...state, method: 'BackendAPI', login, logout, register }}>
       {children}
     </AuthContext.Provider>
   )

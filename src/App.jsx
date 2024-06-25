@@ -11,8 +11,6 @@ import UserProfile from './views/UserProfile'
 import ViewTutorProfile from './views/ViewTutorProfile'
 
 import AuthGuard from './auth/AuthGuard'
-import './fake-db'
-import { useEffect } from 'react'
 
 const App = () => {
   // const getUsers = () => {
