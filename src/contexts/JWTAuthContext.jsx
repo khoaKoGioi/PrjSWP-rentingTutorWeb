@@ -1,6 +1,5 @@
 import { createContext, useEffect, useReducer } from 'react'
 import axios from 'axios'
-import databaseService from '../server/services/database.services'
 
 const initialState = {
   user: null,
@@ -37,6 +36,7 @@ const AuthContext = createContext({
   ...initialState,
   method: 'LocalStorage', // Indicate the storage method in the context
   login: () => {},
+  serverLogin: () => {},
   logout: () => {},
   register: () => {}
 })
@@ -47,9 +47,9 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password, rememberMe) => {
     try {
       const response = await axios.post('/api/auth/login', { email, password })
+      // const response = await axios.post(config)
       const { user } = response.data
-      // console.log(response)
-      // const { user } = await databaseService.getUsers(email, password)
+
       const result = await dispatch({ type: 'LOGIN', payload: { user } })
 
       if (rememberMe) {
@@ -61,6 +61,39 @@ export const AuthProvider = ({ children }) => {
       throw new Error(error.response ? error.response.data.message : 'Login failed')
     }
   }
+
+  const serverLogin = async (formData) => {
+    const res = await axios.post(`http://localhost:3000/users/login`, formData)
+    console.log(res.data)
+    return res.data
+  }
+  // const config = {
+  //   method: 'post',
+  //   url: '/login', // endpoint without baseURL
+  //   baseURL: 'http://localhost:3000/users', // base URL for your API
+  //   headers: { 'Content-Type': 'application/json' }
+  // }
+
+  // try {
+  //   console.log('response')
+
+  //   // Corrected payload (password instead of passsword)
+  //   const response = await axios(config, formData)
+
+  //   console.log(response)
+  //   const { user } = response.data
+  //   console.log(user)
+
+  //   const result = await dispatch({ type: 'LOGIN', payload: { user } })
+
+  //   if (rememberMe) {
+  //     localStorage.setItem('rememberMe', 'true')
+  //   } else {
+  //     localStorage.removeItem('rememberMe')
+  //   }
+  // } catch (error) {
+  //   throw new Error(error.response && error.response.data ? error.response.data.message : 'Login failed')
+  // }
 
   const register = async (email, username, password) => {
     try {
@@ -100,7 +133,7 @@ export const AuthProvider = ({ children }) => {
   if (!state.isInitialized) return <div>Loading...</div>
 
   return (
-    <AuthContext.Provider value={{ ...state, method: 'LocalStorage', login, logout, register }}>
+    <AuthContext.Provider value={{ ...state, method: 'LocalStorage', login, serverLogin, logout, register }}>
       {children}
     </AuthContext.Provider>
   )

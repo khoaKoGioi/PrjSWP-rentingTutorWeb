@@ -1,6 +1,5 @@
 import MockAdapter from 'axios-mock-adapter'
 import axios from 'axios'
-//import databaseService from '../../services/database.services'
 
 const mock = new MockAdapter(axios)
 
@@ -8,16 +7,15 @@ const userList = [
   {
     id: 1,
     role: 'SA',
-    avatar:
-    "https://i.pinimg.com/originals/b5/d9/f6/b5d9f6262c408ee0fdd6ce12f2e6e1b9.jpg",
-    username: "Khoa cute",
-    name: "Anh Khoa",
-    email: "khoaDeThuong@gmail.com",
-    phone: "0900090090",
-    school: "FPT University",
-    dob: "2004-01-01",
-    grade: "12",
-    password:"123",
+    avatar: 'https://i.pinimg.com/originals/b5/d9/f6/b5d9f6262c408ee0fdd6ce12f2e6e1b9.jpg',
+    username: 'Khoa cute',
+    name: 'Anh Khoa',
+    email: 'khoaDeThuong@gmail.com',
+    phone: '0900090090',
+    school: 'FPT University',
+    dob: '2004-01-01',
+    grade: '12',
+    password: '123'
   }
 ]
 
@@ -36,6 +34,12 @@ mock.onPost('/api/auth/login').reply(async (config) => {
     return [500, { message: 'Internal server error' }]
   }
 })
+
+// mock.onPost('http://localhost:3000/users/login').reply(async(config)=>{
+//   try{
+//     const {email, password} = JSON.parse(config.data)
+//   }
+// })
 
 // Register Endpoint
 mock.onPost('/api/auth/register').reply((config) => {
