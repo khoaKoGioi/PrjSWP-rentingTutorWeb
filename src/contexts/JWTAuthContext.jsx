@@ -2,6 +2,7 @@
 
 import React, { createContext, useEffect, useReducer } from 'react'
 import { loginUser, registerUser, fetchUserProfile } from '../apiService/api'
+import axios from 'axios'
 
 const initialState = {
   user: null,
@@ -62,37 +63,23 @@ export const AuthProvider = ({ children }) => {
   }
 
   const serverLogin = async (formData) => {
-    const res = await axios.post(`http://localhost:3000/users/login`, formData)
-    console.log(res.data)
-    return res.data
+    try {
+      const res = await axios.post(`http://localhost:3000/users/login`, formData)
+      const { token, user } = res.data.data
+      dispatch({ type: 'LOGIN', payload: { token, user } })
+      console.log(res.data.data)
+
+      if (formData.rememberMe) {
+        localStorage.setItem('rememberMe', 'true')
+      } else {
+        localStorage.removeItem('rememberMe')
+      }
+      return res.data
+    } catch (error) {
+      console.log(error)
+      throw new Error(error.response ? error.response.data.message : 'Login failed')
+    }
   }
-  // const config = {
-  //   method: 'post',
-  //   url: '/login', // endpoint without baseURL
-  //   baseURL: 'http://localhost:3000/users', // base URL for your API
-  //   headers: { 'Content-Type': 'application/json' }
-  // }
-
-  // try {
-  //   console.log('response')
-
-  //   // Corrected payload (password instead of passsword)
-  //   const response = await axios(config, formData)
-
-  //   console.log(response)
-  //   const { user } = response.data
-  //   console.log(user)
-
-  //   const result = await dispatch({ type: 'LOGIN', payload: { user } })
-
-  //   if (rememberMe) {
-  //     localStorage.setItem('rememberMe', 'true')
-  //   } else {
-  //     localStorage.removeItem('rememberMe')
-  //   }
-  // } catch (error) {
-  //   throw new Error(error.response && error.response.data ? error.response.data.message : 'Login failed')
-  // }
 
   const register = async (email, username, password) => {
     try {
@@ -134,7 +121,7 @@ export const AuthProvider = ({ children }) => {
   if (!state.isInitialized) return <div>Loading...</div>
 
   return (
-    <AuthContext.Provider value={{ ...state, method: 'BackendAPI', login, logout, register }}>
+    <AuthContext.Provider value={{ ...state, method: 'BackendAPI', login, serverLogin, logout, register }}>
       {children}
     </AuthContext.Provider>
   )
