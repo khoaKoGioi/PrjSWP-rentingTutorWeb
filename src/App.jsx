@@ -9,9 +9,9 @@ import ClassList from './views/ClassList'
 import ClassDetail from './views/ClassDetail'
 import UserProfile from './views/UserProfile'
 import ViewTutorProfile from './views/ViewTutorProfile'
-
 import AuthGuard from './auth/AuthGuard'
-
+import ClassManagement from './views/ClassManagement'
+import AdminPortal from './views/AdminPortal'
 const App = () => {
   // const getUsers = () => {
   //   fetch('/data/getUsers')
@@ -39,6 +39,8 @@ const App = () => {
           <Route path='/registerTutor' element={<RegisterTutor />} />
           <Route path='/ClassList' element={<ClassList />} />
           <Route path='/card/:id' element={<ClassDetail />} />
+          <Route path='/manage-classes' element={<ClassManagement />} />
+          <Route path='/admin-portal' element={<AdminPortal />} />
           {/* Protected routes */}
 
           <Route

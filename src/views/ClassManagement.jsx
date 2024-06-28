@@ -1,13 +1,13 @@
+// src/ClassManagement.js
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
 
-const apiUrl = 'https://6676c5c6145714a1bd72bec9.mockapi.io/swp/class'
+const apiURL = 'https://667c07dd3c30891b865b026d.mockapi.io/ass2/class'
 
 const ClassManagement = () => {
   const [classes, setClasses] = useState([])
-  const [newClass, setNewClass] = useState({
-    id: '',
+  const [formData, setFormData] = useState({
     imageLink: '',
     title: '',
     tutor: '',
@@ -16,228 +16,192 @@ const ClassManagement = () => {
     rating: '',
     price: ''
   })
-  const [editing, setEditing] = useState(false)
-  const [currentClass, setCurrentClass] = useState(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    loadClasses()
+    fetchClasses()
   }, [])
 
-  const loadClasses = () => {
-    axios
-      .get(apiUrl)
-      .then((response) => setClasses(response.data))
-      .catch((error) => console.log(error))
+  const fetchClasses = async () => {
+    try {
+      const response = await axios.get(apiURL)
+      setClasses(response.data)
+    } catch (error) {
+      console.error('Error fetching classes:', error)
+    }
   }
 
-  const addClass = (e) => {
-    e.preventDefault()
-    axios
-      .post(apiUrl, newClass)
-      .then(() => {
-        loadClasses()
-        setNewClass({
-          imageLink: '',
-          title: '',
-          tutor: '',
-          description: '',
-          lectures: '',
-          rating: '',
-          price: ''
-        })
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleAddClass = async () => {
+    try {
+      const response = await axios.post(apiURL, formData)
+      setClasses([...classes, response.data])
+      setFormData({
+        imageLink: '',
+        title: '',
+        tutor: '',
+        description: '',
+        lectures: '',
+        rating: '',
+        price: ''
       })
-      .catch((error) => console.log(error))
+      setIsModalOpen(false)
+    } catch (error) {
+      console.error('Error adding class:', error)
+    }
   }
 
-  const editClass = (cls) => {
-    setEditing(true)
-    setCurrentClass(cls)
+  const handleDeleteClass = async (id) => {
+    try {
+      await axios.delete(`${apiURL}/${id}`)
+      setClasses(classes.filter((cls) => cls.id !== id))
+    } catch (error) {
+      console.error('Error deleting class:', error)
+    }
   }
 
-  const updateClass = () => {
-    axios
-      .put(`${apiUrl}/${currentClass.id}`, currentClass)
-      .then(() => {
-        loadClasses()
-        setEditing(false)
-        setCurrentClass(null)
-      })
-      .catch((error) => console.log(error))
-  }
-
-  const deleteClass = (classId) => {
-    axios
-      .delete(`${apiUrl}/${classId}`)
-      .then(() => loadClasses())
-      .catch((error) => console.log(error))
+  const handleUpdateClass = async (id, updatedData) => {
+    try {
+      const response = await axios.put(`${apiURL}/${id}`, updatedData)
+      setClasses(classes.map((cls) => (cls.id === id ? response.data : cls)))
+    } catch (error) {
+      console.error('Error updating class:', error)
+    }
   }
 
   return (
-    <div className='min-h-screen bg-gray-50 flex flex-col justify-center items-center py-12 sm:px-6 lg:px-8 px-6'>
+    <div className='container mx-auto p-4 pt-16'>
       <header>
         <MegaMenuWithHover />
       </header>
-      <div className='p-6 bg-gray-100 min-h-screen'>
-        <h1 className='text-3xl font-bold mb-6 mt-10 text-center'>Manage Classes</h1>
-
-        {/* Form for adding/editing class */}
-        <form onSubmit={addClass} className='mb-8 p-6 bg-white shadow-md rounded-lg space-y-4'>
-          <input
-            type='text'
-            placeholder='Image Link'
-            value={newClass.imageLink}
-            onChange={(e) => setNewClass({ ...newClass, imageLink: e.target.value })}
-            className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-          />
-          <input
-            type='text'
-            placeholder='Title'
-            value={newClass.title}
-            onChange={(e) => setNewClass({ ...newClass, title: e.target.value })}
-            className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-          />
-          <input
-            type='text'
-            placeholder='Tutor'
-            value={newClass.tutor}
-            onChange={(e) => setNewClass({ ...newClass, tutor: e.target.value })}
-            className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-          />
-          <input
-            type='text'
-            placeholder='Description'
-            value={newClass.description}
-            onChange={(e) => setNewClass({ ...newClass, description: e.target.value })}
-            className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-          />
-          <input
-            type='text'
-            placeholder='Lectures'
-            value={newClass.lectures}
-            onChange={(e) => setNewClass({ ...newClass, lectures: e.target.value })}
-            className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-          />
-          <input
-            type='text'
-            placeholder='Rating'
-            value={newClass.rating}
-            onChange={(e) => setNewClass({ ...newClass, rating: e.target.value })}
-            className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-          />
-          <input
-            type='text'
-            placeholder='Price'
-            value={newClass.price}
-            onChange={(e) => setNewClass({ ...newClass, price: e.target.value })}
-            className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-          />
-          <button
-            onClick={addClass}
-            className='w-full py-2 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 active:bg-orange-400 focus:outline-none'
-          >
-            Add Class
-          </button>
-        </form>
-
-        {/* Table displaying classes */}
-        <div className='mt-8'>
-          <h2 className='text-xl font-bold mb-4 text-center'>Class List</h2>
-          <table className='min-w-full divide-y divide-gray-200'>
-            <thead className='bg-gray-50'>
-              <tr>
-                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Title
-                </th>
-                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Tutor
-                </th>
-                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className='bg-white divide-y divide-gray-200'>
-              {classes.map((cls) => (
-                <tr key={cls.id}>
-                  <td className='px-6 py-4 whitespace-nowrap'>{cls.title}</td>
-                  <td className='px-6 py-4 whitespace-nowrap'>{cls.tutor}</td>
-                  <td className='px-6 py-4 whitespace-nowrap space-x-2'>
-                    <button
-                      onClick={() => editClass(cls)}
-                      className='px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600'
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => deleteClass(cls.id)}
-                      className='px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 focus:outline-none focus:bg-red-600'
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className='mx-auto mt-10'>
+        <h1 className='text-2xl font-bold mb-4 text-center'>Class Management</h1>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mb-4'
+        >
+          Add New Class
+        </button>
+        <div className='grid grid-cols-1 gap-4'>
+          {classes.map((cls) => (
+            <div key={cls.id} className='flex justify-between items-center p-4 border rounded shadow'>
+              <div>
+                <h2 className='text-lg font-bold'>{cls.title}</h2>
+                <p className='text-sm'>{cls.tutor}</p>
+                <p className='text-sm'>Lectures: {cls.lectures}</p>
+              </div>
+              <div>
+                <button
+                  onClick={() => handleUpdateClass(cls.id, formData)}
+                  className='bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-700 mr-2'
+                >
+                  Update
+                </button>
+                <button
+                  onClick={() => handleDeleteClass(cls.id)}
+                  className='bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700'
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-        {editing && currentClass && (
-          <div className='mt-8 p-6 bg-white shadow-md rounded-lg space-y-4'>
-            <h2 className='text-2xl font-bold mb-4'>Edit Class</h2>
-            <input
-              type='text'
-              placeholder='Image Link'
-              value={currentClass.imageLink}
-              onChange={(e) => setCurrentClass({ ...currentClass, imageLink: e.target.value })}
-              className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-            />
-            <input
-              type='text'
-              placeholder='Title'
-              value={currentClass.title}
-              onChange={(e) => setCurrentClass({ ...currentClass, title: e.target.value })}
-              className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-            />
-            <input
-              type='text'
-              placeholder='Tutor'
-              value={currentClass.tutor}
-              onChange={(e) => setCurrentClass({ ...currentClass, tutor: e.target.value })}
-              className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-            />
-            <input
-              type='text'
-              placeholder='Description'
-              value={currentClass.description}
-              onChange={(e) => setCurrentClass({ ...currentClass, description: e.target.value })}
-              className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-            />
-            <input
-              type='text'
-              placeholder='Lectures'
-              value={currentClass.lectures}
-              onChange={(e) => setCurrentClass({ ...currentClass, lectures: e.target.value })}
-              className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-            />
-            <input
-              type='text'
-              placeholder='Rating'
-              value={currentClass.rating}
-              onChange={(e) => setCurrentClass({ ...currentClass, rating: e.target.value })}
-              className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-            />
-            <input
-              type='text'
-              placeholder='Price'
-              value={currentClass.price}
-              onChange={(e) => setCurrentClass({ ...currentClass, price: e.target.value })}
-              className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500'
-            />
-            <button
-              onClick={updateClass}
-              className='w-full py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700'
-            >
-              Update Class
-            </button>
+
+        {isModalOpen && (
+          <div className='fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center'>
+            <div className='bg-white p-8 rounded shadow-lg w-1/2 mt-20'>
+              <h2 className='text-xl font-bold mb-4'>Add New Class</h2>
+              <div className='mb-4'>
+                <label className='block mb-2'>Image Link</label>
+                <input
+                  type='text'
+                  name='imageLink'
+                  value={formData.imageLink}
+                  onChange={handleChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Title</label>
+                <input
+                  type='text'
+                  name='title'
+                  value={formData.title}
+                  onChange={handleChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Tutor</label>
+                <input
+                  type='text'
+                  name='tutor'
+                  value={formData.tutor}
+                  onChange={handleChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Description</label>
+                <input
+                  type='text'
+                  name='description'
+                  value={formData.description}
+                  onChange={handleChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Lectures</label>
+                <input
+                  type='number'
+                  name='lectures'
+                  value={formData.lectures}
+                  onChange={handleChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Rating</label>
+                <input
+                  type='number'
+                  step='0.1'
+                  name='rating'
+                  value={formData.rating}
+                  onChange={handleChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Price</label>
+                <input
+                  type='number'
+                  name='price'
+                  value={formData.price}
+                  onChange={handleChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <button
+                onClick={handleAddClass}
+                className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mr-2'
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className='bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700'
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         )}
       </div>
