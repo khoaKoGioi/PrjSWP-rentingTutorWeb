@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
-import { Typography } from '@material-tailwind/react'
-import ClassCard from '../components/ClassCard.jsx'
+import { Typography, Card, CardBody } from '@material-tailwind/react'
 import { Pagination } from '@nextui-org/react'
 import BreadcrumbsWithIcon from '../components/BreadCrumb.jsx'
 import PriceRangeSlider from '../components/PriceRangeSlider.jsx'
+import ClassCard from '../components/ClassCard.jsx' // Assuming ClassCard component exists
 
-const itemsPerPage = 12 // 4 rows with 3 items each
+const itemsPerPage = 12
 
 const ClassList = () => {
   const [currentPage, setCurrentPage] = useState(1)
@@ -31,13 +31,9 @@ const ClassList = () => {
     fetchClasses()
   }, [])
 
-  // Calculate the total number of pages
   const totalPages = Math.ceil(data.length / itemsPerPage)
-
-  // Get the data for the current page
   const currentData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
-  // Handle page change
   const handlePageChange = (page) => {
     setCurrentPage(page)
   }
@@ -61,101 +57,104 @@ const ClassList = () => {
         </div>
         <div className='flex items-end pl-10'>
           <Typography variant='h3' className='mt-2'>
-            {data.length} results for "react"
+            {data.length} results for Class
           </Typography>
         </div>
       </div>
 
       <div className='flex'>
-        <aside className='w-1/4 p-4'>
-          <Link to='/manage-classes'>
-            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full mb-4'>
-              Manage Classes
-            </button>
-          </Link>
-
+        <aside className='w-1/4 p-4 rounded-lg shadow-md'>
           {/* Include the PriceRangeSlider component */}
           <PriceRangeSlider onChange={(value) => console.log(value)} />
 
-          <div className='mb-6'>
-            <Typography variant='h6'>Filter by Rating</Typography>
-            <div>
-              <label>
-                <input type='checkbox' /> 1 Star & Up
+          <div className='mt-6'>
+            <Typography variant='h6' className='text-gray-800 font-bold mb-2'>
+              Filter by Rating
+            </Typography>
+            <div className='space-y-2'>
+              <label className='flex items-center'>
+                <input type='checkbox' className='form-checkbox text-blue-500' />
+                <span className='ml-2 text-gray-700'>1 Star & Up</span>
               </label>
-            </div>
-            <div>
-              <label>
-                <input type='checkbox' /> 2 Stars & Up
+              <label className='flex items-center'>
+                <input type='checkbox' className='form-checkbox text-blue-500' />
+                <span className='ml-2 text-gray-700'>2 Stars & Up</span>
               </label>
-            </div>
-            <div>
-              <label>
-                <input type='checkbox' /> 3 Stars & Up
+              <label className='flex items-center'>
+                <input type='checkbox' className='form-checkbox text-blue-500' />
+                <span className='ml-2 text-gray-700'>3 Stars & Up</span>
               </label>
-            </div>
-            <div>
-              <label>
-                <input type='checkbox' /> 4 Stars & Up
+              <label className='flex items-center'>
+                <input type='checkbox' className='form-checkbox text-blue-500' />
+                <span className='ml-2 text-gray-700'>4 Stars & Up</span>
               </label>
-            </div>
-            <div>
-              <label>
-                <input type='checkbox' /> 5 Stars
+              <label className='flex items-center'>
+                <input type='checkbox' className='form-checkbox text-blue-500' />
+                <span className='ml-2 text-gray-700'>5 Stars</span>
               </label>
             </div>
           </div>
-          <div>
-            <Typography variant='h6'>Filter by Duration</Typography>
-            <div>
-              <label>
-                <input type='checkbox' /> Under 60 Minutes
+
+          <div className='mt-6'>
+            <Typography variant='h6' className='text-gray-800 font-bold mb-2'>
+              Filter by Duration
+            </Typography>
+            <div className='space-y-2'>
+              <label className='flex items-center'>
+                <input type='checkbox' className='form-checkbox text-blue-500' />
+                <span className='ml-2 text-gray-700'>Under 60 Minutes</span>
               </label>
-            </div>
-            <div>
-              <label>
-                <input type='checkbox' /> Less Than 2 Hours
+              <label className='flex items-center'>
+                <input type='checkbox' className='form-checkbox text-blue-500' />
+                <span className='ml-2 text-gray-700'>Less Than 2 Hours</span>
               </label>
-            </div>
-            <div>
-              <label>
-                <input type='checkbox' /> 1-4 Weeks
+              <label className='flex items-center'>
+                <input type='checkbox' className='form-checkbox text-blue-500' />
+                <span className='ml-2 text-gray-700'>1-4 Weeks</span>
               </label>
-            </div>
-            <div>
-              <label>
-                <input type='checkbox' /> 1-3 Months
+              <label className='flex items-center'>
+                <input type='checkbox' className='form-checkbox text-blue-500' />
+                <span className='ml-2 text-gray-700'>1-3 Months</span>
               </label>
-            </div>
-            <div>
-              <label>
-                <input type='checkbox' /> 3-6 Months
+              <label className='flex items-center'>
+                <input type='checkbox' className='form-checkbox text-blue-500' />
+                <span className='ml-2 text-gray-700'>3-6 Months</span>
               </label>
             </div>
           </div>
         </aside>
-        <main className='w-3/4 p-4'>
+
+        <main className='w-3/4 px-7'>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20'>
             {currentData.map((item) => (
-              <ClassCard
-                key={item.id}
-                id={item.id}
-                imageLink={item.imageLink}
-                title={item.title}
-                tutor={item.title}
-                description={item.description}
-                rating={item.rating}
-                price={item.price}
-                lectures={item.lectures}
-              />
+              <Link to={`/classDetail/${item.id}`} key={item.id} state={item}>
+                <Card className='group relative overflow-hidden hover:opacity-75'>
+                  <img
+                    src={`https://img.youtube.com/vi/${item.videoLink.split('v=')[1]}/0.jpg`}
+                    alt={item.title}
+                    className='object-cover'
+                  />
+                  <CardBody className='py-4'>
+                    <Typography variant='h5' className='font-bold'>
+                      {item.title}
+                    </Typography>
+                    <Typography variant='body2' className='mt-2'>
+                      Tutor: {item.tutor}
+                    </Typography>
+                    <Typography variant='body2' className='mt-2'>
+                      Price: ${item.price}
+                    </Typography>
+                  </CardBody>
+                </Card>
+              </Link>
             ))}
           </div>
 
           <div className='flex justify-center mt-8'>
             <Pagination
-              showControls
               total={totalPages}
-              initialPage={currentPage}
+              active={currentPage}
+              maxVisible={5}
               onChange={(page) => handlePageChange(page)}
             />
           </div>
