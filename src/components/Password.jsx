@@ -1,29 +1,55 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input, Typography } from "@material-tailwind/react";
 
-export function Password() {
-  const [password, setPassword] = useState('');
+export function Password({ value, onChange }) {
+  const [password, setPassword] = useState(value || '');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  useEffect(() => {
+    setPassword(value || '');
+  }, [value]);
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    onChange({ target: { name: 'password', value: newPassword } });
+    validatePassword(newPassword);
   };
 
   const handleConfirmPasswordChange = (e) => {
     setConfirmPassword(e.target.value);
   };
 
+  const validatePassword = (password) => {
+    const minLength = /.{8,}/;
+    const upperCase = /[A-Z]/;
+    const lowerCase = /[a-z]/;
+    const number = /[0-9]/;
+
+    if (!minLength.test(password)) {
+      setPasswordError('Password must be at least 8 characters long.');
+    } else if (!upperCase.test(password)) {
+      setPasswordError('Password must contain at least one uppercase letter.');
+    } else if (!lowerCase.test(password)) {
+      setPasswordError('Password must contain at least one lowercase letter.');
+    } else if (!number.test(password)) {
+      setPasswordError('Password must contain at least one number.');
+    } else {
+      setPasswordError('');
+    }
+  };
+
   const passwordsMatch = password === confirmPassword;
 
   return (
     <div className="mt-6 w-full">
-      <Input type="password" label="Password" value={password} onChange={handlePasswordChange} required/>
+      <Input type="password" label="Password" value={password} onChange={handlePasswordChange} required />
+      {passwordError && <Typography variant="small" color="red">{passwordError}</Typography>}
       <div className="mt-6 w-full">
-      <Input type="password" label="Confirm Password" value={confirmPassword} onChange={handleConfirmPasswordChange} required/>
-      {!passwordsMatch && <Typography variant="small" color="red">Passwords do not match</Typography>}  
+        <Input type="password" label="Confirm Password" value={confirmPassword} onChange={handleConfirmPasswordChange} required />
+        {!passwordsMatch && confirmPassword.length > 0 && <Typography variant="small" color="red">Passwords do not match</Typography>}
       </div>
-      
-
       <Typography
         variant="small"
         color="gray"

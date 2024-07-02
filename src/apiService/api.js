@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api'; // Replace with your backend API base URL
+const API_URL = 'http://localhost:3000/api'; // Replace with your backend API base URL
 
 
 export const loginUser = async (email, password) => {
@@ -16,9 +16,67 @@ export const loginUser = async (email, password) => {
   }
 };
 
-export const registerUser = async (email, username, password) => {
+export const registerStudent = async (email, userName, password, fullName, avatar, dateOfBirth, phone, address, grade, school) => {
+  
   try {
-    const response = await axios.post(`${API_URL}/auth/register`, { email, username, password });
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('userName', userName);
+    formData.append('password', password);
+    formData.append('fullName', fullName);
+    formData.append('avatar', avatar);
+    formData.append('dateOfBirth', dateOfBirth);
+    formData.append('phone', phone);
+    formData.append('address', address);
+
+    formData.append('grade', grade);
+    formData.append('school', school);
+    console.log('Received Data:', { email, userName, password, fullName,avatar, dateOfBirth, phone, address, grade, school });
+
+
+    console.log('Register Student Form Data:', formData);
+
+    const response = await axios.post(`${API_URL}/auth/registerStudent`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+
+  } catch (error) {
+    console.error('Error in registerStudent:', error.response || error.message || error);
+    
+    throw new Error(
+      
+      error.response ? error.response.data.message : 'Registration failed'
+    );
+  }
+};
+
+export const registerTutor = async (email, userName, password, fullName,avatar, dateOfBirth, phone, address, workplace, credentialFile ,degreeFile, description) => {
+  try {
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('userName', userName);
+    formData.append('password', password);
+    formData.append('fullName', fullName);
+    formData.append('avatar', avatar);
+    formData.append('dateOfBirth', dateOfBirth);
+    formData.append('phone', phone);
+    formData.append('address', address);
+    
+
+
+    formData.append('workplace', workplace);
+    formData.append('credentialFile', credentialFile);
+    formData.append('degreeFile', degreeFile);
+    formData.append('description', description);
+
+    const response = await axios.post(`${API_URL}/auth/registerTutor`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
     return response.data;
   } catch (error) {
     throw new Error(

@@ -1,65 +1,70 @@
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../contexts/JWTAuthContext.jsx";
 import logo from "../assets/logo.png";
-import { DatePicker } from "@nextui-org/react";
 import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
-import { useState } from "react";
-import { GradePick } from "../components/GradePick.jsx";
+import GradePick  from "../components/GradePick.jsx";
 import { Input } from "@material-tailwind/react";
-import { Password } from "../components/Password.jsx";
-
+import {Password} from "../components/Password.jsx";
+import { useNavigate } from "react-router-dom";
 const Register = () => {
+  const navigate = useNavigate();
+  const { register } = useContext(AuthContext);
   const [formData, setFormData] = useState({
-    fullname: "",
-    username: "",
+    fullName: "",
+    userName: "",
     email: "",
     phone: "",
-    school: "",
-    grade: "",
     dateOfBirth: "",
     password: "",
+    address: "", // Add address field
+    avatar: null, // Add avatarFile field
+    
+    school: "",
+    grade: "",
+
+    
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
 
-  const handleDateChange = (date) => {
-    setFormData({ ...formData, dateOfBirth: date });
+  const handleDateChange = (e) => {
+    setFormData({ ...formData, dateOfBirth: e.target.value });
   };
 
   const handleGradeChange = (grade) => {
     setFormData({ ...formData, grade });
   };
 
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setFormData({ ...formData, [name]: files[0] });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form Data:", formData); // Log formData to check its structure
+  
     try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        const result = await response.json();
-        alert("Student registered successfully");
-        setFormData({
-          fullName: "",
-          username: "",
-          email: "",
-          phone: "",
-          address: "",
-          dateOfBirth: "",
-          password: "",
-        });
-      } else {
-        const error = await response.json();
-        alert(`Error: ${error.message || response.statusText}`);
-      }
+      const response = await register("student", formData); // Await the register function call
+      console.log("Response:", response); // Log response to check its structure
+      alert("Student registered successfully");
+        
+      navigate("/");
+        
+      
     } catch (error) {
       console.error("Error submitting form:", error);
+      alert(`Error submitting form: ${error.message}`);
     }
   };
+  
+  
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -90,8 +95,9 @@ const Register = () => {
           <form method="POST" onSubmit={handleSubmit}>
             <div className="mt-6 w-full">
               <Input
-                label="Fullname"
-                name="fullname"
+                label="FullName"
+                name="fullName"
+                value={formData.fullName}
                 onChange={handleChange}
                 required
               />
@@ -100,7 +106,8 @@ const Register = () => {
             <div className="mt-6 w-full">
               <Input
                 label="Username"
-                name="username"
+                name="userName"
+                value={formData.userName}
                 onChange={handleChange}
                 required
               />
@@ -110,6 +117,7 @@ const Register = () => {
               <Input
                 label="Email address"
                 name="email"
+                value={formData.email}
                 onChange={handleChange}
                 required
               />
@@ -119,7 +127,26 @@ const Register = () => {
               <Input
                 label="Phone number"
                 name="phone"
+                value={formData.phone}
                 onChange={handleChange}
+              />
+            </div>
+
+            <div className="mt-6 w-full">
+              <Input
+                label="Address"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="mt-6 w-full">
+              <input
+                type="file"
+                name="avatar"
+                onChange={handleFileChange}
               />
             </div>
 
@@ -128,34 +155,37 @@ const Register = () => {
                 <Input
                   label="School"
                   name="school"
+                  value={formData.school}
                   onChange={handleChange}
                   required
                 />
               </div>
 
               <div className="w-1/3 box-border">
-                <GradePick onChange={handleGradeChange} />
+                <GradePick value={formData.grade} onChange={handleGradeChange} />
               </div>
             </div>
 
             <div className="mt-6">
               <label
-                htmlFor="date"
+                htmlFor="dateOfBirth"
                 className="block text-sm font-medium leading-5 text-gray-700"
               >
                 Date of birth
               </label>
               <div className="mt-1">
-                <DatePicker
-                  id="date"
-                  name="date"
+                <input
+                  id="dateOfBirth"
+                  name="dateOfBirth"
+                  type="date"
+                  value={formData.dateOfBirth}
                   onChange={handleDateChange}
-                  className="appearance-none block w-full py-2 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="mt-1 appearance-none block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5"
                 />
               </div>
             </div>
 
-            <Password onChange={handleChange} />
+            <Password value={formData.password} onChange={handleChange} />
 
             <div className="mt-6">
               <span className="block w-full rounded-md shadow-sm">
