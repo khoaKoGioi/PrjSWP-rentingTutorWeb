@@ -45,12 +45,24 @@ const UserProfile = () => {
   }
 
   const handleUpdate = async () => {
-    // Implement the update logic here
-    console.log('User updated:', userData)
     try {
-      // Send updated data to the server
-      // await updateUserProfile(userData);
+      const response = await fetch(`http://localhost:5000/api/users/update/${user.userID}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to update profile')
+      }
+      const data = await response.json()
+
+      localStorage.setItem('token', data.token)
+      setUserData(data.user)
       alert('Profile updated successfully!')
+      window.location.reload()
     } catch (error) {
       console.error('Failed to update profile:', error)
       alert('Failed to update profile. Please try again.')

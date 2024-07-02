@@ -18,10 +18,6 @@ const profileMenuItems = [
     action: 'profile' // Add action type for profile
   },
   {
-    label: 'Edit Profile',
-    icon: Cog6ToothIcon
-  },
-  {
     label: 'Inbox',
     icon: InboxArrowDownIcon
   },
