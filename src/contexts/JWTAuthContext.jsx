@@ -39,7 +39,6 @@ export const AuthContext = createContext({
   ...initialState,
   method: 'BackendAPI', // Indicate the storage method in the context
   login: () => {},
-  serverLogin: () => {},
   logout: () => {},
   register: () => {}
 })
@@ -49,8 +48,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password, rememberMe) => {
     try {
-      const { token, user } = await loginUser(email, password)
-      dispatch({ type: 'LOGIN', payload: { token, user } })
+      const { token, user, student } = await loginUser(email, password)
+      dispatch({ type: 'LOGIN', payload: { token, user, student } })
 
       if (rememberMe) {
         localStorage.setItem('rememberMe', 'true')
@@ -62,24 +61,24 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const serverLogin = async (formData) => {
-    try {
-      const res = await axios.post(`http://localhost:3000/users/login`, formData)
-      const { token, user } = res.data.data
-      dispatch({ type: 'LOGIN', payload: { token, user } })
-      console.log(res.data.data)
+  // const serverLogin = async (formData) => {
+  //   try {
+  //     const res = await axios.post(`http://localhost:3000/users/login`, formData)
+  //     const { token, user } = res.data.data
+  //     dispatch({ type: 'LOGIN', payload: { token, user } })
+  //     console.log(res.data.data)
 
-      if (formData.rememberMe) {
-        localStorage.setItem('rememberMe', 'true')
-      } else {
-        localStorage.removeItem('rememberMe')
-      }
-      return res.data
-    } catch (error) {
-      console.log(error)
-      throw new Error(error.response ? error.response.data.message : 'Login failed')
-    }
-  }
+  //     if (formData.rememberMe) {
+  //       localStorage.setItem('rememberMe', 'true')
+  //     } else {
+  //       localStorage.removeItem('rememberMe')
+  //     }
+  //     return res.data
+  //   } catch (error) {
+  //     console.log(error)
+  //     throw new Error(error.response ? error.response.data.message : 'Login failed')
+  //   }
+  // }
 
   const register = async (email, username, password) => {
     try {
@@ -121,7 +120,7 @@ export const AuthProvider = ({ children }) => {
   if (!state.isInitialized) return <div>Loading...</div>
 
   return (
-    <AuthContext.Provider value={{ ...state, method: 'BackendAPI', login, serverLogin, logout, register }}>
+    <AuthContext.Provider value={{ ...state, method: 'BackendAPI', login, logout, register }}>
       {children}
     </AuthContext.Provider>
   )

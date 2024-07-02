@@ -14,7 +14,7 @@ const Login = () => {
   })
   const [errorMessage, setErrorMessage] = useState('') // Error state
 
-  const { login, serverLogin } = useContext(AuthContext) // Consume login function from AuthContext
+  const { login } = useContext(AuthContext) // Consume login function from AuthContext
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -28,9 +28,7 @@ const Login = () => {
     e.preventDefault()
     setErrorMessage('') // Reset error message
     try {
-      //await login(formData.email, formData.password, formData.rememberMe) // Use login function from AuthContext
-      //console.log(serverLogin)
-      await serverLogin(formData)
+      await login(formData.email, formData.password, formData.rememberMe) // Use login function from AuthContext
       navigate('/') // Redirect after successful login
     } catch (error) {
       setErrorMessage(error.message || 'Invalid email or password') // Set error message
