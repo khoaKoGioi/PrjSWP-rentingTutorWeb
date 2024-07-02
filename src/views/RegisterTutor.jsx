@@ -1,81 +1,60 @@
-import { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../contexts/JWTAuthContext.jsx";
 import logo from "../assets/logo.png";
-import { DatePicker } from "@nextui-org/react";
 import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
 import { Input, Textarea } from "@material-tailwind/react";
 import { Password } from "../components/Password.jsx";
-import ImageUploader from "../components/ImageUploader.jsx";
+import { useNavigate } from "react-router-dom";
 import "../styles/custom.css";
 
 const RegisterTutor = () => {
+  const navigate = useNavigate();
+  const { register } = useContext(AuthContext);
+
   const [formData, setFormData] = useState({
-    fullname: "",
-    username: "",
+    fullName: "",
+    userName: "",
     email: "",
     phone: "",
-    workplace: "",
     dateOfBirth: "",
     password: "",
-    address: "",
-    credentialFiles: [],
-    degreeFiles: [],
-    photoId: [],
-    listOfSubjects: "",
+    address: "", // Add address field
+    avatar: null, // Add avatarFile field
+
+    workplace: "",
+    credentialFile: null,
+    degreeFile: null,
     description: "",
   });
+  const handleDateChange = (e) => {
+    setFormData({ ...formData, dateOfBirth: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setFormData({ ...formData, [name]: files[0] });
+  };
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    if (type === "file") {
-      setFormData({ ...formData, [name]: files });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
 
-  const handleDateChange = (date) => {
-    setFormData({ ...formData, dateOfBirth: date });
-  };
-
-  const handlePhotoIdUpload = (files) => {
-    setFormData({ ...formData, photoId: files });
-  };
-
-  const handleCredentialUpload = (files) => {
-    setFormData({ ...formData, credentialFiles: files });
-  };
-
-  const handleDegreeUpload = (files) => {
-    setFormData({ ...formData, degreeFiles: files });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataObj = new FormData();
-    for (const key in formData) {
-      if (Array.isArray(formData[key])) {
-        formData[key].forEach((file, index) => {
-          formDataObj.append(`${key}[${index}]`, file);
-        });
-      } else {
-        formDataObj.append(key, formData[key]);
-      }
-    }
-    // Implement the form submission logic, e.g., using fetch or axios
-    try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        body: formDataObj,
-      });
-      if (response.ok) {
-        // Handle success
-        console.log("Form submitted successfully!");
-      } else {
-        // Handle errors
-        console.error("Error submitting form:", response.statusText);
-      }
+    console.log("Form Data:", formData);
+     try {
+      const response = await register("tutor", formData);
+      console.log("Response:", response);
+      alert("Tutor registered successfully");
+      navigate("/");
     } catch (error) {
       console.error("Error submitting form:", error);
+      alert(`Error submitting form: ${error.message}`);
     }
   };
 
@@ -108,8 +87,9 @@ const RegisterTutor = () => {
           <form method="POST" onSubmit={handleSubmit}>
             <div className="mt-6 w-full">
               <Input
-                label="Fullname"
-                name="fullname"
+                label="fullName"
+                name="fullName"
+                value={formData.fullName}
                 onChange={handleChange}
                 required
               />
@@ -117,8 +97,9 @@ const RegisterTutor = () => {
 
             <div className="mt-6 w-full">
               <Input
-                label="Username"
-                name="username"
+                label="userName"
+                name="userName"
+                value={formData.userName}
                 onChange={handleChange}
                 required
               />
@@ -128,6 +109,7 @@ const RegisterTutor = () => {
               <Input
                 label="Email address"
                 name="email"
+                value={formData.email}
                 onChange={handleChange}
                 required
               />
@@ -137,6 +119,7 @@ const RegisterTutor = () => {
               <Input
                 label="Phone number"
                 name="phone"
+                value={formData.phone}
                 onChange={handleChange}
                 required
               />
@@ -146,6 +129,7 @@ const RegisterTutor = () => {
               <Input
                 label="Home address"
                 name="address"
+                value={formData.address}
                 onChange={handleChange}
                 required
               />
@@ -155,22 +139,22 @@ const RegisterTutor = () => {
               <Input
                 label="Workplace"
                 name="workplace"
+                value={formData.workplace}
                 onChange={handleChange}
                 required
               />
             </div>
 
-            <div className="mt-6">
-              <label
-                htmlFor="date"
-                className="block text-sm font-medium leading-5 text-gray-700"
-              >
+            <div className="mt-6 w-full">
+              <label htmlFor="dateOfBirth" className="block text-sm font-medium leading-5 text-gray-700">
                 Date of birth
               </label>
               <div className="mt-1">
-                <DatePicker
-                  id="date"
+                <input
+                  type="date"
+                  id="dateOfBirth"
                   name="dateOfBirth"
+                  value={formData.dateOfBirth}
                   onChange={handleDateChange}
                   required
                   className="appearance-none block w-full py-2 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
@@ -180,30 +164,36 @@ const RegisterTutor = () => {
 
             <div className="mt-6 w-full">
               <label className="block text-sm font-medium leading-5 text-gray-700">
-                Upload photo ID
+                Upload Avatar
               </label>
               <small className="text-red-500 block">
-                *Please upload 1 picture of your full face.
+                *Please upload pictures of your face as avatar.
               </small>
-              <ImageUploader
-                onUpload={handlePhotoIdUpload}
-                maxFiles={1}
+              <input
+                type="file"
+                name="avatar"
+                
+                onChange={handleFileChange}
                 required
+                
               />
             </div>
+           
 
             <div className="mt-6 w-full">
               <label className="block text-sm font-medium leading-5 text-gray-700">
                 Upload Credential
               </label>
               <small className="text-red-500 block">
-                *Please upload both two pictures of both sides of your
-                Credential.
+                *Please upload pictures of your Credential.
               </small>
-              <ImageUploader
-                onUpload={handleCredentialUpload}
-                maxFiles={2}
+              <input
+                type="file"
+                name="credentialFile"
+                
+                onChange={handleFileChange}
                 required
+                
               />
             </div>
 
@@ -214,32 +204,29 @@ const RegisterTutor = () => {
               <small className="text-red-500 block">
                 You can upload up to 4 degrees.
               </small>
-              <ImageUploader onUpload={handleDegreeUpload} maxFiles={4} />
-            </div>
-
-            <div className="mt-6 w-full">
-              <Textarea
-                label="List of subjects"
-                name="listOfSubjects"
-                onChange={handleChange}
-                required
-                placeholder="List of subjects which you want to teach"
-                className="custom-placeholder"
+              <input
+                type="file"
+                name="degreeFile"
+                
+                onChange={handleFileChange}
+                
               />
             </div>
 
+            
             <div className="mt-6 w-full">
               <Textarea
                 label="Description"
                 name="description"
+                value={formData.description}
                 onChange={handleChange}
                 required
-                placeholder="Give some more information about your backgroud and advantages "
+                placeholder="Give some more information about your background and advantages "
                 className="custom-placeholder"
               />
             </div>
 
-            <Password onChange={handleChange} required />
+            <Password value={formData.password} onChange={handleChange} />
 
             <div className="mt-6">
               <span className="block w-full rounded-md shadow-sm">
