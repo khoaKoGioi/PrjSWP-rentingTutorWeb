@@ -9,8 +9,10 @@ import ClassList from './views/ClassList'
 import ClassDetail from './views/ClassDetail'
 import UserProfile from './views/UserProfile'
 import ViewTutorProfile from './views/ViewTutorProfile'
-
 import AuthGuard from './auth/AuthGuard'
+import ClassManagement from './views/ClassManagement'
+import AdminPortal from './views/AdminPortal'
+import ClassListManagement from './views/ClassListManagement'
 
 const App = () => {
   // const getUsers = () => {
@@ -35,10 +37,13 @@ const App = () => {
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<RegisterStudent />} />
-          <Route path='/registerTutor' element={<RegisterTutor />} />
-          <Route path='/ClassList' element={<ClassList />} />
-          <Route path='/card/:id' element={<ClassDetail />} />
+          <Route path='/register-student' element={<RegisterStudent />} />
+          <Route path='/register-tutor' element={<RegisterTutor />} />
+          <Route path='/Classlist' element={<ClassList />} />
+          <Route path='/classDetail/:id' element={<ClassDetail />} />
+          <Route path='/manage-classes' element={<ClassManagement />} />
+          <Route path='/admin-portal' element={<AdminPortal />} />
+          <Route path='/admin-classlist' element={<ClassListManagement />} />
           {/* Protected routes */}
 
           <Route
