@@ -17,12 +17,13 @@ const ClassList = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await fetch('https://6676c5c6145714a1bd72bec9.mockapi.io/swp/class')
+        // const response = await fetch('https://6676c5c6145714a1bd72bec9.mockapi.io/swp/class')
+        const response = await fetch('http://localhost:5000/api/admin/classList')
         if (!response.ok) {
           throw new Error('Failed to fetch data')
         }
         const result = await response.json()
-        setData(result)
+        setData(result.data)
       } catch (error) {
         setError(error.message)
       }
@@ -127,19 +128,19 @@ const ClassList = () => {
         <main className='w-3/4 px-7'>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20'>
             {currentData.map((item) => (
-              <Link to={`/classDetail/${item.id}`} key={item.id} state={item}>
+              <Link to={`/classDetail/${item.classID}`} key={item.classID} state={item}>
                 <Card className='group relative overflow-hidden hover:opacity-75'>
                   <img
                     src={`https://img.youtube.com/vi/${item.videoLink.split('v=')[1]}/0.jpg`}
-                    alt={item.title}
+                    alt={item.className}
                     className='object-cover'
                   />
                   <CardBody className='py-4'>
                     <Typography variant='h5' className='font-bold'>
-                      {item.title}
+                      {item.className}
                     </Typography>
                     <Typography variant='body2' className='mt-2'>
-                      Tutor: {item.tutor}
+                      Tutor: {item.tutorFullName}
                     </Typography>
                     <Typography variant='body2' className='mt-2'>
                       Price: ${item.price}
