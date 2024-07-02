@@ -29,8 +29,6 @@ const Login = () => {
     setErrorMessage('') // Reset error message
     try {
       await login(formData.email, formData.password, formData.rememberMe) // Use login function from AuthContext
-      //console.log(serverLogin)
-      await serverLogin(formData)
       navigate('/') // Redirect after successful login
     } catch (error) {
       setErrorMessage(error.message || 'Invalid email or password') // Set error message
