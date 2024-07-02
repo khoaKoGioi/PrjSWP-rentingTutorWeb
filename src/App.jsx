@@ -13,6 +13,7 @@ import AuthGuard from './auth/AuthGuard'
 import ClassManagement from './views/ClassManagement'
 import AdminPortal from './views/AdminPortal'
 import ClassListManagement from './views/ClassListManagement'
+import FeedbackManagement from './views/feedbackManagement'
 
 const App = () => {
   // const getUsers = () => {
@@ -44,6 +45,7 @@ const App = () => {
           <Route path='/manage-classes' element={<ClassManagement />} />
           <Route path='/admin-portal' element={<AdminPortal />} />
           <Route path='/admin-classlist' element={<ClassListManagement />} />
+          <Route path='/admin-feedback' element={<FeedbackManagement />} />
           {/* Protected routes */}
 
           <Route

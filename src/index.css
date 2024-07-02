@@ -1,8 +1,87 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 :root {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
+/*
+const otherClasses = [
+    {
+      id: 1,
+      imageLink: 'class1.jpg',
+      name: 'Class 1',
+      description: 'Description of Class 1'
+    },
+    {
+      id: 2,
+      imageLink: 'class2.jpg',
+      name: 'Class 2',
+      description: 'Description of Class 2'
+    },
+    {
+      id: 3,
+      imageLink: 'class3.jpg',
+      name: 'Class 3',
+      description: 'Description of Class 3'
+    }
+    // Add more classes here...
+  ]
+*/
+/*
+<div className='w-full md:w-1/4 pb-4'>
+          <Card className='shadow-lg h-full flex flex-col'>
+            <CardBody className='flex flex-col items-center p-6 flex-grow'>
+              <CircularImg avatar={tutor.avatar} />
+              <Typography variant='h5' className='mb-2'>
+                {tutor.name}
+              </Typography>
+              <Typography variant='body1' className='text-center'>
+                {tutor.description}
+              </Typography>
+              <Typography variant='body2' className='mt-4'>
+                <strong>Rating:</strong> {tutor.rating}
+              </Typography>
+              <Typography variant='body2'>
+                <strong>Subjects:</strong> {tutor.subjects}
+              </Typography>
+
+              <NavLink
+                to='/tutor-profile'
+                className='w-50 bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 transition duration-300'
+              >
+                Request now
+              </NavLink>
+
+              <Typography className='p-5' variant='h5'>
+                More classes with {tutor.name}
+              </Typography>
+
+              <Card className='shadow-lg w-full max-h-80 overflow-y-auto'>
+                <CardBody>
+                  {otherClasses.map((otherClass) => (
+                    <Card key={otherClass.id} className='flex mb-4'>
+                      <div className='flex-none w-32'>
+                        <img
+                          src={otherClass.imageLink}
+                          alt={otherClass.name}
+                          className='w-full h-24 object-cover rounded-lg'
+                        />
+                      </div>
+                      <div className='flex-grow p-4'>
+                        <Typography variant='h5' className='mb-2'>
+                          {otherClass.name}
+                        </Typography>
+                        <Typography variant='body1' className='mb-2'>
+                          {otherClass.description}
+                        </Typography>
+                      </div>
+                    </Card>
+                  ))}
+                </CardBody>
+              </Card>
+            </CardBody>
+          </Card>
+        </div>
+*/
