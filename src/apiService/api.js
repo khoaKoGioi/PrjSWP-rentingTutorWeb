@@ -2,7 +2,7 @@
 
 import axios from 'axios'
 
-const API_URL = 'https://e59e-171-233-29-47.ngrok-free.app/api' // Replace with your backend API base URL
+const API_URL = 'http://localhost:5000/api' // Replace with your backend API base URL
 
 export const loginUser = async (email, password) => {
   try {

@@ -1,9 +1,7 @@
 // AuthContext.js
 
-
-import React, { createContext, useEffect, useReducer } from "react";
-import { loginUser, registerStudent, registerTutor, fetchUserProfile } from "../apiService/api";
-
+import React, { createContext, useEffect, useReducer } from 'react'
+import { loginUser, registerStudent, registerTutor, fetchUserProfile } from '../apiService/api'
 
 const initialState = {
   user: null,
@@ -27,16 +25,15 @@ const reducer = (state, action) => {
       return { ...state, isAuthenticated: false, user: null }
     }
 
-    case "REGISTER_STUDENT": {
-      const { token, user } = action.payload;
-      localStorage.setItem("token", token); // Store token in localStorage
-      return { ...state, isAuthenticated: true, user };
+    case 'REGISTER_STUDENT': {
+      const { token, user } = action.payload
+      localStorage.setItem('token', token) // Store token in localStorage
+      return { ...state, isAuthenticated: true, user }
     }
-    case "REGISTER_TUTOR": {
-      const { token, user } = action.payload;
-      localStorage.setItem("token", token); // Store token in localStorage
-      return { ...state, isAuthenticated: true, user };
-
+    case 'REGISTER_TUTOR': {
+      const { token, user } = action.payload
+      localStorage.setItem('token', token) // Store token in localStorage
+      return { ...state, isAuthenticated: true, user }
     }
     default:
       return state
@@ -47,14 +44,11 @@ export const AuthContext = createContext({
   ...initialState,
   method: 'BackendAPI', // Indicate the storage method in the context
   login: () => {},
-  serverLogin: () => {},
   logout: () => {},
 
   registerStudent: () => {},
-  registerTutor: () => {},
-  
-});
-
+  registerTutor: () => {}
+})
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -74,43 +68,9 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const serverLogin = async (formData) => {
-    const res = await axios.post(`http://localhost:3000/users/login`, formData)
-    console.log(res.data)
-    return res.data
-  }
-  // const config = {
-  //   method: 'post',
-  //   url: '/login', // endpoint without baseURL
-  //   baseURL: 'http://localhost:3000/users', // base URL for your API
-  //   headers: { 'Content-Type': 'application/json' }
-  // }
-
-  // try {
-  //   console.log('response')
-
-  //   // Corrected payload (password instead of passsword)
-  //   const response = await axios(config, formData)
-
-  //   console.log(response)
-  //   const { user } = response.data
-  //   console.log(user)
-
-  //   const result = await dispatch({ type: 'LOGIN', payload: { user } })
-
-  //   if (rememberMe) {
-  //     localStorage.setItem('rememberMe', 'true')
-  //   } else {
-  //     localStorage.removeItem('rememberMe')
-  //   }
-  // } catch (error) {
-  //   throw new Error(error.response && error.response.data ? error.response.data.message : 'Login failed')
-  // }
-
   const register = async (userType, formData) => {
     try {
-
-      let response;
+      let response
       if (userType === 'student') {
         response = await registerStudent(
           formData.email,
@@ -123,11 +83,10 @@ export const AuthProvider = ({ children }) => {
           formData.address,
 
           formData.grade,
-          formData.school,
-       );
-        console.log("Registration Response:", response);
-        dispatch({ type: "REGISTER_STUDENT", payload: response });
-
+          formData.school
+        )
+        console.log('Registration Response:', response)
+        dispatch({ type: 'REGISTER_STUDENT', payload: response })
       } else if (userType === 'tutor') {
         response = await registerTutor(
           formData.email,
@@ -143,15 +102,13 @@ export const AuthProvider = ({ children }) => {
           formData.credentialFile,
           formData.degreeFile,
           formData.description
-
-        );
-        console.log("Registration Response:", response);
-        dispatch({ type: "REGISTER_TUTOR", payload: response });
+        )
+        console.log('Registration Response:', response)
+        dispatch({ type: 'REGISTER_TUTOR', payload: response })
       }
 
-      localStorage.setItem("rememberMe", "true");
-      return response; // Return the response from the API call if needed
-
+      localStorage.setItem('rememberMe', 'true')
+      return response // Return the response from the API call if needed
     } catch (error) {
       throw new Error(error.response ? error.response.data.message : 'Registration failed')
     }
@@ -186,17 +143,15 @@ export const AuthProvider = ({ children }) => {
   if (!state.isInitialized) return <div>Loading...</div>
 
   return (
-
     <AuthContext.Provider
       value={{
         ...state,
-        method: "BackendAPI",
+        method: 'BackendAPI',
         login,
         logout,
         register
       }}
     >
-
       {children}
     </AuthContext.Provider>
   )

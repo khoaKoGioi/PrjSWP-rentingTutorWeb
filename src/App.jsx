@@ -16,22 +16,6 @@ import ClassListManagement from './views/ClassListManagement'
 import FeedbackManagement from './views/feedbackManagement'
 
 const App = () => {
-  // const getUsers = () => {
-  //   fetch('/data/getUsers')
-  //     .then((res) => {
-  //       if (!res.ok) {
-  //         throw new Error(`HTTP error! status: ${res.status}`)
-  //       }
-  //       return res.json()
-  //     })
-  //     .then((json) => console.log(json))
-  //     .catch((error) => console.error('Error fetching users:', error))
-  // }
-
-  // useEffect(() => {
-  //   getUsers()
-  // }, [])
-
   return (
     <AuthProvider>
       <Router>
