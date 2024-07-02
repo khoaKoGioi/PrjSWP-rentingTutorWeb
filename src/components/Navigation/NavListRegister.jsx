@@ -16,13 +16,13 @@ const navListMenuItems = [
     title: "As Student",
     description: "Become a student member of our website.",
     icon: UserGroupIcon,
-    path: "/register",
+    path: "/register-student",
   },
   {
     title: "As Tutor",
     description: "Become a tutor guiding our students",
     icon: AcademicCapIcon,
-    path: "/registerTutor",
+    path: "/register-tutor",
   },
 ];
 function NavListRegister() {
