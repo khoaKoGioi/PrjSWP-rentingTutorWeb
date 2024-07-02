@@ -55,8 +55,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password, rememberMe) => {
     try {
-      const { token, user, student } = await loginUser(email, password)
-      dispatch({ type: 'LOGIN', payload: { token, user, student } })
+      const { token, user } = await loginUser(email, password)
+      dispatch({ type: 'LOGIN', payload: { token, user } })
 
       if (rememberMe) {
         localStorage.setItem('rememberMe', 'true')
@@ -67,39 +67,6 @@ export const AuthProvider = ({ children }) => {
       throw new Error(error.response ? error.response.data.message : 'Login failed')
     }
   }
-
-  const serverLogin = async (formData) => {
-    const res = await axios.post(`http://localhost:3000/users/login`, formData)
-    console.log(res.data)
-    return res.data
-  }
-  // const config = {
-  //   method: 'post',
-  //   url: '/login', // endpoint without baseURL
-  //   baseURL: 'http://localhost:3000/users', // base URL for your API
-  //   headers: { 'Content-Type': 'application/json' }
-  // }
-
-  // try {
-  //   console.log('response')
-
-  //   // Corrected payload (password instead of passsword)
-  //   const response = await axios(config, formData)
-
-  //   console.log(response)
-  //   const { user } = response.data
-  //   console.log(user)
-
-  //   const result = await dispatch({ type: 'LOGIN', payload: { user } })
-
-  //   if (rememberMe) {
-  //     localStorage.setItem('rememberMe', 'true')
-  //   } else {
-  //     localStorage.removeItem('rememberMe')
-  //   }
-  // } catch (error) {
-  //   throw new Error(error.response && error.response.data ? error.response.data.message : 'Login failed')
-  // }
 
   const register = async (userType, formData) => {
     try {
