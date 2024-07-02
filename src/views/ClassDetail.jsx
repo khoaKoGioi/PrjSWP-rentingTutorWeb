@@ -1,23 +1,85 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation, NavLink } from 'react-router-dom'
-import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
-import { Typography, Card, CardBody, Button } from '@material-tailwind/react'
-import BreadcrumbsWithIcon from '../components/BreadCrumb.jsx'
+import { useLocation } from 'react-router-dom'
+import axios from 'axios'
+import { Button, Card, CardBody, Typography } from '@material-tailwind/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faTimes } from '@fortawesome/free-solid-svg-icons'
-import RatingWithComment from '../components/Rating.jsx'
-import { CircularImg } from '../components/CircularImg.jsx' // Assuming CircularImg is in the same directory
+import { CircularImg } from '../components/CircularImg.jsx'
+import BreadcrumbsWithIcon from '../components/BreadCrumb.jsx'
+import MegaMenuWithHover from '../components/MegaMenuWithHover.jsx'
 
 const ClassDetail = () => {
   const location = useLocation()
-  const { id, imageLink, title, description, tutor, lectures, price, videoLink } = location.state
-
-  // Tutor information using useState
+  const { id, title, description, tutor, lectures, price, videoLink } = location.state
   const [showVideo, setShowVideo] = useState(false)
+  const [isEnrolled, setIsEnrolled] = useState(false)
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false)
+  const [feedbackMessage, setFeedbackMessage] = useState('')
+  const [feedbacks, setFeedbacks] = useState([])
 
   useEffect(() => {
-    // Fetch additional data if needed
+    fetchFeedbacks()
+    checkEnrollmentStatus()
   }, [])
+
+  const fetchFeedbacks = async () => {
+    try {
+      const response = await axios.get(`https://6676c5c6145714a1bd72bec9.mockapi.io/swp/feedbacks?classId=${id}`)
+      setFeedbacks(response.data)
+    } catch (error) {
+      console.error('Error fetching feedbacks:', error)
+    }
+  }
+
+  const checkEnrollmentStatus = async () => {
+    try {
+      const response = await axios.get(`https://6676c5c6145714a1bd72bec9.mockapi.io/swp/class/${id}`)
+      setIsEnrolled(response.data.isEnrolled)
+    } catch (error) {
+      console.error('Error fetching class data:', error)
+    }
+  }
+
+  const handleEnrollNow = async () => {
+    try {
+      await axios.put(`https://6676c5c6145714a1bd72bec9.mockapi.io/swp/class/${id}`, {
+        isEnrolled: true
+      })
+      setIsEnrolled(true)
+    } catch (error) {
+      console.error('Error enrolling in class:', error)
+    }
+  }
+
+  const handleGiveFeedback = () => {
+    setShowFeedbackForm(true)
+  }
+
+  const handleSaveFeedback = async () => {
+    try {
+      const response = await axios.post('https://6676c5c6145714a1bd72bec9.mockapi.io/swp/feedbacks', {
+        classId: id,
+        message: feedbackMessage,
+        studentAvatar: '', // Assuming avatar info can be included if available
+        studentName: '', // Assuming student name can be included if available
+        date: new Date().toISOString(),
+        isEnrolled: true // Automatically set isEnrolled to true for enrolled students
+      })
+      setFeedbacks([...feedbacks, response.data])
+      setFeedbackMessage('')
+      setShowFeedbackForm(false)
+    } catch (error) {
+      console.error('Error saving feedback:', error)
+    }
+  }
+
+  const handleCloseFeedbackForm = () => {
+    setShowFeedbackForm(false)
+  }
+
+  const handleCloseVideo = () => {
+    setShowVideo(false)
+  }
 
   const getYoutubeThumbnail = (url) => {
     if (!url) {
@@ -36,37 +98,6 @@ const ClassDetail = () => {
     return `https://img.youtube.com/vi/${videoId}/0.jpg`
   }
 
-  const handleVideoClick = () => {
-    setShowVideo(true)
-  }
-
-  const handleCloseVideo = () => {
-    setShowVideo(false)
-  }
-
-  // Dummy data for other classes
-  const otherClasses = [
-    {
-      id: 1,
-      imageLink: 'class1.jpg',
-      name: 'Class 1',
-      description: 'Description of Class 1'
-    },
-    {
-      id: 2,
-      imageLink: 'class2.jpg',
-      name: 'Class 2',
-      description: 'Description of Class 2'
-    },
-    {
-      id: 3,
-      imageLink: 'class3.jpg',
-      name: 'Class 3',
-      description: 'Description of Class 3'
-    }
-    // Add more classes here...
-  ]
-
   return (
     <div className='min-h-screen bg-gray-100 p-4'>
       <header>
@@ -84,7 +115,7 @@ const ClassDetail = () => {
           <Card className='shadow-lg w-full'>
             <CardBody className='flex flex-col md:flex-row items-start md:items-center gap-5 p-6'>
               <div className='w-full md:w-1/2'>
-                <div className='relative cursor-pointer' onClick={handleVideoClick}>
+                <div className='relative cursor-pointer' onClick={() => setShowVideo(true)}>
                   <img
                     src={getYoutubeThumbnail(videoLink)}
                     alt='Video Thumbnail'
@@ -120,78 +151,60 @@ const ClassDetail = () => {
                 <Typography variant='body2' className='mb-2'>
                   <strong>Price:</strong> ${price}
                 </Typography>
-                <Button className='w-50'>Enroll now</Button>
+                <div className='flex gap-4'>
+                  <Button className='w-50' onClick={handleEnrollNow} disabled={isEnrolled || showFeedbackForm}>
+                    {isEnrolled ? 'Enrolled' : 'Enroll now'}
+                  </Button>
+                  {isEnrolled && (
+                    <Button className='w-50' onClick={showFeedbackForm ? handleCloseFeedbackForm : handleGiveFeedback}>
+                      {showFeedbackForm ? 'Close' : 'Give feedback'}
+                    </Button>
+                  )}
+                </div>
               </div>
             </CardBody>
           </Card>
 
-          <Card className='shadow-lg w-full'>
+          {showFeedbackForm && (
+            <Card className='shadow-lg w-full mt-4'>
+              <CardBody>
+                <textarea
+                  className='border border-gray-300 rounded-md p-2 w-full mb-2'
+                  placeholder='Write your feedback...'
+                  value={feedbackMessage}
+                  onChange={(e) => setFeedbackMessage(e.target.value)}
+                />
+                <Button onClick={handleSaveFeedback} className='ml-2'>
+                  Save
+                </Button>
+              </CardBody>
+            </Card>
+          )}
+
+          <Card className='shadow-lg w-full mt-4'>
             <CardBody>
               <Typography variant='h3' className='mb-2'>
                 All reviews
               </Typography>
-              <RatingWithComment />
-            </CardBody>
-          </Card>
-        </div>
-
-        <div className='w-full md:w-1/4 pb-4'>
-          <Card className='shadow-lg h-full flex flex-col'>
-            <CardBody className='flex flex-col items-center p-6 flex-grow'>
-              <CircularImg avatar={tutor.avatar} />
-              <Typography variant='h5' className='mb-2'>
-                {tutor.name}
-              </Typography>
-              <Typography variant='body1' className='text-center'>
-                {tutor.description}
-              </Typography>
-              <Typography variant='body2' className='mt-4'>
-                <strong>Rating:</strong> {tutor.rating}
-              </Typography>
-              <Typography variant='body2'>
-                <strong>Subjects:</strong> {tutor.subjects}
-              </Typography>
-
-              <NavLink
-                to='/tutor-profile'
-                className='w-50 bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 transition duration-300'
-              >
-                Request now
-              </NavLink>
-
-              <Typography className='p-5' variant='h5'>
-                More classes with {tutor.name}
-              </Typography>
-
-              <Card className='shadow-lg w-full max-h-80 overflow-y-auto'>
-                <CardBody>
-                  {otherClasses.map((otherClass) => (
-                    <Card key={otherClass.id} className='flex mb-4'>
-                      <div className='flex-none w-32'>
-                        <img
-                          src={otherClass.imageLink}
-                          alt={otherClass.name}
-                          className='w-full h-24 object-cover rounded-lg'
-                        />
-                      </div>
-                      <div className='flex-grow p-4'>
-                        <Typography variant='h5' className='mb-2'>
-                          {otherClass.name}
-                        </Typography>
-                        <Typography variant='body1' className='mb-2'>
-                          {otherClass.description}
-                        </Typography>
-                      </div>
-                    </Card>
-                  ))}
-                </CardBody>
-              </Card>
+              {feedbacks.map((feedback, index) => (
+                <Card key={index} className='p-3 mb-3'>
+                  <div className='flex items-center mb-2'>
+                    <CircularImg avatar={feedback.studentAvatar} />
+                    <div className='ml-2'>
+                      <Typography variant='body1'>{feedback.studentName}</Typography>
+                      <Typography variant='body2' className='text-gray-500'>
+                        {new Date(feedback.date).toLocaleDateString()}
+                      </Typography>
+                    </div>
+                  </div>
+                  <Typography variant='body1'>{feedback.message}</Typography>
+                </Card>
+              ))}
             </CardBody>
           </Card>
         </div>
       </div>
 
-      {/* Video Popup */}
       {showVideo && (
         <div className='fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center'>
           <div className='relative w-full h-full max-w-screen-lg'>

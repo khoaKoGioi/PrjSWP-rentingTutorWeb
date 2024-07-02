@@ -13,6 +13,7 @@ import AuthGuard from './auth/AuthGuard'
 import ClassManagement from './views/ClassManagement'
 import AdminPortal from './views/AdminPortal'
 import ClassListManagement from './views/ClassListManagement'
+import FeedbackManagement from './views/feedbackManagement'
 
 const App = () => {
   return (
@@ -21,13 +22,14 @@ const App = () => {
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/login' element={<Login />} />
-          <Route path='/register-student' element={<RegisterStudent />} />
-          <Route path='/register-tutor' element={<RegisterTutor />} />
+          <Route path='/register' element={<RegisterStudent />} />
+          <Route path='/registerTutor' element={<RegisterTutor />} />
           <Route path='/Classlist' element={<ClassList />} />
           <Route path='/classDetail/:id' element={<ClassDetail />} />
           <Route path='/manage-classes' element={<ClassManagement />} />
           <Route path='/admin-portal' element={<AdminPortal />} />
           <Route path='/admin-classlist' element={<ClassListManagement />} />
+          <Route path='/admin-feedback' element={<FeedbackManagement />} />
           {/* Protected routes */}
 
           <Route
