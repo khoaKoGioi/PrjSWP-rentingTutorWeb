@@ -18,7 +18,7 @@ const ClassList = () => {
     const fetchClasses = async () => {
       try {
         // const response = await fetch('https://6676c5c6145714a1bd72bec9.mockapi.io/swp/class')
-        const response = await fetch('http://localhost:5000/api/admin/classList')
+        const response = await fetch('http://localhost:5000/api/users/getAllClass')
         if (!response.ok) {
           throw new Error('Failed to fetch data')
         }
