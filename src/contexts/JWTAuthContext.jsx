@@ -18,6 +18,7 @@ const reducer = (state, action) => {
     case 'LOGIN': {
       const { token, user } = action.payload
       localStorage.setItem('token', token) // Store token in localStorage
+      localStorage.setItem('role', user.role)
       return { ...state, isAuthenticated: true, user }
     }
     case 'LOGOUT': {

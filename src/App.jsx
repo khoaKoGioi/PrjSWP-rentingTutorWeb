@@ -41,7 +41,7 @@ const App = () => {
             }
           />
           <Route
-            path='/tutor-profile'
+            path='/tutor-profile/:id'
             element={
               <AuthGuard>
                 <ViewTutorProfile />
