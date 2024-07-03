@@ -178,7 +178,7 @@ const ClassDetail = () => {
 
       <div className='container mx-auto pl-4 flex flex-col md:flex-row gap-8'>
         <div className='w-full md:w-3/4 mb-4 flex flex-col pt-16'>
-          <BreadcrumbsWithIcon pathnames={['Home', 'ClassList', `ClassDetail ${classData.classID}`]} />
+          <BreadcrumbsWithIcon pathnames={['Home', 'ClassList', `Class ${classData.classID}`]} />
         </div>
       </div>
 
@@ -209,7 +209,7 @@ const ClassDetail = () => {
                   {classData.description}
                 </Typography>
                 <Typography variant='body2' className='mb-2'>
-                  <Link href={`/tutor-profile/${classData.userID}`} className='block'>
+                  <Link to={`/tutor-profile/${classData.userID}`} className='block'>
                     <strong>Tutor:</strong> {classData.tutorFullName}
                   </Link>
                 </Typography>
