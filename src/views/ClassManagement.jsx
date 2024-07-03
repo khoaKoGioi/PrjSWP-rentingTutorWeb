@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
+import AuthContext from '../contexts/JWTAuthContext' // Import AuthContext
 
 const apiBaseUrl = 'http://localhost:5000/api/tutors'
 
 const ClassManagement = () => {
   const token = localStorage.getItem('token')
+  const role = localStorage.getItem('role')
   const [classes, setClasses] = useState([])
   const [formData, setFormData] = useState({
     videoLink: '',
@@ -26,12 +28,12 @@ const ClassManagement = () => {
   const [currentClassId, setCurrentClassId] = useState(null)
 
   useEffect(() => {
-    if (token) {
+    if (token && role == 'Tutor') {
       fetchClasses()
     }
-  }, [token])
+  }, [token, role])
 
-  if (!token) {
+  if (!token || !role || role == 'Student') {
     return (
       <div className='flex items-center justify-center min-h-screen'>
         <MegaMenuWithHover />
@@ -152,7 +154,6 @@ const ClassManagement = () => {
   }
 
   const handleOpenUpdateModal = (cls) => {
-    console.log(cls)
     setCurrentClassId(cls.classID)
     setUpdateFormData({
       videoLink: cls.videoLink,
@@ -203,7 +204,7 @@ const ClassManagement = () => {
         </button>
         <div className='grid grid-cols-1 gap-4'>
           {classes.map((cls) => (
-            <div key={cls.id} className='flex justify-between items-center p-4 border rounded shadow'>
+            <div key={cls.classID} className='flex justify-between items-center p-4 border rounded shadow'>
               <div>
                 <h2 className='text-lg font-bold'>{cls.className}</h2>
                 <p className='text-sm'>Subject: {cls.subject}</p>
