@@ -1,32 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { Button, Card, CardBody, Typography } from '@material-tailwind/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlay, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faPlay, faStar, faStarHalfAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { CircularImg } from '../components/CircularImg.jsx'
 import BreadcrumbsWithIcon from '../components/BreadCrumb.jsx'
 import MegaMenuWithHover from '../components/MegaMenuWithHover.jsx'
 
 const ClassDetail = () => {
-  const location = useLocation()
-  const {
-    classID,
-    className,
-    subject,
-    length,
-    type,
-    studentID,
-    description,
-    tutorID,
-    tutorFullName,
-    rating,
-    price,
-    videoLink,
-    available
-  } = location.state || {}
+  const { id } = useParams()
   const [showVideo, setShowVideo] = useState(false)
+  const [classData, setClassData] = useState([])
   const [isEnrolled, setIsEnrolled] = useState(false)
   const [showFeedbackForm, setShowFeedbackForm] = useState(false)
   const [feedbackMessage, setFeedbackMessage] = useState('')
@@ -34,15 +20,29 @@ const ClassDetail = () => {
   const [enrollError, setEnrollError] = useState('')
 
   useEffect(() => {
-    if (classID) {
-      fetchFeedbacks()
-      checkEnrollmentStatus()
+    const fetchClass = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/users/getClass/${id}`)
+        const classDetails = response.data.data // Assuming API response contains all required fields
+        setClassData(classDetails)
+      } catch (error) {
+        console.log(error)
+      }
     }
-  }, [classID])
+
+    fetchClass()
+  }, [])
+
+  useEffect(() => {
+    if (id) {
+      checkEnrollmentStatus()
+      fetchFeedbacks()
+    }
+  }, [id])
 
   const fetchFeedbacks = async () => {
     try {
-      const response = await axios.get(`https://6676c5c6145714a1bd72bec9.mockapi.io/swp/feedbacks?classId=${id}`)
+      const response = await axios.get(`https://6676c5c6145714a1bd72bec9.mockapi.io/swp/feedbacks?classId=`)
       setFeedbacks(response.data)
     } catch (error) {
       console.error('Error fetching feedbacks:', error)
@@ -51,18 +51,21 @@ const ClassDetail = () => {
 
   const checkEnrollmentStatus = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/students/checkEnroll/${classID}`)
+      const response = await axios.get(`http://localhost:5000/api/students/checkEnroll/${id}`)
       const token = localStorage.getItem('token')
       if (!token) {
         console.error('User is not logged in')
         return
       }
       const decodedToken = jwtDecode(token)
-      const studentID = decodedToken.user.studentID
-      if (studentID == response.data.studentID) {
-        setIsEnrolled(response.data.status)
-      } else {
-        setIsEnrolled(false)
+      if (decodedToken.user.role == 'Student') {
+        const studentID = decodedToken.user.studentID
+        if (studentID == response.data.studentID) {
+          setIsEnrolled(response.data.status)
+        } else {
+          setIsEnrolled(false)
+        }
+        setEnrollError('')
       }
     } catch (error) {
       console.error('Error fetching class data:', error)
@@ -73,16 +76,27 @@ const ClassDetail = () => {
     try {
       const token = localStorage.getItem('token')
       if (!token) {
-        console.error('User is not logged in')
+        setEnrollError('User is not logged in')
         return
       }
       const decodedToken = jwtDecode(token)
-      const studentID = decodedToken.user.studentID
-      await axios.post(`http://localhost:5000/api/students/enrollClass/${classID}`, {
-        studentID
-      })
-      setIsEnrolled(true)
-      setEnrollError('')
+      if (decodedToken.user.role == 'Student') {
+        const studentID = decodedToken.user.studentID
+        await axios.post(`http://localhost:5000/api/students/enrollClass/${classData.classID}`, {
+          studentID
+        })
+        setIsEnrolled(true)
+        setEnrollError('')
+      } else if (decodedToken.user.role == 'Tutor') {
+        const tutorId = decodedToken.user.tutorID
+        if (tutorId == classData.tutorID) {
+          setEnrollError('You are the tutor of this class!')
+        } else {
+          setEnrollError('You are not a student!')
+        }
+      } else {
+        setEnrollError('User is not a student')
+      }
     } catch (error) {
       console.error('Error enrolling in class:', error)
       setEnrollError(error.response.data.message || 'Failed to enroll in class. Please try again.')
@@ -136,7 +150,23 @@ const ClassDetail = () => {
     return `https://img.youtube.com/vi/${videoId}/0.jpg`
   }
 
-  if (!classID) {
+  const renderStars = (rating) => {
+    const stars = []
+    const fullStars = Math.floor(rating)
+    const hasHalfStar = rating % 1 !== 0
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<FontAwesomeIcon key={i} icon={faStar} className='text-yellow-400' />)
+    }
+
+    if (hasHalfStar) {
+      stars.push(<FontAwesomeIcon key='half' icon={faStarHalfAlt} className='text-yellow-400' />)
+    }
+
+    return stars
+  }
+
+  if (!id) {
     return <div>Loading...</div> // Render a loading state or redirect if classID is not available
   }
 
@@ -148,7 +178,7 @@ const ClassDetail = () => {
 
       <div className='container mx-auto pl-4 flex flex-col md:flex-row gap-8'>
         <div className='w-full md:w-3/4 mb-4 flex flex-col pt-16'>
-          <BreadcrumbsWithIcon pathnames={['Home', 'ClassList', `ClassDetail ${classID}`]} />
+          <BreadcrumbsWithIcon pathnames={['Home', 'ClassList', `ClassDetail ${classData.classID}`]} />
         </div>
       </div>
 
@@ -159,7 +189,7 @@ const ClassDetail = () => {
               <div className='w-full md:w-1/2'>
                 <div className='relative cursor-pointer' onClick={() => setShowVideo(true)}>
                   <img
-                    src={getYoutubeThumbnail(videoLink)}
+                    src={getYoutubeThumbnail(classData.videoLink)}
                     alt='Video Thumbnail'
                     className='w-full h-auto rounded-lg'
                   />
@@ -173,31 +203,33 @@ const ClassDetail = () => {
               </div>
               <div className='w-full md:w-1/2'>
                 <Typography variant='h4' className='mb-4'>
-                  {className}
+                  {classData.className}
                 </Typography>
                 <Typography variant='body1' className='mb-4' style={{ wordWrap: 'break-word' }}>
-                  {description}
+                  {classData.description}
                 </Typography>
                 <Typography variant='body2' className='mb-2'>
-                  <strong>Tutor:</strong> {tutorFullName}
+                  <Link href={`/tutor-profile/${classData.userID}`} className='block'>
+                    <strong>Tutor:</strong> {classData.tutorFullName}
+                  </Link>
                 </Typography>
                 <Typography variant='body2' className='mb-2'>
-                  <strong>Subject:</strong> {subject}
+                  <strong>Subject:</strong> {classData.subject}
                 </Typography>
                 <Typography variant='body2' className='mb-2'>
-                  <strong>Rating of tutor:</strong> {rating}
+                  <strong>Rating of tutor:</strong> {renderStars(classData.rating)}
                 </Typography>
                 <Typography variant='body2' className='mb-2'>
-                  <strong>Last for:</strong> {length}
+                  <strong>Last for:</strong> {classData.length}
                 </Typography>
                 <Typography variant='body2' className='mb-2'>
-                  <strong>Available:</strong> {available}
+                  <strong>Available:</strong> {classData.available}
                 </Typography>
                 <Typography variant='body2' className='mb-2'>
-                  <strong>Type:</strong> {type}
+                  <strong>Type:</strong> {classData.type}
                 </Typography>
                 <Typography variant='body2' className='mb-2'>
-                  <strong>Price:</strong> ${price}
+                  <strong>Price:</strong> ${classData.price}
                 </Typography>
                 <div className='flex gap-4'>
                   <Button className='w-50' onClick={handleEnrollNow} disabled={isEnrolled || showFeedbackForm}>
@@ -268,7 +300,7 @@ const ClassDetail = () => {
               className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
               width='560'
               height='315'
-              src={`https://www.youtube.com/embed/${videoLink.split('v=')[1]}`}
+              src={`https://www.youtube.com/embed/${classData.videoLink.split('v=')[1]}`}
               title='YouTube Video Player'
               allowFullScreen
             ></iframe>

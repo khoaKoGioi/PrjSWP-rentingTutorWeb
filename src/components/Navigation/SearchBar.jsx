@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Input, Button } from '@material-tailwind/react'
+import axios from 'axios'
 
 const SearchBar = () => {
   const [query, setQuery] = useState('')
@@ -15,16 +16,13 @@ const SearchBar = () => {
 
   const fetchSuggestions = async (searchQuery) => {
     try {
-      const tutorResponse = await fetch('https://6676c5c6145714a1bd72bec9.mockapi.io/swp/tutor')
-      const classResponse = await fetch('https://6676c5c6145714a1bd72bec9.mockapi.io/swp/class')
-      const tutors = await tutorResponse.json()
-      const classes = await classResponse.json()
+      const tutorResponse = await axios.get(`http://localhost:5000/api/students/searchTutorByTutorName/${searchQuery}`)
+      const classResponse = await axios.get(`http://localhost:5000/api/students/searchClassByTutorName/${searchQuery}`)
 
-      const tutorSuggestions = tutors.filter((tutor) => tutor.name.toLowerCase().includes(searchQuery.toLowerCase()))
+      const tutorSuggestions = tutorResponse.data.data
+      const classSuggestions = classResponse.data.data
 
-      const classSuggestions = classes.filter((cls) => cls.title.toLowerCase().includes(searchQuery.toLowerCase()))
-
-      setSuggestions([...tutorSuggestions, ...classSuggestions])
+      setSuggestions([...classSuggestions, ...tutorSuggestions])
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -63,7 +61,15 @@ const SearchBar = () => {
         <ul className='absolute z-10 w-full mt-12 bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-y-auto'>
           {suggestions.map((suggestion, index) => (
             <li key={index} className='px-4 py-2 cursor-pointer hover:bg-gray-100 text-black'>
-              {suggestion.name || suggestion.title}
+              {suggestion.className ? (
+                <a href={`/classDetail/${suggestion.classID}`} className='block'>
+                  {suggestion.className}
+                </a>
+              ) : (
+                <a href={`/tutor-profile/${suggestion.userID}`} className='block'>
+                  {suggestion.fullName}
+                </a>
+              )}
             </li>
           ))}
         </ul>
