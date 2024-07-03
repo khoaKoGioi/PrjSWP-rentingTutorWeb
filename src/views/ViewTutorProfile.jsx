@@ -1,120 +1,128 @@
-import React, { useState } from "react";
-import { MegaMenuWithHover } from "../components/MegaMenuWithHover.jsx";
-import {
-  FaStar,
-  FaUser,
-  FaBook,
-  FaCertificate,
-  FaInfoCircle,
-} from "react-icons/fa";
-import BreadcrumbsWithIcon from "../components/BreadCrumb.jsx"; // Adjust path as per your project structure
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
+import { FaStar, FaUser, FaBook, FaCertificate, FaInfoCircle } from 'react-icons/fa'
+import BreadcrumbsWithIcon from '../components/BreadCrumb.jsx' // Adjust path as per your project structure
+import { useParams } from 'react-router-dom'
+import axios from 'axios'
 
 const ViewTutorProfile = () => {
-  const location = useLocation();
-  const { id } = location.state || {};
+  const { id } = useParams()
+  const [tutor, setTutor] = useState([])
+  const [isRequestOpen, setRequestOpen] = useState(false)
+  const [requestMessage, setRequestMessage] = useState('')
 
-  const [tutor] = useState({
-    avatar:
-      "https://i.pinimg.com/originals/b5/d9/f6/b5d9f6262c408ee0fdd6ce12f2e6e1b9.jpg",
-    name: "Khoa cute",
-    description:
-      "Experienced in English and Math with over 10 years of teaching",
-    subjects: "Math, Science, Physics, Chemistry",
-    certificate: "place for inputting certificate",
-    rating: 4.5,
-  });
+  useEffect(() => {
+    if (id) {
+      fetchTutor()
+    }
+  }, [id])
 
-  const [isRequestOpen, setRequestOpen] = useState(false);
-  const [requestMessage, setRequestMessage] = useState("");
+  const fetchTutor = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/users/getTutor/${id}`)
+      setTutor(response.data.data) // Assuming the API response contains the tutor data in `data` field
+    } catch (error) {
+      console.error('Error fetching tutor data:', error)
+    }
+  }
 
   const handleRequestClick = () => {
-    setRequestOpen(!isRequestOpen);
-  };
+    setRequestOpen(!isRequestOpen)
+  }
 
   const handleRequestChange = (e) => {
-    setRequestMessage(e.target.value);
-  };
+    setRequestMessage(e.target.value)
+  }
 
   const handleSendRequest = () => {
     // Here you would handle the request, e.g., send the request message to a server
-    console.log("Request message sent:", requestMessage);
+    console.log('Request message sent:', requestMessage)
     // Close the request box after sending the message
-    setRequestOpen(false);
-    setRequestMessage("");
-  };
+    setRequestOpen(false)
+    setRequestMessage('')
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <div className="container mx-auto pt-16 ">
+    <div className='min-h-screen bg-gray-100 p-4'>
+      <div className='container mx-auto pt-16 '>
         <header>
           <MegaMenuWithHover />
         </header>
       </div>
-      <div className="container mx-auto pl-4 flex flex-col md:flex-row gap-8">
-        <div className="w-full md:w-3/4 mb-4 flex flex-col">
-       <BreadcrumbsWithIcon  
-        pathnames={["Home", "ClassList", `ClassDetail ${id}`, tutor.name]} // Update pathnames as per your breadcrumb requirements
-        />  
+      <div className='container mx-auto pl-4 flex flex-col md:flex-row gap-8'>
+        <div className='w-full md:w-3/4 mb-4 flex flex-col'>
+          <BreadcrumbsWithIcon
+            pathnames={['Home', 'ClassList', `ClassDetail ${id}`, tutor.fullName]} // Update pathnames as per your breadcrumb requirements
+          />
         </div>
       </div>
-      
-     
-      <div className="flex flex-col items-center p-6 bg-white shadow-lg rounded-lg max-w-2xl mx-auto">
-        <div className="font-extrabold bg-gradient-to-r mb-7 from-orange-500 to-orange-800 bg-clip-text text-transparent text-2xl py-5">
+
+      <div className='flex flex-col items-center p-6 bg-white shadow-lg rounded-lg max-w-2xl mx-auto'>
+        <div className='font-extrabold bg-gradient-to-r mb-7 from-orange-500 to-orange-800 bg-clip-text text-transparent text-2xl py-5'>
           {/*eslint-disable-next-line react/no-unescaped-entities */}
-          {tutor.name}'s Profile
+          {tutor.fullName}'s Profile
         </div>
-        <div className="flex items-center w-full mb-4">
-          <div className="w-32 h-32 flex-shrink-0">
+        <div className='flex items-center w-full mb-4'>
+          <div className='w-32 h-32 flex-shrink-0'>
             <img
-              className="rounded-full w-full h-full object-cover"
-              src={tutor.avatar}
-              alt="Tutor Avatar"
+              className='rounded-full w-full h-full object-cover'
+              src={
+                tutor.avatar
+                  ? tutor.avatar
+                  : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSp5Ubik9ZId9O2iIKuSPD5ZSS6ef7UzZ04UQ&s'
+              }
+              alt='Tutor Avatar'
             />
           </div>
-          <div className="ml-6 flex-1">
-            <div className="mb-4">
-              <h2 className="flex items-center">
-                <FaUser className="mr-2 text-gray-600" /> {tutor.name}
+          <div className='ml-6 flex-1'>
+            <div className='mb-4'>
+              <h2 className='flex items-center'>
+                <FaUser className='mr-2 text-gray-600' /> {tutor.fullName}
               </h2>
             </div>
-            <div className="mb-4 flex items-center">
-              <FaInfoCircle className="mr-2 text-gray-600" />
+            <div className='mb-4 flex items-center'>
+              <FaInfoCircle className='mr-2 text-gray-600' />
               <p>{tutor.description}</p>
             </div>
-            <div className="mb-4 flex items-center">
-              <FaBook className="mr-2 text-gray-600" />
+            <div className='mb-4 flex items-center'>
+              <FaBook className='mr-2 text-gray-600' />
               <p>{tutor.subjects}</p>
             </div>
-            <div className="mb-4 flex items-center">
-              <FaCertificate className="mr-2 text-gray-600" />
-              <p>{tutor.certificate}</p>
+            <div className='mb-4 flex items-center'>
+              <FaCertificate className='mr-2 text-gray-600' />
+              <div className='flex-shrink-0'>
+                <img
+                  src={tutor.degrees}
+                  alt='Tutor Degrees'
+                  className='object-contain max-w-full max-h-32' // Adjust max-h to control the height
+                  style={{ maxWidth: '100%', maxHeight: '8rem' }} // Inline style for more control
+                />
+              </div>
             </div>
-            <div className="mb-4 flex items-center">
-              <FaStar className="mr-2 text-yellow-600" />
-              <p>{tutor.rating} / 5.0</p>
+            <div className='mb-4 flex items-center'>
+              <FaStar className='mr-2 text-yellow-600' />
+              <p>{tutor.rating || 'No rating'} / 5</p>
             </div>
           </div>
         </div>
         <button
           onClick={handleRequestClick}
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 transition duration-300 mb-4"
+          className='w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 transition duration-300 mb-4'
         >
           Send Request
         </button>
         {isRequestOpen && (
-          <div className="w-full">
+          <div className='w-full'>
             <textarea
               value={requestMessage}
               onChange={handleRequestChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 mb-4"
-              rows="3"
-              placeholder="Write your request here..."
+              className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 mb-4'
+              rows='3'
+              placeholder='Write your request here...'
             />
             <button
               onClick={handleSendRequest}
-              className="w-full bg-green-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-green-600 transition duration-300"
+              className='w-full bg-green-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-green-600 transition duration-300'
             >
               Send
             </button>
@@ -122,7 +130,7 @@ const ViewTutorProfile = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ViewTutorProfile;
+export default ViewTutorProfile
