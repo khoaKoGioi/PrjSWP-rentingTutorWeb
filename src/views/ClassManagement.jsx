@@ -21,6 +21,9 @@ const ClassManagement = () => {
     type: ''
   })
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
+  const [updateFormData, setUpdateFormData] = useState(formData)
+  const [currentClassId, setCurrentClassId] = useState(null)
 
   useEffect(() => {
     if (token) {
@@ -69,12 +72,18 @@ const ClassManagement = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-
-    // Convert paymentID to a number if it's not an empty string
     const numericValue = name === 'PaymentID' && value !== '' ? parseInt(value, 10) : value
-
     setFormData({
       ...formData,
+      [name]: numericValue
+    })
+  }
+
+  const handleUpdateChange = (e) => {
+    const { name, value } = e.target
+    const numericValue = name === 'PaymentID' && value !== '' ? parseInt(value, 10) : value
+    setUpdateFormData({
+      ...updateFormData,
       [name]: numericValue
     })
   }
@@ -114,12 +123,33 @@ const ClassManagement = () => {
     }
   }
 
-  const handleUpdateClass = async (id, updatedData) => {
+  const handleOpenUpdateModal = (cls) => {
+    setCurrentClassId(cls.classID)
+    setUpdateFormData({
+      videoLink: cls.videoLink,
+      className: cls.className,
+      tutorID: cls.tutorID,
+      description: cls.description,
+      price: cls.price,
+      subject: cls.subject,
+      PaymentID: cls.PaymentID,
+      length: cls.length,
+      available: cls.available,
+      type: cls.type
+    })
+    setIsUpdateModalOpen(true)
+  }
+
+  const handleUpdateClass = async () => {
     try {
-      const response = await axios.put(`${apiBaseUrl}/updateClasses/${id}`, updatedData)
-      setClasses(classes.map((cls) => (cls.id === id ? response.data : cls)))
+      const response = await axios.post(`${apiBaseUrl}/updateClasses/${currentClassId}`, updateFormData)
+      setClasses(classes.map((cls) => (cls.id === currentClassId ? response.data : cls)))
+      setIsUpdateModalOpen(false)
+      alert('Class updated successfully!')
+      fetchClasses()
     } catch (error) {
       console.error('Error updating class:', error)
+      alert('There was an error updating the class.')
     }
   }
 
@@ -145,7 +175,7 @@ const ClassManagement = () => {
               </div>
               <div>
                 <button
-                  onClick={() => handleUpdateClass(cls.id, formData)}
+                  onClick={() => handleOpenUpdateModal(cls)}
                   className='bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-700 mr-2'
                 >
                   Update
@@ -274,6 +304,123 @@ const ClassManagement = () => {
               </button>
               <button
                 onClick={() => setIsModalOpen(false)}
+                className='bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700'
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        {isUpdateModalOpen && (
+          <div className='fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center'>
+            <div className='bg-white p-8 rounded shadow-lg w-1/2 max-h-[80vh] overflow-y-auto mt-20'>
+              <h2 className='text-xl font-bold mb-4'>Update Class</h2>
+              <div className='mb-4'>
+                <label className='block mb-2'>Video link</label>
+                <input
+                  type='text'
+                  name='videoLink'
+                  value={updateFormData.videoLink}
+                  onChange={handleUpdateChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Class name</label>
+                <input
+                  type='text'
+                  name='className'
+                  value={updateFormData.className}
+                  onChange={handleUpdateChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Subject included</label>
+                <input
+                  type='text'
+                  name='subject'
+                  value={updateFormData.subject}
+                  onChange={handleUpdateChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Description</label>
+                <textarea
+                  name='description'
+                  value={updateFormData.description}
+                  onChange={handleUpdateChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Available on</label>
+                <input
+                  type='text'
+                  name='available'
+                  value={updateFormData.available}
+                  onChange={handleUpdateChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Length</label>
+                <input
+                  type='text'
+                  name='length'
+                  value={updateFormData.length}
+                  onChange={handleUpdateChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Subscription type:</label>
+                <select
+                  name='PaymentID'
+                  value={updateFormData.PaymentID}
+                  onChange={handleUpdateChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                >
+                  <option value={0}>Select subscription type:</option>
+                  <option value={1}>1</option>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                </select>
+              </div>
+
+              <div className='mb-4'>
+                <label className='block mb-2'>Type (Online or Offline)</label>
+                <select
+                  name='type'
+                  value={updateFormData.type}
+                  onChange={handleUpdateChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                >
+                  <option value=''>Select teaching method:</option>
+                  <option value='1'>Online</option>
+                  <option value='2'>Offline</option>
+                </select>
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Price</label>
+                <input
+                  type='number'
+                  name='price'
+                  value={updateFormData.price}
+                  onChange={handleUpdateChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                />
+              </div>
+              <button
+                onClick={handleUpdateClass}
+                className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mr-2'
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setIsUpdateModalOpen(false)}
                 className='bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700'
               >
                 Cancel
