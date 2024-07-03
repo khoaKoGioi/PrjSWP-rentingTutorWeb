@@ -33,6 +33,7 @@
     "eslint-config-node": "^4.1.0",
     "express": "^4.19.2",
     "framer-motion": "^11.2.10",
+    "jwt-decode": "^4.0.0",
     "lucide-react": "^0.394.0",
     "mssql": "^10.0.2",
     "react": "^18.2.0",

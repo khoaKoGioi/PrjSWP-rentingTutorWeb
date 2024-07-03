@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
 import { Button, Card, CardBody, Typography } from '@material-tailwind/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faTimes } from '@fortawesome/free-solid-svg-icons'
@@ -16,6 +17,7 @@ const ClassDetail = () => {
     subject,
     length,
     type,
+    studentID,
     description,
     tutorID,
     tutorFullName,
@@ -29,6 +31,7 @@ const ClassDetail = () => {
   const [showFeedbackForm, setShowFeedbackForm] = useState(false)
   const [feedbackMessage, setFeedbackMessage] = useState('')
   const [feedbacks, setFeedbacks] = useState([])
+  const [enrollError, setEnrollError] = useState('')
 
   useEffect(() => {
     if (classID) {
@@ -48,8 +51,19 @@ const ClassDetail = () => {
 
   const checkEnrollmentStatus = async () => {
     try {
-      const response = await axios.get(`https://6676c5c6145714a1bd72bec9.mockapi.io/swp/class/${id}`)
-      setIsEnrolled(response.data.isEnrolled)
+      const response = await axios.get(`http://localhost:5000/api/students/checkEnroll/${classID}`)
+      const token = localStorage.getItem('token')
+      if (!token) {
+        console.error('User is not logged in')
+        return
+      }
+      const decodedToken = jwtDecode(token)
+      const studentID = decodedToken.user.studentID
+      if (studentID == response.data.studentID) {
+        setIsEnrolled(response.data.status)
+      } else {
+        setIsEnrolled(false)
+      }
     } catch (error) {
       console.error('Error fetching class data:', error)
     }
@@ -57,12 +71,21 @@ const ClassDetail = () => {
 
   const handleEnrollNow = async () => {
     try {
-      await axios.put(`https://6676c5c6145714a1bd72bec9.mockapi.io/swp/class/${id}`, {
-        isEnrolled: true
+      const token = localStorage.getItem('token')
+      if (!token) {
+        console.error('User is not logged in')
+        return
+      }
+      const decodedToken = jwtDecode(token)
+      const studentID = decodedToken.user.studentID
+      await axios.post(`http://localhost:5000/api/students/enrollClass/${classID}`, {
+        studentID
       })
       setIsEnrolled(true)
+      setEnrollError('')
     } catch (error) {
       console.error('Error enrolling in class:', error)
+      setEnrollError(error.response.data.message || 'Failed to enroll in class. Please try again.')
     }
   }
 
@@ -186,6 +209,11 @@ const ClassDetail = () => {
                     </Button>
                   )}
                 </div>
+                {enrollError && (
+                  <Typography variant='body2' className='text-red-600 mt-2'>
+                    {enrollError}
+                  </Typography>
+                )}
               </div>
             </CardBody>
           </Card>
