@@ -15,7 +15,7 @@ const ClassManagement = () => {
     description: '',
     price: '',
     subject: '',
-    PaymentID: '',
+    PaymentID: 0,
     length: '',
     available: '',
     type: ''
@@ -88,8 +88,36 @@ const ClassManagement = () => {
     })
   }
 
+  const validateForm = (data) => {
+    const requiredFields = [
+      'videoLink',
+      'className',
+      'subject',
+      'description',
+      'available',
+      'length',
+      'PaymentID',
+      'type',
+      'price'
+    ]
+    for (const field of requiredFields) {
+      if (!data[field]) {
+        if (field == 'PaymentID') return `Please fill in the Subcription field.`
+        return `Please fill in the ${field} field.`
+      }
+    }
+    return null
+  }
+
   const handleAddClass = async () => {
     try {
+      //alert
+      const validationError = validateForm(formData)
+      if (validationError) {
+        alert(validationError)
+        return
+      }
+
       const token = localStorage.getItem('token')
       if (!token) {
         console.error('User is not logged in')
@@ -110,7 +138,7 @@ const ClassManagement = () => {
         description: '',
         price: '',
         subject: '',
-        PaymentID: '',
+        PaymentID: 0,
         length: '',
         available: '',
         type: ''
@@ -124,6 +152,7 @@ const ClassManagement = () => {
   }
 
   const handleOpenUpdateModal = (cls) => {
+    console.log(cls)
     setCurrentClassId(cls.classID)
     setUpdateFormData({
       videoLink: cls.videoLink,
@@ -132,16 +161,22 @@ const ClassManagement = () => {
       description: cls.description,
       price: cls.price,
       subject: cls.subject,
-      PaymentID: cls.PaymentID,
+      PaymentID: cls.paymentID,
       length: cls.length,
       available: cls.available,
-      type: cls.type
+      type: cls.type === 'Online' ? 'Online' : 'Offline'
     })
     setIsUpdateModalOpen(true)
   }
 
   const handleUpdateClass = async () => {
     try {
+      const validationError = validateForm(updateFormData)
+      if (validationError) {
+        alert(validationError)
+        return
+      }
+
       const response = await axios.post(`${apiBaseUrl}/updateClasses/${currentClassId}`, updateFormData)
       setClasses(classes.map((cls) => (cls.id === currentClassId ? response.data : cls)))
       setIsUpdateModalOpen(false)
@@ -266,7 +301,9 @@ const ClassManagement = () => {
                   onChange={handleChange}
                   className='w-full p-2 border border-gray-300 rounded'
                 >
-                  <option value={0}>Select subscription type:</option>
+                  <option value={0} disabled>
+                    Select subscription type:
+                  </option>
                   <option value={1}>1</option>
                   <option value={2}>2</option>
                   <option value={3}>3</option>
@@ -281,7 +318,9 @@ const ClassManagement = () => {
                   onChange={handleChange}
                   className='w-full p-2 border border-gray-300 rounded'
                 >
-                  <option value=''>Select teaching method:</option>
+                  <option value='' disabled>
+                    Select teaching method:
+                  </option>
                   <option value='1'>Online</option>
                   <option value='2'>Offline</option>
                 </select>
@@ -383,24 +422,28 @@ const ClassManagement = () => {
                   onChange={handleUpdateChange}
                   className='w-full p-2 border border-gray-300 rounded'
                 >
-                  <option value={0}>Select subscription type:</option>
-                  <option value={1}>1</option>
-                  <option value={2}>2</option>
-                  <option value={3}>3</option>
+                  <option value='0' disabled>
+                    Select subscription type:
+                  </option>
+                  <option value='1'>1</option>
+                  <option value='2'>2</option>
+                  <option value='3'>3</option>
                 </select>
               </div>
 
               <div className='mb-4'>
-                <label className='block mb-2'>Type (Online or Offline)</label>
+                <label className='block mb-2'>Type (Online/Offline)</label>
                 <select
                   name='type'
                   value={updateFormData.type}
                   onChange={handleUpdateChange}
                   className='w-full p-2 border border-gray-300 rounded'
                 >
-                  <option value=''>Select teaching method:</option>
-                  <option value='1'>Online</option>
-                  <option value='2'>Offline</option>
+                  <option value='' disabled>
+                    Select Type
+                  </option>
+                  <option value='Online'>Online</option>
+                  <option value='Offline'>Offline</option>
                 </select>
               </div>
               <div className='mb-4'>

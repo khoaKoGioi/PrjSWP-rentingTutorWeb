@@ -19,7 +19,6 @@ import AuthContext from '../contexts/JWTAuthContext'
 const UserProfile = () => {
   const { user } = useContext(AuthContext)
   const [userData, setUserData] = useState({})
-  console.log(userData)
   const fileInputRef = useRef(null)
 
   useEffect(() => {

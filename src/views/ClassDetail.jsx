@@ -12,7 +12,7 @@ import MegaMenuWithHover from '../components/MegaMenuWithHover.jsx'
 const ClassDetail = () => {
   const { id } = useParams()
   const [showVideo, setShowVideo] = useState(false)
-  const [classData, setClassData] = useState([])
+  const [classData, setClassData] = useState({})
   const [isEnrolled, setIsEnrolled] = useState(false)
   const [showFeedbackForm, setShowFeedbackForm] = useState(false)
   const [feedbackMessage, setFeedbackMessage] = useState('')
@@ -30,11 +30,8 @@ const ClassDetail = () => {
       }
     }
 
-    fetchClass()
-  }, [])
-
-  useEffect(() => {
     if (id) {
+      fetchClass()
       checkEnrollmentStatus()
       fetchFeedbacks()
     }
@@ -205,30 +202,30 @@ const ClassDetail = () => {
                 <Typography variant='h4' className='mb-4'>
                   {classData.className}
                 </Typography>
-                <Typography variant='body1' className='mb-4' style={{ wordWrap: 'break-word' }}>
+                <Typography tag='h3' className='mb-4' style={{ wordWrap: 'break-word' }}>
                   {classData.description}
                 </Typography>
-                <Typography variant='body2' className='mb-2'>
+                <Typography tag='h3' className='mb-2'>
                   <Link to={`/tutor-profile/${classData.userID}`} className='block'>
                     <strong>Tutor:</strong> {classData.tutorFullName}
                   </Link>
                 </Typography>
-                <Typography variant='body2' className='mb-2'>
+                <Typography tag='h3' className='mb-2'>
                   <strong>Subject:</strong> {classData.subject}
                 </Typography>
-                <Typography variant='body2' className='mb-2'>
+                <Typography tag='h3' className='mb-2'>
                   <strong>Rating of tutor:</strong> {renderStars(classData.rating)}
                 </Typography>
-                <Typography variant='body2' className='mb-2'>
+                <Typography tag='h3' className='mb-2'>
                   <strong>Last for:</strong> {classData.length}
                 </Typography>
-                <Typography variant='body2' className='mb-2'>
+                <Typography tag='h3' className='mb-2'>
                   <strong>Available:</strong> {classData.available}
                 </Typography>
-                <Typography variant='body2' className='mb-2'>
+                <Typography tag='h3' className='mb-2'>
                   <strong>Type:</strong> {classData.type}
                 </Typography>
-                <Typography variant='body2' className='mb-2'>
+                <Typography tag='h3' className='mb-2'>
                   <strong>Price:</strong> ${classData.price}
                 </Typography>
                 <div className='flex gap-4'>
@@ -242,7 +239,7 @@ const ClassDetail = () => {
                   )}
                 </div>
                 {enrollError && (
-                  <Typography variant='body2' className='text-red-600 mt-2'>
+                  <Typography tag='h3' className='text-red-600 mt-2'>
                     {enrollError}
                   </Typography>
                 )}
@@ -276,13 +273,15 @@ const ClassDetail = () => {
                   <div className='flex items-center mb-2'>
                     <CircularImg avatar={feedback.studentAvatar} />
                     <div className='ml-2'>
-                      <Typography variant='body1'>{feedback.studentName}</Typography>
-                      <Typography variant='body2' className='text-gray-500'>
+                      <Typography variant='paragraph'>
+                        <span style={{ fontWeight: 'bold' }}>{feedback.studentName}</span>
+                      </Typography>
+                      <Typography tag='h3' className='text-gray-500'>
                         {new Date(feedback.date).toLocaleDateString()}
                       </Typography>
                     </div>
                   </div>
-                  <Typography variant='body1'>{feedback.message}</Typography>
+                  <Typography variant='paragraph'>{feedback.message}</Typography>
                 </Card>
               ))}
             </CardBody>

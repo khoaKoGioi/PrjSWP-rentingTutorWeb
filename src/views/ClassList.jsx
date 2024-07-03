@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
 import { Typography, Card, CardBody } from '@material-tailwind/react'
-import { Pagination } from '@nextui-org/react'
 import BreadcrumbsWithIcon from '../components/BreadCrumb.jsx'
 import PriceRangeSlider from '../components/PriceRangeSlider.jsx'
 import ClassCard from '../components/ClassCard.jsx' // Assuming ClassCard component exists
+import { Pagination } from '@nextui-org/react'
 
 const itemsPerPage = 12
 
@@ -201,13 +201,13 @@ const ClassList = () => {
                     <Typography variant='h5' className='font-bold'>
                       {item.className}
                     </Typography>
-                    <Typography variant='body2' className='mt-2'>
+                    <Typography tag='h3' className='mt-2'>
                       Tutor: {item.tutorFullName}
                     </Typography>
-                    <Typography variant='body2' className='mt-2'>
+                    <Typography tag='h3' className='mt-2'>
                       Duration: {item.length}
                     </Typography>
-                    <Typography variant='body2' className='mt-2'>
+                    <Typography tag='h3' className='mt-2'>
                       Price: ${item.price}
                     </Typography>
                   </CardBody>
@@ -220,7 +220,7 @@ const ClassList = () => {
             <Pagination
               total={totalPages}
               active={currentPage}
-              maxVisible={5}
+              // maxVisible={5}
               onChange={(page) => handlePageChange(page)}
             />
           </div>
