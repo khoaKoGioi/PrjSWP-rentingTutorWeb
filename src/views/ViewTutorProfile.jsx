@@ -52,7 +52,7 @@ const ViewTutorProfile = () => {
       <div className='container mx-auto pl-4 flex flex-col md:flex-row gap-8'>
         <div className='w-full md:w-3/4 mb-4 flex flex-col'>
           <BreadcrumbsWithIcon
-            pathnames={['Home', 'ClassList', `ClassDetail ${id}`, tutor.fullName]} // Update pathnames as per your breadcrumb requirements
+            pathnames={['Home', 'ClassList', `ClassDetail`, tutor.fullName]} // Update pathnames as per your breadcrumb requirements
           />
         </div>
       </div>

@@ -14,23 +14,92 @@ const ClassList = () => {
   const [data, setData] = useState([])
   const [error, setError] = useState(null)
 
+  //state for filter
+  const [priceRange, setPriceRange] = useState([0, 5000])
+  const [selectedRatings, setSelectedRatings] = useState([])
+  const [selectedDurations, setSelectedDurations] = useState([])
+
+  //Filter Function
+  const filterByPrice = (classes, range) => {
+    if (range[0] === 0 && range[1] === 5000) return classes
+    return classes.filter((cls) => cls.price >= range[0] && cls.price <= range[1])
+  }
+
+  const filterByRating = (classes, ratings) => {
+    if (ratings.length === 0) return classes
+    return classes.filter((cls) => {
+      const classRating = Math.floor(cls.rating)
+      return ratings.some((rating) => classRating >= rating)
+    })
+  }
+
+  const filterByDuration = (classes, durations) => {
+    if (durations.length === 0) return classes
+    return classes.filter((cls) => {
+      const duration = cls.length.toLowerCase()
+      const durationInDays = convertToDays(duration)
+      return durations.some((d) => {
+        const [min, max] = convertDurationToRange(d)
+        return durationInDays > min && durationInDays <= max
+      })
+    })
+  }
+
+  const convertToDays = (duration) => {
+    const regex = /(\d+)\s*(day|week|month|year)s?/
+    const match = duration.match(regex)
+    if (!match) return 0
+    const value = parseInt(match[1], 10)
+    const unit = match[2]
+    switch (unit) {
+      case 'day':
+        return value
+      case 'week':
+        return value * 7
+      case 'month':
+        return value * 30
+      case 'year':
+        return value * 365
+      default:
+        return 0
+    }
+  }
+
+  const convertDurationToRange = (duration) => {
+    switch (duration) {
+      case '1-4 weeks':
+        return [7, 28]
+      case '1-3 months':
+        return [30, 90]
+      case '3-6 months':
+        return [90, 180]
+      case '6-12 months':
+        return [180, 365]
+      default:
+        return [0, 0]
+    }
+  }
+
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        // const response = await fetch('https://6676c5c6145714a1bd72bec9.mockapi.io/swp/class')
         const response = await fetch('http://localhost:5000/api/users/getAllClass')
         if (!response.ok) {
           throw new Error('Failed to fetch data')
         }
         const result = await response.json()
-        setData(result.data)
+        let filteredData = result.data
+        filteredData = filterByPrice(filteredData, priceRange)
+        filteredData = filterByRating(filteredData, selectedRatings)
+        filteredData = filterByDuration(filteredData, selectedDurations)
+        setData(filteredData)
       } catch (error) {
         setError(error.message)
       }
     }
 
     fetchClasses()
-  }, [])
+  }, [priceRange, selectedRatings, selectedDurations])
 
   const totalPages = Math.ceil(data.length / itemsPerPage)
   const currentData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
@@ -65,34 +134,30 @@ const ClassList = () => {
 
       <div className='flex'>
         <aside className='w-1/4 p-4 rounded-lg shadow-md'>
-          {/* Include the PriceRangeSlider component */}
-          <PriceRangeSlider onChange={(value) => console.log(value)} />
+          <PriceRangeSlider onChange={(value) => setPriceRange(value)} />
 
           <div className='mt-6'>
             <Typography variant='h6' className='text-gray-800 font-bold mb-2'>
               Filter by Rating
             </Typography>
             <div className='space-y-2'>
-              <label className='flex items-center'>
-                <input type='checkbox' className='form-checkbox text-blue-500' />
-                <span className='ml-2 text-gray-700'>1 Star & Up</span>
-              </label>
-              <label className='flex items-center'>
-                <input type='checkbox' className='form-checkbox text-blue-500' />
-                <span className='ml-2 text-gray-700'>2 Stars & Up</span>
-              </label>
-              <label className='flex items-center'>
-                <input type='checkbox' className='form-checkbox text-blue-500' />
-                <span className='ml-2 text-gray-700'>3 Stars & Up</span>
-              </label>
-              <label className='flex items-center'>
-                <input type='checkbox' className='form-checkbox text-blue-500' />
-                <span className='ml-2 text-gray-700'>4 Stars & Up</span>
-              </label>
-              <label className='flex items-center'>
-                <input type='checkbox' className='form-checkbox text-blue-500' />
-                <span className='ml-2 text-gray-700'>5 Stars</span>
-              </label>
+              {[1, 2, 3, 4, 5].map((rating) => (
+                <label className='flex items-center' key={rating}>
+                  <input
+                    type='checkbox'
+                    className='form-checkbox text-blue-500'
+                    checked={selectedRatings.includes(rating)}
+                    onChange={() => {
+                      setSelectedRatings((prevRatings) =>
+                        prevRatings.includes(rating)
+                          ? prevRatings.filter((r) => r !== rating)
+                          : [...prevRatings, rating]
+                      )
+                    }}
+                  />
+                  <span className='ml-2 text-gray-700'>{rating} Stars & Up</span>
+                </label>
+              ))}
             </div>
           </div>
 
@@ -101,26 +166,23 @@ const ClassList = () => {
               Filter by Duration
             </Typography>
             <div className='space-y-2'>
-              <label className='flex items-center'>
-                <input type='checkbox' className='form-checkbox text-blue-500' />
-                <span className='ml-2 text-gray-700'>Under 60 Minutes</span>
-              </label>
-              <label className='flex items-center'>
-                <input type='checkbox' className='form-checkbox text-blue-500' />
-                <span className='ml-2 text-gray-700'>Less Than 2 Hours</span>
-              </label>
-              <label className='flex items-center'>
-                <input type='checkbox' className='form-checkbox text-blue-500' />
-                <span className='ml-2 text-gray-700'>1-4 Weeks</span>
-              </label>
-              <label className='flex items-center'>
-                <input type='checkbox' className='form-checkbox text-blue-500' />
-                <span className='ml-2 text-gray-700'>1-3 Months</span>
-              </label>
-              <label className='flex items-center'>
-                <input type='checkbox' className='form-checkbox text-blue-500' />
-                <span className='ml-2 text-gray-700'>3-6 Months</span>
-              </label>
+              {['1-4 weeks', '1-3 months', '3-6 months', '6-12 months'].map((duration) => (
+                <label className='flex items-center' key={duration}>
+                  <input
+                    type='checkbox'
+                    className='form-checkbox text-blue-500'
+                    checked={selectedDurations.includes(duration)}
+                    onChange={() => {
+                      setSelectedDurations((prevDurations) =>
+                        prevDurations.includes(duration)
+                          ? prevDurations.filter((d) => d !== duration)
+                          : [...prevDurations, duration]
+                      )
+                    }}
+                  />
+                  <span className='ml-2 text-gray-700'>{duration}</span>
+                </label>
+              ))}
             </div>
           </div>
         </aside>
@@ -141,6 +203,9 @@ const ClassList = () => {
                     </Typography>
                     <Typography variant='body2' className='mt-2'>
                       Tutor: {item.tutorFullName}
+                    </Typography>
+                    <Typography variant='body2' className='mt-2'>
+                      Duration: {item.length}
                     </Typography>
                     <Typography variant='body2' className='mt-2'>
                       Price: ${item.price}
