@@ -50,7 +50,7 @@ const FeedbackManagement = () => {
                   <Typography variant='body1' className='mb-2'>
                     {feedback.message}
                   </Typography>
-                  <Typography variant='body2' className='text-gray-500'>
+                  <Typography tag='h3' className='text-gray-500'>
                     Student ID: {feedback.studentID}
                   </Typography>
                 </div>

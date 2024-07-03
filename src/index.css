@@ -40,10 +40,10 @@ const otherClasses = [
               <Typography variant='body1' className='text-center'>
                 {tutor.description}
               </Typography>
-              <Typography variant='body2' className='mt-4'>
+              <Typography tag='h3' className='mt-4'>
                 <strong>Rating:</strong> {tutor.rating}
               </Typography>
-              <Typography variant='body2'>
+              <Typography tag='h3'>
                 <strong>Subjects:</strong> {tutor.subjects}
               </Typography>
 
