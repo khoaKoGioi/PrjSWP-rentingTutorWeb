@@ -19,6 +19,7 @@ export function MegaMenuWithHover() {
   // Function to handle logout
   const handleLogout = () => {
     setIsLoggedIn(false) // Update login state to false
+    localStorage.removeItem('token')
     localStorage.removeItem('isLoggedIn') // Remove login status from localStorage
   }
 

@@ -1,74 +1,122 @@
-// src/ClassManagement.js
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
 
-const apiURL = 'https://667c07dd3c30891b865b026d.mockapi.io/ass2/class'
+const apiBaseUrl = 'http://localhost:5000/api/tutors'
 
 const ClassManagement = () => {
+  const token = localStorage.getItem('token')
   const [classes, setClasses] = useState([])
   const [formData, setFormData] = useState({
-    imageLink: '',
-    title: '',
-    tutor: '',
+    videoLink: '',
+    className: '',
+    tutorID: '',
     description: '',
-    lectures: '',
-    rating: '',
-    price: ''
+    price: '',
+    subject: '',
+    PaymentID: '',
+    length: '',
+    available: '',
+    type: ''
   })
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    fetchClasses()
-  }, [])
+    if (token) {
+      fetchClasses()
+    }
+  }, [token])
+
+  if (!token) {
+    return (
+      <div className='flex items-center justify-center min-h-screen'>
+        <MegaMenuWithHover />
+        <div className='text-center'>
+          <h1 className='text-2xl font-bold'>Access Denied</h1>
+          <p className='mt-2 text-gray-600'>You do not have permission to view this page.</p>
+        </div>
+      </div>
+    )
+  }
 
   const fetchClasses = async () => {
     try {
-      const response = await axios.get(apiURL)
-      setClasses(response.data)
+      if (!token) {
+        console.error('User is not logged in')
+        return
+      }
+      const decodedToken = jwtDecode(token)
+      const tutorID = decodedToken.user.tutorID
+      const response = await axios.post(`${apiBaseUrl}/findClasses/${tutorID}`)
+      const activeClasses = response.data.classroom.filter((classroom) => classroom.isActive)
+      setClasses(activeClasses)
     } catch (error) {
       console.error('Error fetching classes:', error)
     }
   }
 
+  const handleDeleteClass = async (classID) => {
+    try {
+      await axios.delete(`${apiBaseUrl}/deleteClasses/${classID}`)
+      alert('Class deleted successfully!')
+      fetchClasses()
+    } catch (error) {
+      console.error('Error deleting class:', error)
+      alert('There was an error deleting the class.')
+    }
+  }
+
   const handleChange = (e) => {
+    const { name, value } = e.target
+
+    // Convert paymentID to a number if it's not an empty string
+    const numericValue = name === 'PaymentID' && value !== '' ? parseInt(value, 10) : value
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: numericValue
     })
   }
 
   const handleAddClass = async () => {
     try {
-      const response = await axios.post(apiURL, formData)
+      const token = localStorage.getItem('token')
+      if (!token) {
+        console.error('User is not logged in')
+        return
+      }
+      const decodedToken = jwtDecode(token)
+      const tutorID = decodedToken.user.tutorID
+      formData.tutorID = tutorID
+
+      const endpoint = `${apiBaseUrl}/createClasses`
+      const response = await axios.post(endpoint, formData)
+
       setClasses([...classes, response.data])
       setFormData({
-        imageLink: '',
-        title: '',
-        tutor: '',
+        videoLink: '',
+        className: '',
+        tutorID: '',
         description: '',
-        lectures: '',
-        rating: '',
-        price: ''
+        price: '',
+        subject: '',
+        PaymentID: '',
+        length: '',
+        available: '',
+        type: ''
       })
       setIsModalOpen(false)
+      alert('Class created successfully!')
     } catch (error) {
       console.error('Error adding class:', error)
-    }
-  }
-
-  const handleDeleteClass = async (id) => {
-    try {
-      await axios.delete(`${apiURL}/${id}`)
-      setClasses(classes.filter((cls) => cls.id !== id))
-    } catch (error) {
-      console.error('Error deleting class:', error)
+      alert('There was an error creating the class.')
     }
   }
 
   const handleUpdateClass = async (id, updatedData) => {
     try {
-      const response = await axios.put(`${apiURL}/${id}`, updatedData)
+      const response = await axios.put(`${apiBaseUrl}/updateClasses/${id}`, updatedData)
       setClasses(classes.map((cls) => (cls.id === id ? response.data : cls)))
     } catch (error) {
       console.error('Error updating class:', error)
@@ -92,9 +140,8 @@ const ClassManagement = () => {
           {classes.map((cls) => (
             <div key={cls.id} className='flex justify-between items-center p-4 border rounded shadow'>
               <div>
-                <h2 className='text-lg font-bold'>{cls.title}</h2>
-                <p className='text-sm'>{cls.tutor}</p>
-                <p className='text-sm'>Lectures: {cls.lectures}</p>
+                <h2 className='text-lg font-bold'>{cls.className}</h2>
+                <p className='text-sm'>Subject: {cls.subject}</p>
               </div>
               <div>
                 <button
@@ -104,7 +151,7 @@ const ClassManagement = () => {
                   Update
                 </button>
                 <button
-                  onClick={() => handleDeleteClass(cls.id)}
+                  onClick={() => handleDeleteClass(cls.classID)}
                   className='bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700'
                 >
                   Delete
@@ -116,42 +163,41 @@ const ClassManagement = () => {
 
         {isModalOpen && (
           <div className='fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center'>
-            <div className='bg-white p-8 rounded shadow-lg w-1/2 mt-20'>
+            <div className='bg-white p-8 rounded shadow-lg w-1/2 max-h-[80vh] overflow-y-auto mt-20'>
               <h2 className='text-xl font-bold mb-4'>Add New Class</h2>
               <div className='mb-4'>
-                <label className='block mb-2'>Image Link</label>
+                <label className='block mb-2'>Video link</label>
                 <input
                   type='text'
-                  name='imageLink'
-                  value={formData.imageLink}
+                  name='videoLink'
+                  value={formData.videoLink}
                   onChange={handleChange}
                   className='w-full p-2 border border-gray-300 rounded'
                 />
               </div>
               <div className='mb-4'>
-                <label className='block mb-2'>Title</label>
+                <label className='block mb-2'>Class name</label>
                 <input
                   type='text'
-                  name='title'
-                  value={formData.title}
+                  name='className'
+                  value={formData.className}
                   onChange={handleChange}
                   className='w-full p-2 border border-gray-300 rounded'
                 />
               </div>
               <div className='mb-4'>
-                <label className='block mb-2'>Tutor</label>
+                <label className='block mb-2'>Subject included</label>
                 <input
                   type='text'
-                  name='tutor'
-                  value={formData.tutor}
+                  name='subject'
+                  value={formData.subject}
                   onChange={handleChange}
                   className='w-full p-2 border border-gray-300 rounded'
                 />
               </div>
               <div className='mb-4'>
                 <label className='block mb-2'>Description</label>
-                <input
-                  type='text'
+                <textarea
                   name='description'
                   value={formData.description}
                   onChange={handleChange}
@@ -159,25 +205,56 @@ const ClassManagement = () => {
                 />
               </div>
               <div className='mb-4'>
-                <label className='block mb-2'>Lectures</label>
+                <label className='block mb-2'>Available on</label>
                 <input
-                  type='number'
-                  name='lectures'
-                  value={formData.lectures}
+                  type='text'
+                  name='available'
+                  value={formData.available}
                   onChange={handleChange}
                   className='w-full p-2 border border-gray-300 rounded'
                 />
               </div>
               <div className='mb-4'>
-                <label className='block mb-2'>Rating</label>
+                <label className='block mb-2'>Length</label>
                 <input
-                  type='number'
-                  step='0.1'
-                  name='rating'
-                  value={formData.rating}
+                  type='text'
+                  name='length'
+                  value={formData.length}
                   onChange={handleChange}
                   className='w-full p-2 border border-gray-300 rounded'
                 />
+              </div>
+              <div className='mb-4'>
+                <label className='block mb-2'>Subscription type:</label>
+                <p className='text-sm text-gray-600'>
+                  Before choosing the type of subscription, go to our Home Page and scroll down to have a look at the
+                  subscription choices.
+                </p>
+                <select
+                  name='PaymentID'
+                  value={formData.PaymentID}
+                  onChange={handleChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                >
+                  <option value={0}>Select subscription type:</option>
+                  <option value={1}>1</option>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                </select>
+              </div>
+
+              <div className='mb-4'>
+                <label className='block mb-2'>Type (Online or Offline)</label>
+                <select
+                  name='type'
+                  value={formData.type}
+                  onChange={handleChange}
+                  className='w-full p-2 border border-gray-300 rounded'
+                >
+                  <option value=''>Select teaching method:</option>
+                  <option value='1'>Online</option>
+                  <option value='2'>Offline</option>
+                </select>
               </div>
               <div className='mb-4'>
                 <label className='block mb-2'>Price</label>
