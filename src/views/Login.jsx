@@ -14,7 +14,7 @@ const Login = () => {
   })
   const [errorMessage, setErrorMessage] = useState('') // Error state
 
-  const { login, serverLogin } = useContext(AuthContext) // Consume login function from AuthContext
+  const { login } = useContext(AuthContext) // Consume login function from AuthContext
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target

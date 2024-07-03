@@ -10,7 +10,20 @@ import MegaMenuWithHover from '../components/MegaMenuWithHover.jsx'
 
 const ClassDetail = () => {
   const location = useLocation()
-  const { id, title, description, tutor, lectures, price, videoLink } = location.state
+  const {
+    classID,
+    className,
+    subject,
+    length,
+    type,
+    description,
+    tutorID,
+    tutorFullName,
+    rating,
+    price,
+    videoLink,
+    available
+  } = location.state || {}
   const [showVideo, setShowVideo] = useState(false)
   const [isEnrolled, setIsEnrolled] = useState(false)
   const [showFeedbackForm, setShowFeedbackForm] = useState(false)
@@ -18,9 +31,11 @@ const ClassDetail = () => {
   const [feedbacks, setFeedbacks] = useState([])
 
   useEffect(() => {
-    fetchFeedbacks()
-    checkEnrollmentStatus()
-  }, [])
+    if (classID) {
+      fetchFeedbacks()
+      checkEnrollmentStatus()
+    }
+  }, [classID])
 
   const fetchFeedbacks = async () => {
     try {
@@ -58,7 +73,7 @@ const ClassDetail = () => {
   const handleSaveFeedback = async () => {
     try {
       const response = await axios.post('https://6676c5c6145714a1bd72bec9.mockapi.io/swp/feedbacks', {
-        classId: id,
+        classId: classID,
         message: feedbackMessage,
         studentAvatar: '', // Assuming avatar info can be included if available
         studentName: '', // Assuming student name can be included if available
@@ -82,12 +97,24 @@ const ClassDetail = () => {
   }
 
   const getYoutubeThumbnail = (url) => {
+    if (!url) {
+      return '' // Handle undefined or null case
+    }
+
     const videoId = url.split('v=')[1]
+    if (!videoId) {
+      return '' // Handle invalid video URL
+    }
+
     const ampersandPosition = videoId.indexOf('&')
     if (ampersandPosition !== -1) {
       return `https://img.youtube.com/vi/${videoId.substring(0, ampersandPosition)}/0.jpg`
     }
     return `https://img.youtube.com/vi/${videoId}/0.jpg`
+  }
+
+  if (!classID) {
+    return <div>Loading...</div> // Render a loading state or redirect if classID is not available
   }
 
   return (
@@ -98,7 +125,7 @@ const ClassDetail = () => {
 
       <div className='container mx-auto pl-4 flex flex-col md:flex-row gap-8'>
         <div className='w-full md:w-3/4 mb-4 flex flex-col pt-16'>
-          <BreadcrumbsWithIcon pathnames={['Home', 'ClassList', `ClassDetail ${id}`]} />
+          <BreadcrumbsWithIcon pathnames={['Home', 'ClassList', `ClassDetail ${classID}`]} />
         </div>
       </div>
 
@@ -123,22 +150,28 @@ const ClassDetail = () => {
               </div>
               <div className='w-full md:w-1/2'>
                 <Typography variant='h4' className='mb-4'>
-                  {title}
+                  {className}
                 </Typography>
-                <Typography variant='body1' className='mb-4'>
+                <Typography variant='body1' className='mb-4' style={{ wordWrap: 'break-word' }}>
                   {description}
                 </Typography>
                 <Typography variant='body2' className='mb-2'>
-                  <strong>Tutor:</strong> {tutor.name}
+                  <strong>Tutor:</strong> {tutorFullName}
                 </Typography>
                 <Typography variant='body2' className='mb-2'>
-                  <strong>Rating:</strong> {tutor.rating}
+                  <strong>Subject:</strong> {subject}
                 </Typography>
                 <Typography variant='body2' className='mb-2'>
-                  <strong>Available:</strong> Mon-Thu-Sat
+                  <strong>Rating of tutor:</strong> {rating}
                 </Typography>
                 <Typography variant='body2' className='mb-2'>
-                  <strong>Lectures:</strong> {lectures}
+                  <strong>Last for:</strong> {length}
+                </Typography>
+                <Typography variant='body2' className='mb-2'>
+                  <strong>Available:</strong> {available}
+                </Typography>
+                <Typography variant='body2' className='mb-2'>
+                  <strong>Type:</strong> {type}
                 </Typography>
                 <Typography variant='body2' className='mb-2'>
                   <strong>Price:</strong> ${price}
