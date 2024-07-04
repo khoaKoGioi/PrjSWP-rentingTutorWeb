@@ -12,13 +12,15 @@ import {
   FaRegUser,
   FaStar,
   FaFileAlt,
-  FaBriefcase
+  FaBriefcase,
+  FaStarHalfAlt
 } from 'react-icons/fa'
 import AuthContext from '../contexts/JWTAuthContext'
 import { storage } from '../firebase.js'
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 import { v4 } from 'uuid'
 import { jwtDecode } from 'jwt-decode'
+import axios from 'axios'
 
 const UserProfile = () => {
   const token = localStorage.getItem('token')
@@ -63,26 +65,22 @@ const UserProfile = () => {
     try {
       let avatarUrl = userData.avatar
       // Check if avatar has changed and upload new avatar if necessary
-      if (userData.avatar instanceof File) {
+      if (userData.avatar) {
         avatarUrl = await uploadFileToFirebase(userData.avatar)
       }
 
       const updatedUserData = { ...userData, avatar: avatarUrl }
+      console.log(updatedUserData)
 
       const userID = user.userID || (await jwtDecode(token).user.userID)
-      const response = await fetch(`http://localhost:5000/api/users/update/${userID}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedUserData)
+      const response = await axios.put(`http://localhost:5000/api/users/update/${userID}`, {
+        updatedUserData
       })
 
-      if (!response.ok) {
+      if (response.statusText != 'OK') {
         throw new Error('Failed to update profile')
-        console.log(response)
       }
-      const data = await response.json()
+      const data = response.data
 
       localStorage.setItem('token', data.token)
       setUserData(data.user)
@@ -99,17 +97,8 @@ const UserProfile = () => {
   }
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setUserData((prevData) => ({
-          ...prevData,
-          avatar: e.target.result
-        }))
-      }
-      reader.readAsDataURL(file)
-    }
+    const { name, files } = e.target
+    setUserData({ ...userData, [name]: files[0] })
   }
 
   const renderRatingStars = () => {
@@ -147,8 +136,10 @@ const UserProfile = () => {
             <img
               className='avatar-image rounded-full w-full h-full object-cover'
               src={
-                userData.avatar ||
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRCdGAc11Bt-rpmGh5q0ESuFgEkDLBUhNOMA&s'
+                userData.avatar instanceof File // Check if avatar is a File object
+                  ? URL.createObjectURL(userData.avatar) // Convert File to URL
+                  : userData.avatar ||
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRCdGAc11Bt-rpmGh5q0ESuFgEkDLBUhNOMA&s'
               } // Provide a default avatar if none is set
               alt='User Avatar'
             />
@@ -160,6 +151,7 @@ const UserProfile = () => {
             type='file'
             ref={fileInputRef}
             style={{ display: 'none' }}
+            name='avatar'
             accept='image/*'
             onChange={handleFileChange}
           />
