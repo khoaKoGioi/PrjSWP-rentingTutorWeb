@@ -53,7 +53,7 @@ const ClassDetail = () => {
       const response = await axios.get(`http://localhost:5000/api/students/checkEnroll/${id}`)
       const token = localStorage.getItem('token')
       if (!token) {
-        // toast.error('User is not logged in')
+        toast.error('User is not logged in')
         return
       }
       const decodedToken = jwtDecode(token)
