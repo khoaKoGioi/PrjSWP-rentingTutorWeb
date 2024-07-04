@@ -15,8 +15,13 @@ import {
   FaBriefcase
 } from 'react-icons/fa'
 import AuthContext from '../contexts/JWTAuthContext'
+import { storage } from '../firebase.js'
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
+import { v4 } from 'uuid'
+import { jwtDecode } from 'jwt-decode'
 
 const UserProfile = () => {
+  const token = localStorage.getItem('token')
   const { user } = useContext(AuthContext)
   const [userData, setUserData] = useState({})
   const fileInputRef = useRef(null)
@@ -24,6 +29,10 @@ const UserProfile = () => {
   useEffect(() => {
     if (user) {
       setUserData(user)
+    }
+    if (token) {
+      const decodedToken = jwtDecode(token)
+      setUserData(decodedToken.user)
     }
   }, [user])
 
@@ -43,18 +52,35 @@ const UserProfile = () => {
     }))
   }
 
+  const uploadFileToFirebase = async (file) => {
+    const storageRef = ref(storage, `images/${v4()}-${file.name}`)
+    await uploadBytes(storageRef, file)
+    const url = await getDownloadURL(storageRef)
+    return url
+  }
+
   const handleUpdate = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/users/update/${user.userID}`, {
+      let avatarUrl = userData.avatar
+      // Check if avatar has changed and upload new avatar if necessary
+      if (userData.avatar instanceof File) {
+        avatarUrl = await uploadFileToFirebase(userData.avatar)
+      }
+
+      const updatedUserData = { ...userData, avatar: avatarUrl }
+
+      const userID = user.userID || (await jwtDecode(token).user.userID)
+      const response = await fetch(`http://localhost:5000/api/users/update/${userID}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(userData)
+        body: JSON.stringify(updatedUserData)
       })
 
       if (!response.ok) {
         throw new Error('Failed to update profile')
+        console.log(response)
       }
       const data = await response.json()
 

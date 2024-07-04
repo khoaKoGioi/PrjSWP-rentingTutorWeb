@@ -5,9 +5,11 @@ import { jwtDecode } from 'jwt-decode'
 import { Button, Card, CardBody, Typography } from '@material-tailwind/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faStar, faStarHalfAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { FaStar } from 'react-icons/fa'
 import { CircularImg } from '../components/CircularImg.jsx'
 import BreadcrumbsWithIcon from '../components/BreadCrumb.jsx'
 import MegaMenuWithHover from '../components/MegaMenuWithHover.jsx'
+import StarRating from '../components/StarRating'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -20,6 +22,7 @@ const ClassDetail = () => {
   const [feedbackMessage, setFeedbackMessage] = useState('')
   const [feedbacks, setFeedbacks] = useState([])
   const [enrollError, setEnrollError] = useState('')
+  const [rating, setRating] = useState('0')
 
   useEffect(() => {
     const fetchClass = async () => {
@@ -41,8 +44,9 @@ const ClassDetail = () => {
 
   const fetchFeedbacks = async () => {
     try {
-      const response = await axios.get(`https://6676c5c6145714a1bd72bec9.mockapi.io/swp/feedbacks?classId=`)
-      setFeedbacks(response.data)
+      const response = await axios.get(`http://localhost:5000/api/tutors/viewFeedback/${id}`)
+      console.log(response.data)
+      setFeedbacks(response.data.data)
     } catch (error) {
       console.error('Error fetching feedbacks:', error)
     }
@@ -53,7 +57,7 @@ const ClassDetail = () => {
       const response = await axios.get(`http://localhost:5000/api/students/checkEnroll/${id}`)
       const token = localStorage.getItem('token')
       if (!token) {
-        // toast.error('User is not logged in')
+        toast.error('User is not logged in')
         return
       }
       const decodedToken = jwtDecode(token)
@@ -69,6 +73,10 @@ const ClassDetail = () => {
     } catch (error) {
       console.error('Error fetching class data:', error)
     }
+  }
+
+  const handleRatingChange = (selectedRating) => {
+    setRating(selectedRating)
   }
 
   const handleEnrollNow = async () => {
@@ -108,16 +116,23 @@ const ClassDetail = () => {
 
   const handleSaveFeedback = async () => {
     try {
-      const response = await axios.post('https://6676c5c6145714a1bd72bec9.mockapi.io/swp/feedbacks', {
-        classId: classID,
+      const token = localStorage.getItem('token')
+      if (!token) {
+        toast.error('User is not logged in')
+        return
+      }
+      const decodedToken = jwtDecode(token)
+      const studentID = decodedToken.user.studentID
+      const response = await axios.post(`http://localhost:5000/api/students/feedback/${id}`, {
+        studentID,
         message: feedbackMessage,
-        studentAvatar: '', // Assuming avatar info can be included if available
-        studentName: '', // Assuming student name can be included if available
+        rating,
         date: new Date().toISOString(),
         isEnrolled: true // Automatically set isEnrolled to true for enrolled students
       })
       setFeedbacks([...feedbacks, response.data])
       setFeedbackMessage('')
+      fetchFeedbacks()
       setShowFeedbackForm(false)
     } catch (error) {
       console.error('Error saving feedback:', error)
@@ -258,6 +273,7 @@ const ClassDetail = () => {
                   value={feedbackMessage}
                   onChange={(e) => setFeedbackMessage(e.target.value)}
                 />
+                Rating: <StarRating initialRating={rating} onRate={handleRatingChange} />
                 <Button onClick={handleSaveFeedback} className='ml-2'>
                   Save
                 </Button>
@@ -273,13 +289,21 @@ const ClassDetail = () => {
               {feedbacks.map((feedback, index) => (
                 <Card key={index} className='p-3 mb-3'>
                   <div className='flex items-center mb-2'>
-                    <CircularImg avatar={feedback.studentAvatar} />
+                    <CircularImg
+                      avatar={
+                        feedback.studentAvatar ||
+                        'https://cdn.iconscout.com/icon/free/png-256/free-incognito-6-902117.png?f=webp&w=256'
+                      }
+                    />
                     <div className='ml-2'>
                       <Typography variant='paragraph'>
                         <span style={{ fontWeight: 'bold' }}>{feedback.studentName}</span>
                       </Typography>
                       <Typography tag='h3' className='text-gray-500'>
                         {new Date(feedback.date).toLocaleDateString()}
+                      </Typography>
+                      <Typography tag='h3' className='text-gray-500'>
+                        {renderStars(feedback.rating)} {/* Render stars for feedback rating */}
                       </Typography>
                     </div>
                   </div>

@@ -1,5 +1,3 @@
-// AuthContext.js
-
 import React, { createContext, useEffect, useReducer } from 'react'
 import { loginUser, registerStudent, registerTutor, fetchUserProfile } from '../apiService/api'
 
@@ -23,17 +21,20 @@ const reducer = (state, action) => {
     }
     case 'LOGOUT': {
       localStorage.removeItem('token') // Remove token from localStorage on logout
+      localStorage.removeItem('role')
       return { ...state, isAuthenticated: false, user: null }
     }
 
     case 'REGISTER_STUDENT': {
       const { token, user } = action.payload
-      localStorage.setItem('token', token) // Store token in localStorage
+      localStorage.setItem('token', token)
+      localStorage.setItem('role', user.role) // Store token in localStorage
       return { ...state, isAuthenticated: true, user }
     }
     case 'REGISTER_TUTOR': {
       const { token, user } = action.payload
-      localStorage.setItem('token', token) // Store token in localStorage
+      localStorage.setItem('token', token)
+      localStorage.setItem('role', user.role) // Store token in localStorage
       return { ...state, isAuthenticated: true, user }
     }
     default:
