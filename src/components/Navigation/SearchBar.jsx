@@ -18,9 +18,10 @@ const SearchBar = () => {
     try {
       const tutorResponse = await axios.get(`http://localhost:5000/api/students/searchTutorByTutorName/${searchQuery}`)
       const classResponse = await axios.get(`http://localhost:5000/api/students/searchClassByTutorName/${searchQuery}`)
+      const classByName = await axios.get(`http://localhost:5000/api/students/searchClassByClassName/${searchQuery}`)
 
       const tutorSuggestions = tutorResponse.data.data
-      const classSuggestions = classResponse.data.data
+      const classSuggestions = [...classByName.data.data, ...classResponse.data.data]
 
       setSuggestions([...classSuggestions, ...tutorSuggestions])
     } catch (error) {
