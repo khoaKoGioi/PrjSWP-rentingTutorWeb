@@ -2,21 +2,22 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
 
-const AdminPortal = () => {
-  const [users, setUsers] = useState([])
-  const [allUsers, setAllUsers] = useState([])
+const AdminPortalTutor = () => {
+  const [tutors, setTutors] = useState([])
+  const [allTutors, setAllTutors] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
-    // Fetch users from the API
+    // Fetch tutors from the API
     axios
       .get('http://localhost:5000/api/admin/getUser')
       .then((response) => {
-        setUsers(response.data.data)
-        setAllUsers(response.data.data)
+        const tutorData = response.data.data.filter((user) => user.role === 'Student')
+        setTutors(tutorData)
+        setAllTutors(tutorData)
       })
       .catch((error) => {
-        console.error('Error fetching users:', error)
+        console.error('Error fetching tutors:', error)
       })
   }, [])
 
@@ -24,16 +25,16 @@ const AdminPortal = () => {
     const value = e.target.value
     setSearchTerm(value)
     if (value.trim() !== '') {
-      const filteredUsers = allUsers.filter((user) => user.userName.toLowerCase().includes(value.toLowerCase()))
-      setUsers(filteredUsers)
+      const filteredTutors = allTutors.filter((tutor) => tutor.userName.toLowerCase().includes(value.toLowerCase()))
+      setTutors(filteredTutors)
     } else {
-      // Reset users list if search term is empty
-      setUsers(allUsers)
+      // Reset tutors list if search term is empty
+      setTutors(allTutors)
     }
   }
 
   const toggleActiveStatus = (id, isActive) => {
-    // Update user's active status
+    // Update tutor's active status
     const newStatus = isActive ? 0 : 1
     const apiUrl = isActive
       ? `http://localhost:5000/api/admin/banUsers/${id}`
@@ -41,10 +42,10 @@ const AdminPortal = () => {
     axios
       .put(apiUrl)
       .then((response) => {
-        setUsers(users.map((user) => (user.id === id ? { ...user, active: newStatus } : user)))
+        setTutors(tutors.map((tutor) => (tutor.id === id ? { ...tutor, active: newStatus } : tutor)))
       })
       .catch((error) => {
-        console.error('Error updating user status:', error)
+        console.error('Error updating tutor status:', error)
       })
   }
 
@@ -54,14 +55,14 @@ const AdminPortal = () => {
         <MegaMenuWithHover />
       </header>
       <div className='pt-20'>
-        <h1 className='text-3xl font-bold mb-6 text-center'>Admin Portal - Users</h1>
+        <h1 className='text-3xl font-bold mb-6 text-center'>Admin Portal - Tutors</h1>
         <div className='flex justify-center mb-6'>
           <input
             type='text'
             value={searchTerm}
             onChange={handleInputChange}
             className='border border-gray-400 p-2 rounded-l-lg flex-grow max-w-xl'
-            placeholder='Search by username'
+            placeholder='Search by tutor username'
           />
         </div>
         <table className='min-w-full bg-white shadow-md rounded-lg overflow-hidden'>
@@ -80,23 +81,23 @@ const AdminPortal = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user, index) => (
-              <tr key={user.id} className='border-b hover:bg-gray-100'>
+            {tutors.map((tutor, index) => (
+              <tr key={tutor.id} className='border-b hover:bg-gray-100'>
                 <td className='p-4'>{index + 1}</td>
-                <td className='p-4'>{user.userName}</td>
-                <td className='p-4'>{user.fullName}</td>
-                <td className='p-4'>{user.email}</td>
-                <td className='p-4'>{user.dateOfBirth}</td>
-                <td className='p-4'>{user.role}</td>
-                <td className='p-4'>{user.phone}</td>
-                <td className='p-4'>{user.address}</td>
-                <td className='p-4'>{user.active ? 'Active' : 'Inactive'}</td>
+                <td className='p-4'>{tutor.userName}</td>
+                <td className='p-4'>{tutor.fullName}</td>
+                <td className='p-4'>{tutor.email}</td>
+                <td className='p-4'>{tutor.dateOfBirth}</td>
+                <td className='p-4'>{tutor.role}</td>
+                <td className='p-4'>{tutor.phone}</td>
+                <td className='p-4'>{tutor.address}</td>
+                <td className='p-4'>{tutor.active ? 'Active' : 'Inactive'}</td>
                 <td className='p-4'>
                   <button
-                    onClick={() => toggleActiveStatus(user.id, user.active)}
-                    className={`p-2 rounded-lg ${user.active ? 'bg-red-500' : 'bg-green-500'} text-white`}
+                    onClick={() => toggleActiveStatus(tutor.id, tutor.active)}
+                    className={`p-2 rounded-lg ${tutor.active ? 'bg-red-500' : 'bg-green-500'} text-white`}
                   >
-                    {user.active ? 'Ban' : 'Unban'}
+                    {tutor.active ? 'Ban' : 'Unban'}
                   </button>
                 </td>
               </tr>
@@ -108,4 +109,4 @@ const AdminPortal = () => {
   )
 }
 
-export default AdminPortal
+export default AdminPortalTutor
