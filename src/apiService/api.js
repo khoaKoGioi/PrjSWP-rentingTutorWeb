@@ -93,8 +93,8 @@ export const registerTutor = async (
     formData.append('address', address)
 
     formData.append('workplace', workplace)
-    formData.append('credentialFile', credentialFile)
-    formData.append('degreeFile', degreeFile)
+    formData.append('identityCard', credentialFile)
+    formData.append('degrees', degreeFile)
     formData.append('description', description)
 
     const response = await axios.post(`${API_URL}/auth/registerTutor`, formData, {

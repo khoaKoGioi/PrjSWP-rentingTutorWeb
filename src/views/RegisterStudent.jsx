@@ -6,6 +6,10 @@ import GradePick from '../components/GradePick.jsx'
 import { Input } from '@material-tailwind/react'
 import { Password } from '../components/Password.jsx'
 import { useNavigate } from 'react-router-dom'
+import { storage } from '../firebase.js'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { v4 } from 'uuid'
+
 const Register = () => {
   const navigate = useNavigate()
   const { register } = useContext(AuthContext)
@@ -44,12 +48,24 @@ const Register = () => {
     setFormData({ ...formData, [name]: files[0] })
   }
 
+  const uploadFileToFirebase = async (file) => {
+    const storageRef = ref(storage, `images/${v4()}-${file.name}`)
+    await uploadBytes(storageRef, file)
+    const url = await getDownloadURL(storageRef)
+    return url
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Form Data:', formData) // Log formData to check its structure
 
     try {
-      const response = await register('student', formData) // Await the register function call
+      const avatarURL = formData.avatar ? await uploadFileToFirebase(formData.avatar) : null
+
+      const updatedFormData = {
+        ...formData,
+        avatar: avatarURL
+      }
+      const response = await register('student', updatedFormData) // Await the register function call
       console.log('Response:', response) // Log response to check its structure
       alert('Student registered successfully')
 
