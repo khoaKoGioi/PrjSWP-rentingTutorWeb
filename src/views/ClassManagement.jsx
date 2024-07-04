@@ -3,6 +3,8 @@ import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
 import AuthContext from '../contexts/JWTAuthContext' // Import AuthContext
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const apiBaseUrl = 'http://localhost:5000/api/tutors'
 
@@ -48,7 +50,7 @@ const ClassManagement = () => {
   const fetchClasses = async () => {
     try {
       if (!token) {
-        console.error('User is not logged in')
+        toast.error('User is not logged in')
         return
       }
       const decodedToken = jwtDecode(token)
@@ -64,7 +66,7 @@ const ClassManagement = () => {
   const handleDeleteClass = async (classID) => {
     try {
       await axios.delete(`${apiBaseUrl}/deleteClasses/${classID}`)
-      alert('Class deleted successfully!')
+      toast('Class deleted successfully!')
       fetchClasses()
     } catch (error) {
       console.error('Error deleting class:', error)
@@ -128,10 +130,7 @@ const ClassManagement = () => {
       const decodedToken = jwtDecode(token)
       const tutorID = decodedToken.user.tutorID
       formData.tutorID = tutorID
-
-      const endpoint = `${apiBaseUrl}/createClasses`
-      const response = await axios.post(endpoint, formData)
-
+      const response = await axios.post(`${apiBaseUrl}/createClasses`, formData)
       setClasses([...classes, response.data])
       setFormData({
         videoLink: '',
@@ -146,10 +145,11 @@ const ClassManagement = () => {
         type: ''
       })
       setIsModalOpen(false)
-      alert('Class created successfully!')
+      toast.info('Class created successfully!')
+      fetchClasses()
     } catch (error) {
       console.error('Error adding class:', error)
-      alert('There was an error creating the class.')
+      toast.error('You can only create 10 class.')
     }
   }
 
@@ -181,11 +181,11 @@ const ClassManagement = () => {
       const response = await axios.post(`${apiBaseUrl}/updateClasses/${currentClassId}`, updateFormData)
       setClasses(classes.map((cls) => (cls.id === currentClassId ? response.data : cls)))
       setIsUpdateModalOpen(false)
-      alert('Class updated successfully!')
+      toast.info('Class updated successfully!')
       fetchClasses()
     } catch (error) {
       console.error('Error updating class:', error)
-      alert('There was an error updating the class.')
+      toast.error('There was an error updating the class.')
     }
   }
 
@@ -473,6 +473,7 @@ const ClassManagement = () => {
           </div>
         )}
       </div>
+      <ToastContainer />
     </div>
   )
 }

@@ -8,6 +8,8 @@ import { faPlay, faStar, faStarHalfAlt, faTimes } from '@fortawesome/free-solid-
 import { CircularImg } from '../components/CircularImg.jsx'
 import BreadcrumbsWithIcon from '../components/BreadCrumb.jsx'
 import MegaMenuWithHover from '../components/MegaMenuWithHover.jsx'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const ClassDetail = () => {
   const { id } = useParams()
@@ -51,7 +53,7 @@ const ClassDetail = () => {
       const response = await axios.get(`http://localhost:5000/api/students/checkEnroll/${id}`)
       const token = localStorage.getItem('token')
       if (!token) {
-        console.error('User is not logged in')
+        // toast.error('User is not logged in')
         return
       }
       const decodedToken = jwtDecode(token)
@@ -73,7 +75,7 @@ const ClassDetail = () => {
     try {
       const token = localStorage.getItem('token')
       if (!token) {
-        setEnrollError('User is not logged in')
+        toast.error('You need to log in before enrolling into this class')
         return
       }
       const decodedToken = jwtDecode(token)
@@ -83,20 +85,20 @@ const ClassDetail = () => {
           studentID
         })
         setIsEnrolled(true)
-        setEnrollError('')
+        toast.success('Successfully enrolled in the class')
       } else if (decodedToken.user.role == 'Tutor') {
         const tutorId = decodedToken.user.tutorID
         if (tutorId == classData.tutorID) {
-          setEnrollError('You are the tutor of this class!')
+          toast.error('You are the tutor of this class!')
         } else {
-          setEnrollError('You are not a student!')
+          toast.error('You are not a student!')
         }
       } else {
-        setEnrollError('User is not a student')
+        toast.error('User is not a student')
       }
     } catch (error) {
       console.error('Error enrolling in class:', error)
-      setEnrollError(error.response.data.message || 'Failed to enroll in class. Please try again.')
+      toast.error(error.response.data.message || 'Failed to enroll in class. Please try again.')
     }
   }
 
@@ -306,6 +308,7 @@ const ClassDetail = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   )
 }
