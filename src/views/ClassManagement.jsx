@@ -242,7 +242,9 @@ const ClassManagement = () => {
           ))}
         </div>
 
-        <h2 className='text-xl font-bold mb-4 mt-8'>Inactive Classes</h2>
+        <div>
+          <h2 className='text-xl font-bold mb-4 mt-8 text-center'>Inactive Classes</h2>
+        </div>
         <div className='grid grid-cols-1 gap-4'>
           {inactiveClasses.map((cls) => (
             <div key={cls.classID} className='flex justify-between items-center p-4 border rounded shadow'>
