@@ -1,4 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
 import {
   FaEnvelope,
@@ -79,18 +81,18 @@ const UserProfile = () => {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to update profile')
+        throw new toast.error('Failed to update profile')
         console.log(response)
       }
       const data = await response.json()
 
       localStorage.setItem('token', data.token)
       setUserData(data.user)
-      alert('Profile updated successfully!')
+      toast.info('Profile updated successfully!')
       window.location.reload()
     } catch (error) {
       console.error('Failed to update profile:', error)
-      alert('Failed to update profile. Please try again.')
+      toast.error('Failed to update profile. Please try again.')
     }
   }
 
@@ -330,6 +332,7 @@ const UserProfile = () => {
           </button>
         </div>
       </div>
+      <ToastContainer />
     </div>
   )
 }

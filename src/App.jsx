@@ -12,7 +12,6 @@ import ViewTutorProfile from './views/ViewTutorProfile'
 import AuthGuard from './auth/AuthGuard'
 import ClassManagement from './views/ClassManagement'
 import AdminPortal from './views/AdminPortal'
-import ClassListManagement from './views/ClassListManagement'
 import FeedbackManagement from './views/feedbackManagement'
 import AdminPortalTutor from './views/AdminPortalTutor'
 import AdminPortalStudent from './views/AdminPortalStudent'
@@ -35,7 +34,6 @@ const App = () => {
           <Route path='/admin-portal-student' element={<AdminPortalStudent />} />
           <Route path='/admin-portal-tutor' element={<AdminPortalTutor />} />
           <Route path='/admin-portal-class' element={<AdminPortalClass />} />
-          <Route path='/admin-classlist' element={<ClassListManagement />} />
           <Route path='/admin-feedback' element={<FeedbackManagement />} />
           {/* Protected routes */}
 
@@ -44,14 +42,6 @@ const App = () => {
             element={
               <AuthGuard>
                 <UserProfile />
-              </AuthGuard>
-            }
-          />
-          <Route
-            path='/tutor-profile/:id'
-            element={
-              <AuthGuard>
-                <ViewTutorProfile />
               </AuthGuard>
             }
           />

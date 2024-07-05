@@ -8,6 +8,8 @@ import { Password } from '../components/Password.jsx'
 import { useNavigate } from 'react-router-dom'
 import { storage } from '../firebase.js'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { v4 } from 'uuid'
 
 const Register = () => {
@@ -67,12 +69,12 @@ const Register = () => {
       }
       const response = await register('student', updatedFormData) // Await the register function call
       console.log('Response:', response) // Log response to check its structure
-      alert('Student registered successfully')
+      toast.info('Student registered successfully')
 
       navigate('/')
     } catch (error) {
       console.error('Error submitting form:', error)
-      alert(`Error submitting form: ${error.message}`)
+      toast.error(`Error submitting form: ${error.message}`)
     }
   }
 
@@ -166,6 +168,7 @@ const Register = () => {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   )
 }

@@ -73,7 +73,7 @@ const ClassManagement = () => {
       fetchClasses()
     } catch (error) {
       console.error('Error deleting class:', error)
-      alert('There was an error deactivating the class.')
+      toast.error('There was an error deactivating the class.')
     }
   }
 
@@ -84,7 +84,7 @@ const ClassManagement = () => {
       fetchClasses()
     } catch (error) {
       console.error('Error deleting class:', error)
-      alert('There was an error activating the class.')
+      toast.error('There was an error activating the class.')
     }
   }
 
@@ -132,7 +132,7 @@ const ClassManagement = () => {
       //alert
       const validationError = validateForm(formData)
       if (validationError) {
-        alert(validationError)
+        toast.error(validationError)
         return
       }
 
@@ -189,7 +189,7 @@ const ClassManagement = () => {
     try {
       const validationError = validateForm(updateFormData)
       if (validationError) {
-        alert(validationError)
+        toast.error(validationError)
         return
       }
 
