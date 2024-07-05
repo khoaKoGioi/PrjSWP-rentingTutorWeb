@@ -23,6 +23,7 @@ const AdminPortal = () => {
   const handleInputChange = (e) => {
     const value = e.target.value
     setSearchTerm(value)
+
     if (value.trim() !== '') {
       const filteredUsers = allUsers.filter((user) => user.userName.toLowerCase().includes(value.toLowerCase()))
       setUsers(filteredUsers)
@@ -41,15 +42,23 @@ const AdminPortal = () => {
     axios
       .put(apiUrl)
       .then((response) => {
-        setUsers(users.map((user) => (user.id === id ? { ...user, active: newStatus } : user)))
+        setUsers(users.map((user) => (user.userID === id ? { ...user, active: newStatus } : user)))
       })
       .catch((error) => {
         console.error('Error updating user status:', error)
       })
   }
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${day}/${month}/${year}`
+  }
+
   return (
-    <div className='container mx-auto p-6 bg-gray-100 min-h-screen'>
+    <div className='mx-auto p-6 bg-gray-100 min-h-screen'>
       <header>
         <MegaMenuWithHover />
       </header>
@@ -64,7 +73,7 @@ const AdminPortal = () => {
             placeholder='Search by username'
           />
         </div>
-        <table className='min-w-full bg-white shadow-md rounded-lg overflow-hidden'>
+        <table className='mx-auto min-w-full bg-white shadow-md rounded-lg overflow-hidden'>
           <thead className='bg-gray-800 text-white'>
             <tr>
               <th className='p-4 text-left'>ID</th>
@@ -81,19 +90,19 @@ const AdminPortal = () => {
           </thead>
           <tbody>
             {users.map((user, index) => (
-              <tr key={user.id} className='border-b hover:bg-gray-100'>
+              <tr key={user.userID} className='border-b hover:bg-gray-100'>
                 <td className='p-4'>{index + 1}</td>
                 <td className='p-4'>{user.userName}</td>
                 <td className='p-4'>{user.fullName}</td>
                 <td className='p-4'>{user.email}</td>
-                <td className='p-4'>{user.dateOfBirth}</td>
+                <td className='p-4'>{formatDate(user.dateOfBirth)}</td>
                 <td className='p-4'>{user.role}</td>
                 <td className='p-4'>{user.phone}</td>
                 <td className='p-4'>{user.address}</td>
                 <td className='p-4'>{user.active ? 'Active' : 'Inactive'}</td>
                 <td className='p-4'>
                   <button
-                    onClick={() => toggleActiveStatus(user.id, user.active)}
+                    onClick={() => toggleActiveStatus(user.userID, user.active)}
                     className={`p-2 rounded-lg ${user.active ? 'bg-red-500' : 'bg-green-500'} text-white`}
                   >
                     {user.active ? 'Ban' : 'Unban'}
