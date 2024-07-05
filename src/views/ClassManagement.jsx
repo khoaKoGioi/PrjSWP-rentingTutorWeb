@@ -5,6 +5,7 @@ import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
 import AuthContext from '../contexts/JWTAuthContext' // Import AuthContext
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import AccessDeniedPage from '../components/AccessDeniedPage.jsx'
 
 const apiBaseUrl = 'http://localhost:5000/api/tutors'
 
@@ -30,23 +31,15 @@ const ClassManagement = () => {
   const [updateFormData, setUpdateFormData] = useState(formData)
   const [currentClassId, setCurrentClassId] = useState(null)
 
+  if (!token || !role || role == 'Student') {
+    return <AccessDeniedPage />
+  }
+
   useEffect(() => {
     if (token && role == 'Tutor') {
       fetchClasses()
     }
   }, [token, role])
-
-  if (!token || !role || role == 'Student') {
-    return (
-      <div className='flex items-center justify-center min-h-screen'>
-        <MegaMenuWithHover />
-        <div className='text-center'>
-          <h1 className='text-2xl font-bold'>Access Denied</h1>
-          <p className='mt-2 text-gray-600'>You do not have permission to view this page.</p>
-        </div>
-      </div>
-    )
-  }
 
   const fetchClasses = async () => {
     try {

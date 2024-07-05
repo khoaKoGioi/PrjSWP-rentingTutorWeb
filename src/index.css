@@ -6,6 +6,12 @@
 :root {
   font-family: 'Poppins', sans-serif;
 }
+
+@media (max-width: 960px) {
+  .mobile-hidden {
+    display: none;
+  }
+}
 /*
 const otherClasses = [
     {

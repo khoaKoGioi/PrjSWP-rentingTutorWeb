@@ -28,15 +28,19 @@ const UserProfile = () => {
   const token = localStorage.getItem('token')
   const { user } = useContext(AuthContext)
   const [userData, setUserData] = useState({})
-  const fileInputRef = useRef(null)
+  const [originalData, setOriginalData] = useState({})
+  const avatarInputRef = useRef(null)
+  const identityCardInputRef = useRef(null)
+  const degreesInputRef = useRef(null)
 
   useEffect(() => {
     if (user) {
       setUserData(user)
-    }
-    if (token) {
+      setOriginalData(user)
+    } else if (token) {
       const decodedToken = jwtDecode(token)
       setUserData(decodedToken.user)
+      setOriginalData(decodedToken.user)
     }
   }, [user])
 
@@ -65,14 +69,39 @@ const UserProfile = () => {
 
   const handleUpdate = async () => {
     try {
-      let avatarUrl = userData.avatar
-      // Check if avatar has changed and upload new avatar if necessary
-      if (userData.avatar) {
-        avatarUrl = await uploadFileToFirebase(userData.avatar)
+      const updates = {}
+
+      // Check for avatar changes
+      if (userData.avatar !== originalData.avatar) {
+        if (userData.avatar instanceof File) {
+          const url = await uploadFileToFirebase(userData.avatar)
+          updates.avatar = url
+        } else {
+          updates.avatar = userData.avatar
+        }
       }
 
-      const updatedUserData = { ...userData, avatar: avatarUrl }
-      console.log(updatedUserData)
+      // Check for degree changes
+      if (userData.degrees !== originalData.degrees) {
+        if (userData.degrees instanceof File) {
+          const url = await uploadFileToFirebase(userData.degrees)
+          updates.degrees = url
+        } else {
+          updates.degrees = userData.degrees
+        }
+      }
+
+      // Check for identity card changes
+      if (userData.identityCard !== originalData.identityCard) {
+        if (userData.identityCard instanceof File) {
+          const url = await uploadFileToFirebase(userData.identityCard)
+          updates.identityCard = url
+        } else {
+          updates.identityCard = userData.identityCard
+        }
+      }
+
+      const updatedUserData = { ...userData, ...updates }
 
       const userID = user.userID || (await jwtDecode(token).user.userID)
       const response = await axios.put(`http://localhost:5000/api/users/update/${userID}`, {
@@ -95,12 +124,21 @@ const UserProfile = () => {
   }
 
   const handleAvatarClick = () => {
-    fileInputRef.current.click()
+    avatarInputRef.current.click()
+  }
+
+  const handleIdentityCardClick = () => {
+    identityCardInputRef.current.click()
+  }
+
+  const handleDegreesClick = () => {
+    degreesInputRef.current.click()
   }
 
   const handleFileChange = (e) => {
     const { name, files } = e.target
     setUserData({ ...userData, [name]: files[0] })
+    console.log(userData)
   }
 
   const renderRatingStars = () => {
@@ -151,7 +189,7 @@ const UserProfile = () => {
           </div>
           <input
             type='file'
-            ref={fileInputRef}
+            ref={avatarInputRef}
             style={{ display: 'none' }}
             name='avatar'
             accept='image/*'
@@ -306,12 +344,47 @@ const UserProfile = () => {
               <div className='flex flex-col mb-4'>
                 <div className='flex items-center'>
                   <FaFileAlt className='mr-2 text-gray-600' />
+                  <span className='block text-sm font-medium text-gray-700'>Identity Card</span>
+                </div>
+                <img
+                  src={
+                    userData.identityCard instanceof File
+                      ? URL.createObjectURL(userData.identityCard) // Convert File to URL
+                      : userData.identityCard || null
+                  }
+                  alt='Identity Card'
+                  className='mt-1 w-full h-auto max-h-60 object-cover border border-gray-300 rounded-md shadow-sm'
+                />
+                <input
+                  type='file'
+                  ref={identityCardInputRef}
+                  // style={{ display: 'none' }}
+                  name='identityCard'
+                  accept='image/*'
+                  onChange={handleFileChange}
+                />
+              </div>
+              <div className='flex flex-col mb-4'>
+                <div className='flex items-center'>
+                  <FaFileAlt className='mr-2 text-gray-600' />
                   <span className='block text-sm font-medium text-gray-700'>Degrees</span>
                 </div>
                 <img
-                  src={userData.degrees || null}
+                  src={
+                    userData.degrees instanceof File
+                      ? URL.createObjectURL(userData.degrees) // Convert File to URL
+                      : userData.degrees || null
+                  }
                   alt='Degrees'
                   className='mt-1 w-full h-auto max-h-60 object-cover border border-gray-300 rounded-md shadow-sm'
+                />
+                <input
+                  type='file'
+                  ref={degreesInputRef}
+                  // style={{ display: 'none' }}
+                  name='degrees'
+                  accept='image/*'
+                  onChange={handleFileChange}
                 />
               </div>
             </>

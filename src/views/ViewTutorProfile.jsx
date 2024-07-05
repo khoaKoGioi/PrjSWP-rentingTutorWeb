@@ -4,16 +4,26 @@ import { FaStar, FaUser, FaBook, FaCertificate, FaInfoCircle } from 'react-icons
 import BreadcrumbsWithIcon from '../components/BreadCrumb.jsx' // Adjust path as per your project structure
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const ViewTutorProfile = () => {
   const { id } = useParams()
+  const token = localStorage.getItem('token')
+  const role = localStorage.getItem('role')
   const [tutor, setTutor] = useState([])
+  const [user, setUser] = useState([])
   const [isRequestOpen, setRequestOpen] = useState(false)
   const [requestMessage, setRequestMessage] = useState('')
 
   useEffect(() => {
     if (id) {
       fetchTutor()
+    }
+    if (token) {
+      const decodedToken = jwtDecode(token)
+      setUser(decodedToken.user)
     }
   }, [id])
 
@@ -34,12 +44,23 @@ const ViewTutorProfile = () => {
     setRequestMessage(e.target.value)
   }
 
-  const handleSendRequest = () => {
-    // Here you would handle the request, e.g., send the request message to a server
-    console.log('Request message sent:', requestMessage)
-    // Close the request box after sending the message
-    setRequestOpen(false)
-    setRequestMessage('')
+  const handleSendRequest = async () => {
+    if (role != 'Student' || user.role != 'Student') {
+      toast.error('You are not a student!')
+    } else {
+      if (!requestMessage) {
+        toast.error('You cannot sent blank message!')
+        return
+      }
+      const response = await axios.post(`http://localhost:5000/api/students/requestClass/${tutor.tutorID}`, {
+        studentID: user.studentID,
+        message: requestMessage
+      })
+      toast.info('Request message sent!')
+      // Close the request box after sending the message
+      setRequestOpen(false)
+      setRequestMessage('')
+    }
   }
 
   return (
@@ -129,6 +150,7 @@ const ViewTutorProfile = () => {
           </div>
         )}
       </div>
+      <ToastContainer />
     </div>
   )
 }
