@@ -118,7 +118,7 @@ const ClassDetail = () => {
     try {
       const token = localStorage.getItem('token')
       if (!token) {
-        toast.error('User is not logged in')
+        console.log('User is not logged in')
         return
       }
       const decodedToken = jwtDecode(token)
