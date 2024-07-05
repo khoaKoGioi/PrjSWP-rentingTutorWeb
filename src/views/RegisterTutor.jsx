@@ -9,6 +9,8 @@ import '../styles/custom.css'
 import { storage } from '../firebase.js'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { v4 } from 'uuid'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const RegisterTutor = () => {
   const navigate = useNavigate()
@@ -68,11 +70,11 @@ const RegisterTutor = () => {
       }
 
       const response = await register('tutor', updatedFormData)
-      alert('Tutor registered successfully')
+      toast.info('Tutor registered successfully')
       navigate('/')
     } catch (error) {
       console.error('Error submitting form:', error)
-      alert(`Error submitting form: ${error.message}`)
+      toast.error(`Error submitting form: ${error.message}`)
     }
   }
 
@@ -187,6 +189,7 @@ const RegisterTutor = () => {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   )
 }
