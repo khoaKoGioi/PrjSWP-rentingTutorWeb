@@ -332,6 +332,7 @@ const ClassDetail = () => {
           </div>
         </div>
       )}
+      <ChatBox />
       <ToastContainer />
     </div>
   )

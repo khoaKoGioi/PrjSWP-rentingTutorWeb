@@ -150,6 +150,7 @@ const ViewTutorProfile = () => {
           </div>
         )}
       </div>
+      <ChatBox />
       <ToastContainer />
     </div>
   )

@@ -30,7 +30,9 @@ const AdminPortal = () => {
     setSearchTerm(value)
 
     if (value.trim() !== '') {
-      const filteredUsers = allUsers.filter((user) => user.userName.toLowerCase().includes(value.toLowerCase()))
+      const filteredUsers = allUsers.filter(
+        (user) => user.userName && user.userName.toLowerCase().includes(value.toLowerCase())
+      )
       setUsers(filteredUsers)
     } else {
       // Reset users list if search term is empty

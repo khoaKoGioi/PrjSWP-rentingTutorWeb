@@ -13,19 +13,19 @@ function NavList() {
   const role = localStorage.getItem('role')
   const adminPortalLinks = [
     {
-      title: 'Admin Portal',
+      title: 'Manage User',
       path: '/admin-portal'
     },
     {
-      title: 'Admin Portal Tutor',
+      title: 'Manage Tutor',
       path: '/admin-portal-tutor'
     },
     {
-      title: 'Admin Portal Class',
+      title: 'Manage Class',
       path: '/admin-portal-class'
     },
     {
-      title: 'Admin Portal Student',
+      title: 'Manage Student',
       path: '/admin-portal-student'
     }
   ]
