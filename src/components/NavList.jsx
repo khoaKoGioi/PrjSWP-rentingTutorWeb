@@ -2,14 +2,33 @@ import React, { useContext } from 'react'
 import NavListRegister from './Navigation/NavListRegister.jsx'
 import ProfileMenu from './ProfileMenu'
 import NavListMenu from './NavListMenu.jsx'
-import { List, ListItem, Typography } from '@material-tailwind/react'
+import { List, ListItem, Menu, MenuHandler, MenuList, Typography } from '@material-tailwind/react'
 import AuthContext from '../contexts/JWTAuthContext' // Import AuthContext
 import { NavLink, useNavigate } from 'react-router-dom'
+import { ChevronDownIcon } from 'lucide-react'
 
 function NavList() {
   const { isAuthenticated } = useContext(AuthContext)
   const navigate = useNavigate() // Use useNavigate hook
   const role = localStorage.getItem('role')
+  const adminPortalLinks = [
+    {
+      title: 'Admin Portal',
+      path: '/admin-portal'
+    },
+    {
+      title: 'Admin Portal Tutor',
+      path: '/admin-portal-tutor'
+    },
+    {
+      title: 'Admin Portal Class',
+      path: '/admin-portal-class'
+    },
+    {
+      title: 'Admin Portal Student',
+      path: '/admin-portal-student'
+    }
+  ]
 
   const renderManageClassLink = role === 'Tutor' && (
     <Typography as='div' variant='small' color='white' className='font-medium'>
@@ -19,6 +38,30 @@ function NavList() {
         </NavLink>
       </ListItem>
     </Typography>
+  )
+
+  const renderAdminClassLink = role === 'Admin' && (
+    <Menu offset={{ mainAxis: 20 }} placement='bottom' allowHover={true}>
+      <MenuHandler>
+        <Typography as='div' variant='small' className='font-medium'>
+          <ListItem className='flex items-center gap-2 py-2 pr-4 text-lg text-white font-extrabold'>
+            Admin Portal
+            <ChevronDownIcon strokeWidth={2.5} className='hidden h-3 w-3 transition-transform lg:block' />
+          </ListItem>
+        </Typography>
+      </MenuHandler>
+      <MenuList className='hidden max-w-screen-xl rounded-xl lg:block'>
+        <ul className='outline-none'>
+          {adminPortalLinks.map((link, index) => (
+            <NavLink key={index} to={link.path}>
+              <ListItem className='flex items-center gap-2 py-2 pr-4 text-lg text-blue-gray-900 font-extrabold'>
+                {link.title}
+              </ListItem>
+            </NavLink>
+          ))}
+        </ul>
+      </MenuList>
+    </Menu>
   )
 
   return (
@@ -32,6 +75,8 @@ function NavList() {
       </Typography>
 
       {role === 'Tutor' && renderManageClassLink}
+
+      {role === 'Admin' && renderAdminClassLink}
 
       <Typography as='div' variant='small' color='white' className='font-medium'>
         <ListItem className='flex items-center text-lg gap-2 py-2 pr-4 font-extrabold'>

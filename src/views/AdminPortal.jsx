@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
+import AccessDeniedPage from '../components/AccessDeniedPage.jsx'
 
 const AdminPortal = () => {
   const [users, setUsers] = useState([])
   const [allUsers, setAllUsers] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
+  const role = localStorage.getItem('role')
+  if (role != 'Admin') {
+    return <AccessDeniedPage />
+  }
 
   useEffect(() => {
     // Fetch users from the API
