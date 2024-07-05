@@ -17,6 +17,7 @@ import AdminPortalTutor from './views/AdminPortalTutor'
 import AdminPortalStudent from './views/AdminPortalStudent'
 import AdminPortalClass from './views/AdminPortalClass'
 import TutorRequest from './views/TutorRequest'
+import AccessDeniedPage from './components/AccessDeniedPage'
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
           <Route path='/admin-portal-class' element={<AdminPortalClass />} />
           <Route path='/admin-feedback' element={<FeedbackManagement />} />
           <Route path='/view-tutor-request' element={<TutorRequest />} />
+          <Route path='/unauthorized' element={<AccessDeniedPage />} />
           {/* Protected routes */}
 
           <Route
