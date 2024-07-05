@@ -31,15 +31,15 @@ const ClassManagement = () => {
   const [updateFormData, setUpdateFormData] = useState(formData)
   const [currentClassId, setCurrentClassId] = useState(null)
 
+  if (!token || !role || role == 'Student') {
+    return <AccessDeniedPage />
+  }
+
   useEffect(() => {
     if (token && role == 'Tutor') {
       fetchClasses()
     }
   }, [token, role])
-
-  if (!token || !role || role == 'Student') {
-    return <AccessDeniedPage />
-  }
 
   const fetchClasses = async () => {
     try {
