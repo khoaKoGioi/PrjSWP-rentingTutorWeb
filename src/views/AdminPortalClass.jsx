@@ -8,17 +8,21 @@ const AdminPortalClass = () => {
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
-    // Fetch classes from the API
+    fetchClasses()
+  }, [])
+
+  const fetchClasses = async () => {
     axios
-      .get('http://localhost:5000/api/admin/classList')
+      .get('http://localhost:5000/api/admin/classListExisted')
       .then((response) => {
         setClasses(response.data.data)
         setAllClasses(response.data.data)
+        console.log(response.data)
       })
       .catch((error) => {
         console.error('Error fetching classes:', error)
       })
-  }, [])
+  }
 
   const handleInputChange = (e) => {
     const value = e.target.value
@@ -34,21 +38,16 @@ const AdminPortalClass = () => {
     }
   }
 
-  const toggleActiveStatus = (id, isActive) => {
-    // Update class's isActive status
-    const newStatus = isActive ? 0 : 1
-    const apiUrl = isActive
-      ? `http://localhost:5000/api/admin/banClass/${id}`
-      : `http://localhost:5000/api/admin/unbanClass/${id}`
+  const deleteClass = (id) => {
+    // Delete class
     axios
-      .put(apiUrl)
+      .delete(`http://localhost:5000/api/admin/deleteClass/${id}`)
       .then((response) => {
-        setClasses(
-          classes.map((classItem) => (classItem.id === id ? { ...classItem, isActive: newStatus } : classItem))
-        )
+        setClasses(classes.filter((classItem) => classItem.id !== id))
+        fetchClasses()
       })
       .catch((error) => {
-        console.error('Error updating class status:', error)
+        console.error('Error deleting class:', error)
       })
   }
 
@@ -105,10 +104,10 @@ const AdminPortalClass = () => {
                 <td className='p-4'>{classItem.isActive ? 'Active' : 'Inactive'}</td>
                 <td className='p-4'>
                   <button
-                    onClick={() => toggleActiveStatus(classItem.id, classItem.isActive)}
-                    className={`p-2 rounded-lg ${classItem.isActive ? 'bg-red-500' : 'bg-green-500'} text-white`}
+                    onClick={() => deleteClass(classItem.classID)}
+                    className='p-2 rounded-lg bg-red-500 text-white'
                   >
-                    {classItem.isActive ? 'Ban' : 'Unban'}
+                    Delete
                   </button>
                 </td>
               </tr>
