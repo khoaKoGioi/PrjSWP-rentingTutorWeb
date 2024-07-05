@@ -7,7 +7,8 @@ import {
   InboxArrowDownIcon,
   LifebuoyIcon,
   PowerIcon,
-  UserCircleIcon
+  UserCircleIcon,
+  BellIcon
 } from '@heroicons/react/24/outline'
 import AuthContext from '../contexts/JWTAuthContext'
 
@@ -16,6 +17,11 @@ const profileMenuItems = [
     label: 'My Profile',
     icon: UserCircleIcon,
     action: 'profile' // Add action type for profile
+  },
+  {
+    label: 'Request',
+    icon: BellIcon,
+    action: 'request'
   },
   {
     label: 'Inbox',
@@ -44,6 +50,8 @@ function ProfileMenu() {
       logout()
     } else if (action === 'profile') {
       navigate('/profile') // Navigate to the profile page
+    } else if (action === 'request') {
+      navigate('/view-tutor-request') // Navigate to the profile page
     }
     closeMenu()
   }
@@ -64,7 +72,11 @@ function ProfileMenu() {
             className={`h-3 w-3 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`}
           />
           {user && user.avatar ? (
-            <img src={user.avatar} alt='Profile' className='border border-gray-900 p-0.5 h-8 w-8 rounded-full' />
+            <img
+              src={user.avatar}
+              alt='Profile'
+              className='border border-gray-900 p-0.5 h-8 w-8 rounded-full object-cover object-center'
+            />
           ) : (
             <UserCircleIcon className='h-8 w-8 rounded-full border border-gray-900 p-0.5' />
           )}
