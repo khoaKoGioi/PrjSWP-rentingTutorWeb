@@ -7,6 +7,7 @@ import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import ChatBox from '../components/ChatBox.jsx'
 
 const ViewTutorProfile = () => {
   const { id } = useParams()
