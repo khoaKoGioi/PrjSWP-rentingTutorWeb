@@ -12,6 +12,7 @@ import MegaMenuWithHover from '../components/MegaMenuWithHover.jsx'
 import StarRating from '../components/StarRating'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import ChatBox from '../components/ChatBox.jsx'
 
 const ClassDetail = () => {
   const { id } = useParams()
