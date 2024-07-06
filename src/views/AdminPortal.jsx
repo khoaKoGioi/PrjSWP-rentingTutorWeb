@@ -66,22 +66,22 @@ const AdminPortal = () => {
 
   return (
     <div className='mx-auto p-6 bg-gray-100 min-h-screen'>
-      <header>
+      <header className='bg-purple-600 text-white shadow-md py-4'>
         <MegaMenuWithHover />
       </header>
       <div className='pt-20'>
-        <h1 className='text-3xl font-bold mb-6 text-center'>Admin Portal - Users</h1>
+        <h1 className='text-4xl font-bold mb-6 text-center text-black'>Admin Portal - Users</h1>
         <div className='flex justify-center mb-6'>
           <input
             type='text'
             value={searchTerm}
             onChange={handleInputChange}
-            className='border border-gray-400 p-2 rounded-l-lg flex-grow max-w-xl'
+            className='border border-gray-400 p-2 rounded-lg flex-grow max-w-xl focus:outline-none focus:ring-2 focus:ring-purple-500'
             placeholder='Search by username'
           />
         </div>
         <table className='mx-auto min-w-full bg-white shadow-md rounded-lg overflow-hidden'>
-          <thead className='bg-gray-800 text-white'>
+          <thead className='bg-gradient-to-t from-yellow-700 to-yellow-300 text-black'>
             <tr>
               <th className='p-4 text-left'>ID</th>
               <th className='p-4 text-left'>UserName</th>
@@ -97,7 +97,7 @@ const AdminPortal = () => {
           </thead>
           <tbody>
             {users.map((user, index) => (
-              <tr key={user.userID} className='border-b hover:bg-gray-100'>
+              <tr key={user.userID} className='border-b hover:bg-purple-50'>
                 <td className='p-4'>{index + 1}</td>
                 <td className='p-4'>{user.userName}</td>
                 <td className='p-4'>{user.fullName}</td>
@@ -106,14 +106,26 @@ const AdminPortal = () => {
                 <td className='p-4'>{user.role}</td>
                 <td className='p-4'>{user.phone}</td>
                 <td className='p-4'>{user.address}</td>
-                <td className='p-4'>{user.active ? 'Active' : 'Inactive'}</td>
                 <td className='p-4'>
-                  <button
-                    onClick={() => toggleActiveStatus(user.userID, user.active)}
-                    className={`p-2 rounded-lg ${user.active ? 'bg-red-500' : 'bg-green-500'} text-white`}
+                  <span
+                    className={`inline-block px-3 py-1 rounded-full text-sm ${
+                      user.active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                    }`}
                   >
-                    {user.active ? 'Ban' : 'Unban'}
-                  </button>
+                    {user.active ? 'Active' : 'Inactive'}
+                  </span>
+                </td>
+                <td className='p-4'>
+                  {user.role !== 'Admin' && (
+                    <button
+                      onClick={() => toggleActiveStatus(user.userID, user.active)}
+                      className={`p-2 rounded-lg transition-colors duration-300 ${
+                        user.active ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'
+                      } text-white`}
+                    >
+                      {user.active ? 'Ban' : 'Unban'}
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
