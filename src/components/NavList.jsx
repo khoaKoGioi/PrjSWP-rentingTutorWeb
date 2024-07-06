@@ -27,6 +27,10 @@ function NavList() {
     {
       title: 'Manage Student',
       path: '/admin-portal-student'
+    },
+    {
+      title: 'Manage Request',
+      path: '/admin-portal-tutor-request'
     }
   ]
 
