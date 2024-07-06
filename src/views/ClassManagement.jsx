@@ -149,7 +149,7 @@ const ClassManagement = () => {
         PaymentID: 0,
         length: '',
         available: '',
-        type: ''
+        type: '' === 'Online' ? 'Online' : 'Offline'
       })
       setIsModalOpen(false)
       toast.info('Class created successfully!')
