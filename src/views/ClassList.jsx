@@ -7,6 +7,7 @@ import PriceRangeSlider from '../components/PriceRangeSlider.jsx'
 import ClassCard from '../components/ClassCard.jsx' // Assuming ClassCard component exists
 import { Pagination } from '@nextui-org/react'
 import ChatBox from '../components/ChatBox.jsx'
+import AccessDeniedPage from './../components/AccessDeniedPage'
 
 const itemsPerPage = 12
 

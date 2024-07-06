@@ -110,17 +110,22 @@ const ChatBox = () => {
       }`}
     >
       <div
-        className='chat-header bg-blue-500 text-white p-2 flex justify-between items-center cursor-pointer'
+        className='chat-header bg-blue-500 text-white p-3 flex justify-between items-center cursor-pointer'
         onClick={toggleChatBox}
       >
-        {isOpen ? <FaTimes /> : <FaComments />}
-        <span className='font-bold'>{selectedUser ? `${selectedUser.fullName} Chat` : 'Select a User'}</span>
+        {isOpen ? <FaTimes size={20} /> : <FaComments size={20} />}
+        <span className='font-bold ml-2'>{selectedUser ? `${selectedUser.fullName} Chat` : 'Select a User'}</span>
       </div>
       {isOpen && (
-        <div className='chat-content flex flex-col p-2 h-full'>
-          <div className='messages flex-1 overflow-y-auto mb-2'>
+        <div className='chat-content flex flex-col p-3 h-full'>
+          <div className='messages flex-1 overflow-y-auto mb-3 space-y-3'>
             {messages.map((msg, index) => (
-              <div key={index} className={`message ${msg.senderID === user.userID ? 'self text-right' : 'text-left'}`}>
+              <div
+                key={index}
+                className={`message p-2 rounded-lg ${
+                  msg.senderID === user.userID ? 'self bg-blue-100 text-right' : 'bg-gray-100 text-left'
+                }`}
+              >
                 <strong>{msg.senderType}</strong>: {msg.messageText}
                 <span className='block text-xs text-gray-500'>{new Date(msg.timestamp).toLocaleTimeString()}</span>
               </div>
@@ -132,14 +137,14 @@ const ChatBox = () => {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder='Type a message'
-              className='flex-1 border p-2 rounded-l-lg'
+              className='flex-1 border p-3 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
-            <button onClick={handleSendMessage} className='bg-blue-500 text-white p-2 rounded-r-lg'>
+            <button onClick={handleSendMessage} className='bg-blue-500 text-white p-3 rounded-r-lg hover:bg-blue-600'>
               Send
             </button>
           </div>
           {/* Toggle user list button */}
-          <div className='toggle-user-list flex left-4 bottom-4'>
+          <div className='toggle-user-list flex left-4 bottom-4 mt-3'>
             <button
               onClick={toggleUserList}
               className='bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none'
@@ -153,9 +158,9 @@ const ChatBox = () => {
       <div
         className={`user-list ${
           isSelectOpen ? 'block' : 'hidden'
-        } absolute bottom-32 right-4 bg-white shadow-lg rounded-lg overflow-hidden p-2 max-h-60 w-60 border`}
+        } absolute bottom-32 right-4 bg-white shadow-lg rounded-lg overflow-hidden p-3 max-h-60 w-60 border`}
       >
-        <h3 className='text-lg font-semibold mb-2'>Select a User</h3>
+        <h3 className='text-lg font-semibold mb-3'>Select a User</h3>
         <ul className='divide-y divide-gray-200 max-h-60 overflow-y-auto'>
           {users.map((user) => (
             <li
