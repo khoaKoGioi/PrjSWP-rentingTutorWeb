@@ -18,6 +18,7 @@ import AdminPortalClass from './views/AdminPortalClass'
 import TutorRequest from './views/TutorRequest'
 import AccessDeniedPage from './components/AccessDeniedPage'
 import Test from './views/checkoutPage'
+import ViewTutorProfile from './views/ViewTutorProfile'
 
 const App = () => {
   return (
