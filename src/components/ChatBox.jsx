@@ -15,6 +15,10 @@ const ChatBox = () => {
   const [selectedUser, setSelectedUser] = useState(null) // State to hold the selected user
   const [users, setUsers] = useState([]) // State to hold the list of users (tutors or students)
 
+  if (!user) {
+    return <div></div>
+  }
+
   useEffect(() => {
     socket.on('connect', () => {
       console.log('Connected to server')
@@ -89,6 +93,7 @@ const ChatBox = () => {
 
   const toggleChatBox = () => {
     setIsOpen(!isOpen)
+    setIsSelectOpen(false)
   }
 
   const handleUserSelect = (user) => {
@@ -169,7 +174,11 @@ const ChatBox = () => {
               onClick={() => handleUserSelect(user)}
             >
               <img
-                src={user.avatar}
+                src={
+                  user.avatar
+                    ? user.avatar
+                    : 'https://img.freepik.com/free-vector/cute-man-business-cartoon-vector-icon-illustration-people-business-isolated-flat-vector_138676-10703.jpg'
+                }
                 alt={`${user.fullName}'s avatar`}
                 className='w-8 h-8 rounded-full object-cover mr-2'
               />

@@ -120,6 +120,18 @@ const ClassManagement = () => {
     return null
   }
 
+  const classPrices = {
+    1: 2000, // Standard Tutor Class
+    2: 4000, // Pro Tutor Class
+    3: 6000 // Enterprise Tutor Class
+  }
+
+  const classTypes = {
+    1: 'Standard Tutor Class',
+    2: 'Pro Tutor Class',
+    3: 'Enterprise Tutor Class'
+  }
+
   const handleAddClass = async () => {
     try {
       //alert
@@ -137,6 +149,21 @@ const ClassManagement = () => {
       const decodedToken = jwtDecode(token)
       const tutorID = decodedToken.user.tutorID
       formData.tutorID = tutorID
+
+      const price = classPrices[formData.PaymentID]
+      const classType = classTypes[formData.PaymentID]
+      const paymentUrl = await axios.post('http://localhost:5000/api/createPayment', {
+        description: 'Thanh toan don hang',
+        items: [
+          {
+            name: classType,
+            quantity: 1,
+            price: price
+          }
+        ],
+        classes: formData
+      })
+      // paymentUrl.data.checkoutUrl
       const response = await axios.post(`${apiBaseUrl}/createClasses`, formData)
       setClasses([...classes, response.data])
       setFormData({
@@ -335,9 +362,9 @@ const ClassManagement = () => {
                   <option value={0} disabled>
                     Select subscription type:
                   </option>
-                  <option value={1}>1</option>
-                  <option value={2}>2</option>
-                  <option value={3}>3</option>
+                  <option value={1}>Standard (2000 vnd/month)</option>
+                  <option value={2}>Pro (4000 vnd/month)</option>
+                  <option value={3}>Enterprise (6000 vnd/month)</option>
                 </select>
               </div>
 
@@ -453,9 +480,15 @@ const ClassManagement = () => {
                   <option value='0' disabled>
                     Select subscription type:
                   </option>
-                  <option value='1'>1</option>
-                  <option value='2'>2</option>
-                  <option value='3'>3</option>
+                  <option value='1' disabled>
+                    Standard (2000 vnd/month)
+                  </option>
+                  <option value='2' disabled>
+                    Pro (4000 vnd/month)
+                  </option>
+                  <option value='3' disabled>
+                    Enterprise (6000 vnd/month)
+                  </option>
                 </select>
               </div>
 
