@@ -120,17 +120,39 @@ export const pricingOptions = [
   {
     title: 'Standard',
     price: '2000 vnd',
-    features: ['Private board sharing', '5 Gb Storage', 'Web Analytics', 'Private Mode']
+    features: [
+      'Class duration: 1 week',
+      'Access to Basic Teaching Tools',
+      'Email Support',
+      'Class Recording (Up to 1 Hour)',
+      'Customizable Class Schedules'
+    ]
   },
   {
     title: 'Pro',
     price: '4000 vnd',
-    features: ['Private board sharing', '10 Gb Storage', 'Web Analytics (Advance)', 'Private Mode']
+    features: [
+      'Class duration: 1 moth',
+      'Access to Advanced Teaching Tools',
+      'Priority Email Support',
+      'Class Recording (Up to 3 Hours)',
+      'Customizable Class Schedules',
+      'Student Performance Tracking'
+    ]
   },
   {
-    title: 'Enterprise',
+    title: 'Premium',
     price: '6000 vnd',
-    features: ['Private board sharing', 'Unlimited Storage', 'High Performance Network', 'Private Mode']
+    features: [
+      'Class duration: 3 months',
+      'Access to Premium Teaching Tools',
+      '24/7 Dedicated Support',
+      'Class Recording (Unlimited Duration)',
+      'Class Recording (Up to 3 Hours)',
+      'Customizable Class Schedules',
+      'Student Performance Tracking',
+      'Marketing and Promotion Tools'
+    ]
   }
 ]
 
