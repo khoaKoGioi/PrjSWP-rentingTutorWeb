@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
@@ -30,6 +30,7 @@ const ClassManagement = () => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
   const [updateFormData, setUpdateFormData] = useState(formData)
   const [currentClassId, setCurrentClassId] = useState(null)
+  const hasCheckedPayment = useRef(false)
 
   if (!token || !role || role == 'Student') {
     return <AccessDeniedPage />
@@ -40,6 +41,13 @@ const ClassManagement = () => {
       fetchClasses()
     }
   }, [token, role])
+
+  useEffect(() => {
+    if (!hasCheckedPayment.current) {
+      handleReturnFromPayment()
+      hasCheckedPayment.current = true // Set the flag to true after running the function
+    }
+  }, [])
 
   const fetchClasses = async () => {
     try {
@@ -134,7 +142,7 @@ const ClassManagement = () => {
 
   const handleAddClass = async () => {
     try {
-      //alert
+      // alert
       const validationError = validateForm(formData)
       if (validationError) {
         toast.error(validationError)
@@ -163,28 +171,68 @@ const ClassManagement = () => {
         ],
         classes: formData
       })
-      // paymentUrl.data.checkoutUrl
-      const response = await axios.post(`${apiBaseUrl}/createClasses`, formData)
-      setClasses([...classes, response.data])
-      setFormData({
-        videoLink: '',
-        className: '',
-        tutorID: '',
-        description: '',
-        price: '',
-        subject: '',
-        PaymentID: 0,
-        length: '',
-        available: '',
-        type: '' === 'Online' ? 'Online' : 'Offline'
-      })
+
+      localStorage.setItem('pendingOrderID', paymentUrl.data.orderID)
+      localStorage.setItem('pendingClassData', JSON.stringify(formData))
       setIsModalOpen(false)
-      toast.info('Class created successfully!')
-      console.log(response.data)
-      fetchClasses()
+      toast.info('Wait for payment before create class!')
+      const checkout = paymentUrl.data.checkoutUrl
+      window.location.href = checkout
     } catch (error) {
       console.error('Error adding class:', error)
       toast.error('There was an error creating the class.')
+    }
+  }
+
+  const handleReturnFromPayment = async () => {
+    try {
+      const orderID = localStorage.getItem('pendingOrderID')
+      const pendingClassData = JSON.parse(localStorage.getItem('pendingClassData'))
+
+      if (!orderID || !pendingClassData) {
+        console.error('No pending order or class data found.')
+        return
+      }
+
+      const token = localStorage.getItem('token')
+      if (!token) {
+        console.error('User is not logged in')
+        return
+      }
+      const decodedToken = jwtDecode(token)
+      const tutorID = decodedToken.user.tutorID
+      const paymentVerificationResponse = await axios.post(`http://localhost:5000/api/checkPayment/${orderID}`, {
+        tutorID
+      })
+
+      if (paymentVerificationResponse.data.success) {
+        const response = await axios.post(`${apiBaseUrl}/createClasses`, pendingClassData)
+        setClasses([...classes, response.data])
+
+        setFormData({
+          videoLink: '',
+          className: '',
+          tutorID: '',
+          description: '',
+          price: '',
+          subject: '',
+          PaymentID: 1, // Default PaymentID
+          length: '',
+          available: '',
+          type: 'Online'
+        })
+
+        localStorage.removeItem('pendingOrderID')
+        localStorage.removeItem('pendingClassData')
+        toast.info('Class created successfully!')
+        fetchClasses()
+      } else {
+        localStorage.removeItem('pendingOrderID')
+        localStorage.removeItem('pendingClassData')
+        toast.error('Payment verification failed.')
+      }
+    } catch (error) {
+      console.error('Error verifying payment:', error)
     }
   }
 

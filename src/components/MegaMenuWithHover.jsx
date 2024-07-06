@@ -22,6 +22,7 @@ export function MegaMenuWithHover() {
     setIsLoggedIn(false) // Update login state to false
     localStorage.removeItem('token')
     localStorage.removeItem('isLoggedIn') // Remove login status from localStorage
+    window.location.reload()
   }
 
   useEffect(() => {

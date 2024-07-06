@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
 import { FaStar, FaUser, FaBook, FaCertificate, FaInfoCircle } from 'react-icons/fa'
 import BreadcrumbsWithIcon from '../components/BreadCrumb.jsx' // Adjust path as per your project structure
@@ -17,6 +17,7 @@ const ViewTutorProfile = () => {
   const [user, setUser] = useState([])
   const [isRequestOpen, setRequestOpen] = useState(false)
   const [requestMessage, setRequestMessage] = useState('')
+  const chatBoxRef = useRef() // Reference to the ChatBox component
 
   useEffect(() => {
     if (id) {
@@ -50,17 +51,25 @@ const ViewTutorProfile = () => {
       toast.error('You are not a student!')
     } else {
       if (!requestMessage) {
-        toast.error('You cannot sent blank message!')
+        toast.error('You cannot send a blank message!')
         return
       }
-      const response = await axios.post(`http://localhost:5000/api/students/requestClass/${tutor.tutorID}`, {
-        studentID: user.studentID,
-        message: requestMessage
-      })
-      toast.info('Request message sent!')
-      // Close the request box after sending the message
-      setRequestOpen(false)
-      setRequestMessage('')
+      try {
+        const response = await axios.post(`http://localhost:5000/api/students/requestClass/${tutor.tutorID}`, {
+          studentID: user.studentID,
+          message: requestMessage
+        })
+        toast.info('Request message sent!')
+
+        // Send the request message to the ChatBox
+        chatBoxRef.current.sendMessage(requestMessage, tutor)
+
+        // Close the request box after sending the message
+        setRequestOpen(false)
+        setRequestMessage('')
+      } catch (error) {
+        console.error('Error sending request message:', error)
+      }
     }
   }
 
@@ -78,7 +87,6 @@ const ViewTutorProfile = () => {
           />
         </div>
       </div>
-
       <div className='flex flex-col items-center p-6 bg-white shadow-lg rounded-lg max-w-2xl mx-auto'>
         <div className='font-extrabold bg-gradient-to-r mb-7 from-orange-500 to-orange-800 bg-clip-text text-transparent text-2xl py-5'>
           {/*eslint-disable-next-line react/no-unescaped-entities */}
@@ -151,7 +159,7 @@ const ViewTutorProfile = () => {
           </div>
         )}
       </div>
-      <ChatBox />
+      <ChatBox ref={chatBoxRef} /> {/* Add ref to ChatBox */}
       <ToastContainer />
     </div>
   )

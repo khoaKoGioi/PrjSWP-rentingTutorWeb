@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, forwardRef, useImperativeHandle } from 'react'
 import io from 'socket.io-client'
 import { FaComments, FaTimes } from 'react-icons/fa'
 import AuthContext from '../contexts/JWTAuthContext'
@@ -6,7 +6,7 @@ import axios from 'axios'
 
 const socket = io('http://localhost:5000') // Ensure the URL matches your server
 
-const ChatBox = () => {
+const ChatBox = forwardRef((props, ref) => {
   const { user } = useContext(AuthContext)
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
@@ -18,6 +18,22 @@ const ChatBox = () => {
   if (!user) {
     return <div></div>
   }
+
+  useImperativeHandle(ref, () => ({
+    sendMessage: (messageText, recipient) => {
+      setSelectedUser(recipient)
+      const message = {
+        senderID: user.userID,
+        receiverID: recipient.userID,
+        senderType: user.role,
+        receiverType: recipient.role,
+        messageText,
+        timestamp: new Date()
+      }
+      setMessages((prevMessages) => [...prevMessages, message])
+      socket.emit('sendMessage', message)
+    }
+  }))
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -106,6 +122,10 @@ const ChatBox = () => {
     setIsSelectOpen(!isSelectOpen)
   }
 
+  if (!user) {
+    return null // Return null if the user is not logged in
+  }
+
   return (
     <div
       className={`chat-box ${
@@ -187,6 +207,6 @@ const ChatBox = () => {
       </div>
     </div>
   )
-}
+})
 
 export default ChatBox
