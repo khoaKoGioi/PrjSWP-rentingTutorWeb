@@ -195,6 +195,7 @@ const TutorRequest = () => {
           </div>
         )}
       </div>
+      <ChatBox />
     </div>
   )
 }
