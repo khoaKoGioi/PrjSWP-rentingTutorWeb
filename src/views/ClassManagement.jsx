@@ -352,8 +352,8 @@ const ClassManagement = () => {
                   <option value='' disabled>
                     Select teaching method:
                   </option>
-                  <option value='1'>Online</option>
-                  <option value='2'>Offline</option>
+                  <option value='Online'>Online</option>
+                  <option value='Offline'>Offline</option>
                 </select>
               </div>
               <div className='mb-4'>
