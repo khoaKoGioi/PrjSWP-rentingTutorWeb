@@ -49,7 +49,7 @@ const AdminPortalTutor = () => {
     axios
       .put(apiUrl)
       .then((response) => {
-        setTutors(tutors.map((tutor) => (tutor.id === id ? { ...tutor, active: newStatus } : tutor)))
+        setTutors(tutors.map((tutor) => (tutor.userID === id ? { ...tutor, active: newStatus } : tutor)))
       })
       .catch((error) => {
         console.error('Error updating tutor status:', error)
@@ -97,7 +97,7 @@ const AdminPortalTutor = () => {
           </thead>
           <tbody>
             {tutors.map((tutor, index) => (
-              <tr key={tutor.id} className='border-b hover:bg-gray-100'>
+              <tr key={tutor.userID} className='border-b hover:bg-gray-100'>
                 <td className='p-4'>{index + 1}</td>
                 <td className='p-4'>{tutor.userName}</td>
                 <td className='p-4'>{tutor.fullName}</td>
@@ -109,7 +109,7 @@ const AdminPortalTutor = () => {
                 <td className='p-4'>{tutor.active ? 'Active' : 'Inactive'}</td>
                 <td className='p-4'>
                   <button
-                    onClick={() => toggleActiveStatus(tutor.id, tutor.active)}
+                    onClick={() => toggleActiveStatus(tutor.userID, tutor.active)}
                     className={`p-2 rounded-lg ${tutor.active ? 'bg-red-500' : 'bg-green-500'} text-white`}
                   >
                     {tutor.active ? 'Ban' : 'Unban'}
