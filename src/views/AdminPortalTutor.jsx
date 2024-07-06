@@ -14,6 +14,10 @@ const AdminPortalTutor = () => {
 
   useEffect(() => {
     // Fetch tutors from the API
+    fetchClasses()
+  }, [])
+
+  const fetchClasses = async () => {
     axios
       .get('http://localhost:5000/api/admin/getUser')
       .then((response) => {
@@ -24,7 +28,7 @@ const AdminPortalTutor = () => {
       .catch((error) => {
         console.error('Error fetching tutors:', error)
       })
-  }, [])
+  }
 
   const handleInputChange = (e) => {
     const value = e.target.value
@@ -50,6 +54,7 @@ const AdminPortalTutor = () => {
       .put(apiUrl)
       .then((response) => {
         setTutors(tutors.map((tutor) => (tutor.id === id ? { ...tutor, active: newStatus } : tutor)))
+        fetchClasses()
       })
       .catch((error) => {
         console.error('Error updating tutor status:', error)
@@ -66,22 +71,22 @@ const AdminPortalTutor = () => {
 
   return (
     <div className='container mx-auto p-6 bg-gray-100 min-h-screen'>
-      <header>
+      <header className='bg-purple-600 text-white shadow-md py-4'>
         <MegaMenuWithHover />
       </header>
       <div className='pt-20'>
-        <h1 className='text-3xl font-bold mb-6 text-center'>Admin Portal - Tutors</h1>
+        <h1 className='text-4xl font-bold mb-6 text-center text-black'>Admin Portal - Tutors</h1>
         <div className='flex justify-center mb-6'>
           <input
             type='text'
             value={searchTerm}
             onChange={handleInputChange}
-            className='border border-gray-400 p-2 rounded-l-lg flex-grow max-w-xl'
+            className='border border-gray-400 p-2 rounded-lg flex-grow max-w-xl focus:outline-none focus:ring-2 focus:ring-purple-500'
             placeholder='Search by tutor name'
           />
         </div>
         <table className='min-w-full bg-white shadow-md rounded-lg overflow-hidden'>
-          <thead className='bg-gray-800 text-white'>
+          <thead className='bg-gradient-to-t from-yellow-700 to-yellow-300 text-black'>
             <tr>
               <th className='p-4 text-left'>ID</th>
               <th className='p-4 text-left'>Username</th>
@@ -97,7 +102,7 @@ const AdminPortalTutor = () => {
           </thead>
           <tbody>
             {tutors.map((tutor, index) => (
-              <tr key={tutor.id} className='border-b hover:bg-gray-100'>
+              <tr key={tutor.userID} className='border-b hover:bg-purple-50'>
                 <td className='p-4'>{index + 1}</td>
                 <td className='p-4'>{tutor.userName}</td>
                 <td className='p-4'>{tutor.fullName}</td>
@@ -106,10 +111,18 @@ const AdminPortalTutor = () => {
                 <td className='p-4'>{tutor.role}</td>
                 <td className='p-4'>{tutor.phone}</td>
                 <td className='p-4'>{tutor.address}</td>
-                <td className='p-4'>{tutor.active ? 'Active' : 'Inactive'}</td>
+                <td className='p-4'>
+                  <span
+                    className={`inline-block px-3 py-1 rounded-full text-sm ${
+                      tutor.active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                    }`}
+                  >
+                    {tutor.active ? 'Active' : 'Inactive'}
+                  </span>
+                </td>
                 <td className='p-4'>
                   <button
-                    onClick={() => toggleActiveStatus(tutor.id, tutor.active)}
+                    onClick={() => toggleActiveStatus(tutor.userID, tutor.active)}
                     className={`p-2 rounded-lg ${tutor.active ? 'bg-red-500' : 'bg-green-500'} text-white`}
                   >
                     {tutor.active ? 'Ban' : 'Unban'}
