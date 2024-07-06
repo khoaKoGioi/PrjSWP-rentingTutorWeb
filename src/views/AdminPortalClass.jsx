@@ -72,8 +72,8 @@ const AdminPortalClass = () => {
             <tr>
               <th className='p-4 text-left'>ID</th>
               <th className='p-4 text-left'>ClassID</th>
-              <th className='p-4 text-left'>ClassName</th>
-              <th className='p-4 text-left'>VideoLink</th>
+              <th className='p-4 text-left'>Class Name</th>
+              <th className='p-4 text-left'>Video</th>
               <th className='p-4 text-left'>TutorID</th>
               <th className='p-4 text-left'>StudentID</th>
               <th className='p-4 text-left'>Subscription type</th>
@@ -82,7 +82,7 @@ const AdminPortalClass = () => {
               <th className='p-4 text-left'>Type</th>
               <th className='p-4 text-left'>Description</th>
               <th className='p-4 text-left'>Price</th>
-              <th className='p-4 text-left'>isActive</th>
+              <th className='p-4 text-left'>Active</th>
               <th className='p-4 text-left'>Action</th>
             </tr>
           </thead>
@@ -99,7 +99,7 @@ const AdminPortalClass = () => {
                 <td className='p-4'>{classItem.length}</td>
                 <td className='p-4'>{classItem.available}</td>
                 <td className='p-4'>{classItem.type}</td>
-                <td className='p-4'>{classItem.description}</td>
+                <td className='p-4 break-after-column break-word'>{classItem.description}</td>
                 <td className='p-4'>{classItem.price}</td>
                 <td className='p-4'>{classItem.isActive ? 'Active' : 'Inactive'}</td>
                 <td className='p-4'>

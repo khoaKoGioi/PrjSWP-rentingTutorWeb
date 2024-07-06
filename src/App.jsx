@@ -37,6 +37,7 @@ const App = () => {
           <Route path='/admin-portal-tutor' element={<AdminPortalTutor />} />
           <Route path='/admin-portal-class' element={<AdminPortalClass />} />
           <Route path='/admin-feedback' element={<FeedbackManagement />} />
+          <Route path='/tutor-profile/:id' element={<ViewTutorProfile />} />
           <Route path='/view-tutor-request' element={<TutorRequest />} />
           <Route path='/unauthorized' element={<AccessDeniedPage />} />
           <Route path='/test' element={<Test />} />

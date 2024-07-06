@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
+import AccessDeniedPage from '../components/AccessDeniedPage.jsx'
 
 const AdminPortalTutor = () => {
   const [tutors, setTutors] = useState([])
   const [allTutors, setAllTutors] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
+  const role = localStorage.getItem('role')
+  if (role != 'Admin') {
+    return <AccessDeniedPage />
+  }
 
   useEffect(() => {
     // Fetch tutors from the API
@@ -25,7 +30,9 @@ const AdminPortalTutor = () => {
     const value = e.target.value
     setSearchTerm(value)
     if (value.trim() !== '') {
-      const filteredTutors = allTutors.filter((tutor) => tutor.userName.toLowerCase().includes(value.toLowerCase()))
+      const filteredTutors = allTutors.filter(
+        (tutor) => tutor.userName && tutor.userName.toLowerCase().includes(value.toLowerCase())
+      )
       setTutors(filteredTutors)
     } else {
       // Reset tutors list if search term is empty
@@ -49,6 +56,14 @@ const AdminPortalTutor = () => {
       })
   }
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${day}/${month}/${year}`
+  }
+
   return (
     <div className='container mx-auto p-6 bg-gray-100 min-h-screen'>
       <header>
@@ -62,17 +77,17 @@ const AdminPortalTutor = () => {
             value={searchTerm}
             onChange={handleInputChange}
             className='border border-gray-400 p-2 rounded-l-lg flex-grow max-w-xl'
-            placeholder='Search by tutor username'
+            placeholder='Search by tutor name'
           />
         </div>
         <table className='min-w-full bg-white shadow-md rounded-lg overflow-hidden'>
           <thead className='bg-gray-800 text-white'>
             <tr>
               <th className='p-4 text-left'>ID</th>
-              <th className='p-4 text-left'>UserName</th>
-              <th className='p-4 text-left'>FullName</th>
+              <th className='p-4 text-left'>Username</th>
+              <th className='p-4 text-left'>Fullname</th>
               <th className='p-4 text-left'>Email</th>
-              <th className='p-4 text-left'>DateOfBirth</th>
+              <th className='p-4 text-left'>Date Of Birth</th>
               <th className='p-4 text-left'>Role</th>
               <th className='p-4 text-left'>Phone</th>
               <th className='p-4 text-left'>Address</th>
@@ -87,7 +102,7 @@ const AdminPortalTutor = () => {
                 <td className='p-4'>{tutor.userName}</td>
                 <td className='p-4'>{tutor.fullName}</td>
                 <td className='p-4'>{tutor.email}</td>
-                <td className='p-4'>{tutor.dateOfBirth}</td>
+                <td className='p-4'>{formatDate(tutor.dateOfBirth)}</td>
                 <td className='p-4'>{tutor.role}</td>
                 <td className='p-4'>{tutor.phone}</td>
                 <td className='p-4'>{tutor.address}</td>

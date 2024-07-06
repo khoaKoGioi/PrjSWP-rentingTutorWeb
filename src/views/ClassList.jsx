@@ -226,6 +226,7 @@ const ClassList = () => {
           </div>
         </main>
       </div>
+      <ChatBox />
     </div>
   )
 }

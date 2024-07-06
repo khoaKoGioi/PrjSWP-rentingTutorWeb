@@ -23,6 +23,7 @@ import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage
 import { v4 } from 'uuid'
 import { jwtDecode } from 'jwt-decode'
 import axios from 'axios'
+import ChatBox from '../components/ChatBox'
 
 const UserProfile = () => {
   const token = localStorage.getItem('token')
@@ -397,6 +398,7 @@ const UserProfile = () => {
           </button>
         </div>
       </div>
+      <ChatBox />
       <ToastContainer />
     </div>
   )

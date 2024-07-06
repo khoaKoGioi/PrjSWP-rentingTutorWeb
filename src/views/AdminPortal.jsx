@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
+import AccessDeniedPage from '../components/AccessDeniedPage.jsx'
 
 const AdminPortal = () => {
   const [users, setUsers] = useState([])
   const [allUsers, setAllUsers] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
+  const role = localStorage.getItem('role')
+  if (role != 'Admin') {
+    return <AccessDeniedPage />
+  }
 
   useEffect(() => {
     // Fetch users from the API
@@ -25,7 +30,9 @@ const AdminPortal = () => {
     setSearchTerm(value)
 
     if (value.trim() !== '') {
-      const filteredUsers = allUsers.filter((user) => user.userName.toLowerCase().includes(value.toLowerCase()))
+      const filteredUsers = allUsers.filter(
+        (user) => user.userName && user.userName.toLowerCase().includes(value.toLowerCase())
+      )
       setUsers(filteredUsers)
     } else {
       // Reset users list if search term is empty
