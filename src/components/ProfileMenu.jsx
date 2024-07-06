@@ -53,6 +53,8 @@ function ProfileMenu() {
       navigate('/profile') // Navigate to the profile page
     } else if (action === 'request') {
       navigate('/view-tutor-request') // Navigate to the profile page
+    } else if (action === 'logout') {
+      navigate('/login')
     }
     closeMenu()
   }

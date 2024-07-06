@@ -17,8 +17,8 @@ import AdminPortalStudent from './views/AdminPortalStudent'
 import AdminPortalClass from './views/AdminPortalClass'
 import TutorRequest from './views/TutorRequest'
 import AccessDeniedPage from './components/AccessDeniedPage'
-import Test from './views/checkoutPage'
 import ViewTutorProfile from './views/ViewTutorProfile'
+import AdminTutorRequests from './views/AdminTutorRequest'
 
 const App = () => {
   return (
@@ -41,7 +41,8 @@ const App = () => {
           <Route path='/tutor-profile/:id' element={<ViewTutorProfile />} />
           <Route path='/view-tutor-request' element={<TutorRequest />} />
           <Route path='/unauthorized' element={<AccessDeniedPage />} />
-          <Route path='/test' element={<Test />} />
+          <Route path='/admin-portal-tutor-request' element={<AdminTutorRequests />} />
+
           {/* Protected routes */}
 
           <Route

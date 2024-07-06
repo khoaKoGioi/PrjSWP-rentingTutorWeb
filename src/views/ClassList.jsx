@@ -128,7 +128,7 @@ const ClassList = () => {
         </div>
         <div className='flex items-end pl-10'>
           <Typography variant='h3' className='mt-2'>
-            {data.length} results for Class
+            {data.length <= 1 ? <div>There is {data.length} class</div> : <div>There are {data.length} classes</div>}
           </Typography>
         </div>
       </div>
