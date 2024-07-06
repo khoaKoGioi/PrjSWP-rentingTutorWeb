@@ -8,7 +8,6 @@ import RegisterTutor from './views/RegisterTutor'
 import ClassList from './views/ClassList'
 import ClassDetail from './views/ClassDetail'
 import UserProfile from './views/UserProfile'
-import ViewTutorProfile from './views/ViewTutorProfile'
 import AuthGuard from './auth/AuthGuard'
 import ClassManagement from './views/ClassManagement'
 import AdminPortal from './views/AdminPortal'
@@ -18,6 +17,8 @@ import AdminPortalStudent from './views/AdminPortalStudent'
 import AdminPortalClass from './views/AdminPortalClass'
 import TutorRequest from './views/TutorRequest'
 import AccessDeniedPage from './components/AccessDeniedPage'
+import Test from './views/checkoutPage'
+import ViewTutorProfile from './views/ViewTutorProfile'
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
           <Route path='/tutor-profile/:id' element={<ViewTutorProfile />} />
           <Route path='/view-tutor-request' element={<TutorRequest />} />
           <Route path='/unauthorized' element={<AccessDeniedPage />} />
+          <Route path='/test' element={<Test />} />
           {/* Protected routes */}
 
           <Route
