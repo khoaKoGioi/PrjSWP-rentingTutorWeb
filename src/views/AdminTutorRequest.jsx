@@ -87,14 +87,18 @@ const AdminTutorRequests = () => {
                     <td className='p-4'>{request.tutorID}</td>
                     <td className='p-4'>
                       {tutor && tutor.degrees ? (
-                        <img src={tutor.degrees} alt='Tutor Degree' className='w-20 h-20 object-cover' />
+                        <a href={tutor.degrees} target='_blank' rel='noopener noreferrer'>
+                          <img src={tutor.degrees} alt='Tutor Degree' className='w-20 h-20 object-cover' />
+                        </a>
                       ) : (
                         'No Degree'
                       )}
                     </td>
                     <td className='p-4'>
                       {tutor && tutor.identityCard ? (
-                        <img src={tutor.identityCard} alt='Identity Card' className='w-20 h-20 object-cover' />
+                        <a href={tutor.identityCard} target='_blank' rel='noopener noreferrer'>
+                          <img src={tutor.identityCard} alt='Identity Card' className='w-20 h-20 object-cover' />
+                        </a>
                       ) : (
                         'No ID Card'
                       )}

@@ -122,12 +122,14 @@ const ViewTutorProfile = () => {
             <div className='mb-4 flex items-center'>
               <FaCertificate className='mr-2 text-gray-600' />
               <div className='flex-shrink-0'>
-                <img
-                  src={tutor.degrees}
-                  alt='Tutor Degrees'
-                  className='object-contain max-w-full max-h-32' // Adjust max-h to control the height
-                  style={{ maxWidth: '100%', maxHeight: '8rem' }} // Inline style for more control
-                />
+                <a href={tutor.degrees} target='_blank' rel='noopener noreferrer'>
+                  <img
+                    src={tutor.degrees}
+                    alt='Tutor Degrees'
+                    className='object-contain max-w-full max-h-32' // Adjust max-h to control the height
+                    style={{ maxWidth: '100%', maxHeight: '8rem' }} // Inline style for more control
+                  />
+                </a>
               </div>
             </div>
             <div className='mb-4 flex items-center'>
