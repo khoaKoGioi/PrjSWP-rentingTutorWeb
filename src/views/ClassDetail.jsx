@@ -26,22 +26,22 @@ const ClassDetail = () => {
   const [rating, setRating] = useState('0')
 
   useEffect(() => {
-    const fetchClass = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/users/getClass/${id}`)
-        const classDetails = response.data.data // Assuming API response contains all required fields
-        setClassData(classDetails)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-
     if (id) {
       fetchClass()
       checkEnrollmentStatus()
       fetchFeedbacks()
     }
   }, [id])
+
+  const fetchClass = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/users/getClass/${id}`)
+      const classDetails = response.data.data // Assuming API response contains all required fields
+      setClassData(classDetails)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const fetchFeedbacks = async () => {
     try {
@@ -135,6 +135,7 @@ const ClassDetail = () => {
       setFeedbackMessage('')
       fetchFeedbacks()
       setShowFeedbackForm(false)
+      fetchClass()
     } catch (error) {
       console.error('Error saving feedback:', error)
     }

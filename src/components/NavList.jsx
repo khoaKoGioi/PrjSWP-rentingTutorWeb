@@ -36,11 +36,13 @@ function NavList() {
 
   const renderManageClassLink = role === 'Tutor' && (
     <Typography as='div' variant='small' color='white' className='font-medium'>
-      <ListItem className='flex items-center text-lg gap-2 py-2 pr-4 font-extrabold'>
-        <NavLink to='/manage-classes' className='flex items-center gap-2'>
-          Manage Class
-        </NavLink>
-      </ListItem>
+      <NavLink to='/manage-classes'>
+        <ListItem className='flex items-center text-lg gap-2 py-2 pr-4 font-extrabold'>
+          <NavLink to='/manage-classes' className='flex items-center gap-2'>
+            Manage Class
+          </NavLink>
+        </ListItem>
+      </NavLink>
     </Typography>
   )
 
@@ -70,24 +72,27 @@ function NavList() {
 
   return (
     <List className='mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row lg:p-1 gap-2'>
-      <Typography as='div' variant='small' color='white' className='font-medium'>
-        <ListItem className='flex items-center text-lg gap-2 py-2 pr-4 font-extrabold'>
-          <NavLink to='/' className='flex items-center gap-2'>
-            Home
-          </NavLink>
-        </ListItem>
-      </Typography>
-
+      <NavLink to='/'>
+        <Typography as='div' variant='small' color='white' className='font-medium'>
+          <ListItem className='flex items-center text-lg gap-2 py-2 pr-4 font-extrabold'>
+            <NavLink to='/' className='flex items-center gap-2'>
+              Home
+            </NavLink>
+          </ListItem>
+        </Typography>
+      </NavLink>
       {role === 'Tutor' && renderManageClassLink}
 
       {role === 'Admin' && renderAdminClassLink}
 
       <Typography as='div' variant='small' color='white' className='font-medium'>
-        <ListItem className='flex items-center text-lg gap-2 py-2 pr-4 font-extrabold'>
-          <NavLink to='/ClassList' className='flex items-center gap-2'>
-            Choose your classes
-          </NavLink>
-        </ListItem>
+        <NavLink to='/ClassList'>
+          <ListItem className='flex items-center text-lg gap-2 py-2 pr-4 font-extrabold'>
+            <NavLink to='/ClassList' className='flex items-center gap-2'>
+              Choose your classes
+            </NavLink>
+          </ListItem>
+        </NavLink>
       </Typography>
 
       <NavListMenu />

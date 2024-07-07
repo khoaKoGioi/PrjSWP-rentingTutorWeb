@@ -122,7 +122,6 @@ const AdminPortalTutor = () => {
                 <td className='p-4'>
                   <button
                     onClick={() => toggleActiveStatus(tutor.userID, tutor.active)}
-                    onClick={() => toggleActiveStatus(tutor.userID, tutor.active)}
                     className={`p-2 rounded-lg ${tutor.active ? 'bg-red-500' : 'bg-green-500'} text-white`}
                   >
                     {tutor.active ? 'Ban' : 'Unban'}

@@ -67,7 +67,7 @@ const Register = () => {
         ...formData,
         avatar: avatarURL
       }
-      const response = await register('student', updatedFormData) // Await the register function call
+      const response = await register('Student', updatedFormData) // Await the register function call
       console.log('Response:', response) // Log response to check its structure
       toast.info('Student registered successfully')
 

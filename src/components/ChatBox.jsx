@@ -20,18 +20,33 @@ const ChatBox = forwardRef((props, ref) => {
   }
 
   useImperativeHandle(ref, () => ({
-    sendMessage: (messageText, recipient) => {
-      setSelectedUser(recipient)
-      const message = {
-        senderID: user.userID,
-        receiverID: recipient.userID,
-        senderType: user.role,
-        receiverType: recipient.role,
-        messageText,
-        timestamp: new Date()
+    sendMessage: async (messageText, recipient) => {
+      try {
+        setSelectedUser(recipient)
+        const message = {
+          senderID: user.userID,
+          receiverID: recipient.userID,
+          senderType: user.role,
+          receiverType: recipient.role,
+          messageText,
+          timestamp: new Date()
+        }
+
+        const response = await axios.post(
+          `http://localhost:5000/api/users/sendMessage/${user.userID}&${recipient.userID}`,
+          {
+            ...message
+          }
+        )
+        setIsOpen(true)
+        if (recipient.userID === selectedUser.userID) {
+          setMessages((prevMessages) => [...prevMessages, message])
+        }
+        // Notify other user via socket
+        socket.emit('sendMessage', message)
+      } catch (error) {
+        console.error('Error sending message:', error)
       }
-      setMessages((prevMessages) => [...prevMessages, message])
-      socket.emit('sendMessage', message)
     }
   }))
 
@@ -41,7 +56,9 @@ const ChatBox = forwardRef((props, ref) => {
     })
 
     socket.on('receiveMessage', (message) => {
-      setMessages((prevMessages) => [...prevMessages, message])
+      if (selectedUser && (message.senderID === selectedUser.userID || message.receiverID === selectedUser.userID)) {
+        setMessages((prevMessages) => [...prevMessages, message])
+      }
     })
 
     socket.on('disconnect', () => {
@@ -53,7 +70,7 @@ const ChatBox = forwardRef((props, ref) => {
       socket.off('receiveMessage')
       socket.off('disconnect')
     }
-  }, [])
+  }, [selectedUser])
 
   useEffect(() => {
     // Fetch users (tutors or students) from the server
@@ -78,7 +95,7 @@ const ChatBox = forwardRef((props, ref) => {
   const handleGetMessage = async (senderID, receiverID) => {
     try {
       const response = await axios.get(`http://localhost:5000/api/users/getMessage/${senderID}&${receiverID}`)
-      setMessages(response.data.data) // Assuming the API returns messages in the correct format
+      setMessages(response.data.data)
     } catch (error) {
       console.error('Error fetching messages:', error)
     }
@@ -102,7 +119,6 @@ const ChatBox = forwardRef((props, ref) => {
         ...message
       }
     )
-    console.log(response)
     socket.emit('sendMessage', message)
     setNewMessage('')
   }
