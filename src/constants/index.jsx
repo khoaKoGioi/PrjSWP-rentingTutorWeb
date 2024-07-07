@@ -121,7 +121,7 @@ export const pricingOptions = [
     title: 'Standard',
     price: '2000 vnd',
     features: [
-      'Class duration: 1 week',
+      'Class duration: 7 days',
       'Access to Basic Teaching Tools',
       'Email Support',
       'Class Recording (Up to 1 Hour)',
@@ -132,7 +132,7 @@ export const pricingOptions = [
     title: 'Pro',
     price: '4000 vnd',
     features: [
-      'Class duration: 1 moth',
+      'Class duration: 14 days',
       'Access to Advanced Teaching Tools',
       'Priority Email Support',
       'Class Recording (Up to 3 Hours)',
@@ -144,7 +144,7 @@ export const pricingOptions = [
     title: 'Premium',
     price: '6000 vnd',
     features: [
-      'Class duration: 3 months',
+      'Class duration: 1 month',
       'Access to Premium Teaching Tools',
       '24/7 Dedicated Support',
       'Class Recording (Unlimited Duration)',

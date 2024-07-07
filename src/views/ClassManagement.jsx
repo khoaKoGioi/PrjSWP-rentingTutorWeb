@@ -410,9 +410,9 @@ const ClassManagement = () => {
                   <option value={0} disabled>
                     Select subscription type:
                   </option>
-                  <option value={1}>Standard (2000 vnd/month)</option>
-                  <option value={2}>Pro (4000 vnd/month)</option>
-                  <option value={3}>Enterprise (6000 vnd/month)</option>
+                  <option value={1}>Standard (2000 vnd/class)</option>
+                  <option value={2}>Pro (4000 vnd/class)</option>
+                  <option value={3}>Enterprise (6000 vnd/class)</option>
                 </select>
               </div>
 
