@@ -33,6 +33,7 @@ const ViewTutorProfile = () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/users/getTutor/${id}`)
       setTutor(response.data.data) // Assuming the API response contains the tutor data in `data` field
+      console.log(response.data.data)
     } catch (error) {
       console.error('Error fetching tutor data:', error)
     }

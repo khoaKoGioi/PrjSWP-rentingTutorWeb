@@ -11,6 +11,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { v4 } from 'uuid'
+import axios from 'axios'
 
 const Register = () => {
   const navigate = useNavigate()
@@ -61,6 +62,16 @@ const Register = () => {
     e.preventDefault()
 
     try {
+      const usersResponse = await axios.get('http://localhost:5000/api/admin/getUser')
+      const users = usersResponse.data.data
+
+      // Check if the email exists
+      const emailExists = users.some((user) => user.email === formData.email)
+      if (emailExists) {
+        toast.error('Email is already registered')
+        return // Exit the function if the email exists
+      }
+
       const avatarURL = formData.avatar ? await uploadFileToFirebase(formData.avatar) : null
 
       const updatedFormData = {

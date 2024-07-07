@@ -11,6 +11,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { v4 } from 'uuid'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import axios from 'axios'
 
 const RegisterTutor = () => {
   const navigate = useNavigate()
@@ -58,6 +59,16 @@ const RegisterTutor = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      const usersResponse = await axios.get('http://localhost:5000/api/admin/getUser')
+      const users = usersResponse.data.data
+
+      // Check if the email exists
+      const emailExists = users.some((user) => user.email === formData.email)
+      if (emailExists) {
+        toast.error('Email is already registered')
+        return // Exit the function if the email exists
+      }
+
       const avatarURL = formData.avatar ? await uploadFileToFirebase(formData.avatar) : null
       const credentialURL = formData.credentialFile ? await uploadFileToFirebase(formData.credentialFile) : null
       const degreeURL = formData.degreeFile ? await uploadFileToFirebase(formData.degreeFile) : null
