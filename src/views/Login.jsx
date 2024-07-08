@@ -104,14 +104,14 @@ const Login = () => {
               onChange={handleChange}
             />
 
-            <div className='text-sm leading-5'>
+            {/* <div className='text-sm leading-5'>
               <a
                 href='#'
                 className='font-medium text-blue-500 hover:text-blue-500 focus:outline-none focus:underline transition ease-in-out duration-150'
               >
                 Forgot your password?
               </a>
-            </div>
+            </div> */}
           </div>
 
           {errorMessage && (

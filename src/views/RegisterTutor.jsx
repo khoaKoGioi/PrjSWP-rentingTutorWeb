@@ -11,6 +11,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { v4 } from 'uuid'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import axios from 'axios'
 
 const RegisterTutor = () => {
   const navigate = useNavigate()
@@ -58,6 +59,16 @@ const RegisterTutor = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      const usersResponse = await axios.get('http://localhost:5000/api/admin/getUser')
+      const users = usersResponse.data.data
+
+      // Check if the email exists
+      const emailExists = users.some((user) => user.email === formData.email)
+      if (emailExists) {
+        toast.error('Email is already registered')
+        return // Exit the function if the email exists
+      }
+
       const avatarURL = formData.avatar ? await uploadFileToFirebase(formData.avatar) : null
       const credentialURL = formData.credentialFile ? await uploadFileToFirebase(formData.credentialFile) : null
       const degreeURL = formData.degreeFile ? await uploadFileToFirebase(formData.degreeFile) : null
@@ -69,7 +80,7 @@ const RegisterTutor = () => {
         degreeFile: degreeURL
       }
 
-      const response = await register('tutor', updatedFormData)
+      const response = await register('Tutor', updatedFormData)
       toast.info('Tutor registered successfully')
       navigate('/')
     } catch (error) {
@@ -139,7 +150,7 @@ const RegisterTutor = () => {
                   value={formData.dateOfBirth}
                   onChange={handleDateChange}
                   required
-                  className='appearance-none block w-full py-2 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5'
+                  className='mt-1 appearance-none block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5'
                 />
               </div>
             </div>

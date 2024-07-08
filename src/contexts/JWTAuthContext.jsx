@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userType, formData) => {
     try {
       let response
-      if (userType === 'student') {
+      if (userType === 'Student') {
         response = await registerStudent(
           formData.email,
           formData.userName,
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }) => {
         )
         console.log('Registration Response:', response)
         dispatch({ type: 'REGISTER_STUDENT', payload: response })
-      } else if (userType === 'tutor') {
+      } else if (userType === 'Tutor') {
         response = await registerTutor(
           formData.email,
           formData.userName,
