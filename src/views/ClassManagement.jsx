@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext, useRef } from 'react'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
-import AuthContext from '../contexts/JWTAuthContext' // Import AuthContext
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import AccessDeniedPage from '../components/AccessDeniedPage.jsx'
@@ -137,7 +136,7 @@ const ClassManagement = () => {
   const classTypes = {
     1: 'Standard Tutor Class',
     2: 'Pro Tutor Class',
-    3: 'Enterprise Tutor Class'
+    3: 'Premium Tutor Class'
   }
 
   const handleAddClass = async () => {
@@ -206,6 +205,7 @@ const ClassManagement = () => {
       })
 
       if (paymentVerificationResponse.data.success) {
+        console.log(pendingClassData)
         const response = await axios.post(`${apiBaseUrl}/createClasses`, pendingClassData)
         setClasses([...classes, response.data])
 
