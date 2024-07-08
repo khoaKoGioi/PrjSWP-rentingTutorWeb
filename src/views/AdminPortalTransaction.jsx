@@ -5,7 +5,6 @@ import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
 
 const AdminPortalTransaction = () => {
   const [payments, setPayments] = useState([])
-  const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -19,14 +18,6 @@ const AdminPortalTransaction = () => {
     fetchPayments()
   }, [])
 
-  const handleInputChange = (event) => {
-    setSearchTerm(event.target.value)
-  }
-
-  const filteredPayments = payments.filter((payment) =>
-    payment.orderCode.toLowerCase().includes(searchTerm.toLowerCase())
-  )
-
   return (
     <div className='mx-auto p-6 bg-gray-100 min-h-screen'>
       <header className='bg-purple-600 text-white shadow-md py-4'>
@@ -34,15 +25,6 @@ const AdminPortalTransaction = () => {
       </header>
       <div className='pt-20'>
         <h1 className='text-4xl font-bold mb-6 text-center text-black'>Admin Portal - Payments</h1>
-        <div className='flex justify-center mb-6'>
-          <input
-            type='text'
-            value={searchTerm}
-            onChange={handleInputChange}
-            className='border border-gray-400 p-2 rounded-lg flex-grow max-w-xl focus:outline-none focus:ring-2 focus:ring-purple-500'
-            placeholder='Search by order code'
-          />
-        </div>
         <table className='mx-auto min-w-full bg-white shadow-md rounded-lg overflow-hidden'>
           <thead className='bg-gradient-to-t from-yellow-700 to-yellow-300 text-black'>
             <tr>
@@ -55,7 +37,7 @@ const AdminPortalTransaction = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredPayments.map((payment, index) => (
+            {payments.map((payment, index) => (
               <tr key={payment.id} className='border-b hover:bg-purple-50'>
                 <td className='p-4'>{index + 1}</td>
                 <td className='p-4'>{payment.tutorID}</td>
