@@ -261,7 +261,6 @@ const ChatBox = forwardRef((props, ref) => {
           ))}
         </ul>
       </div>
-      <ToastContainer />
     </div>
   )
 })
