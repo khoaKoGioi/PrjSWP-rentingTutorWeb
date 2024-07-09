@@ -82,7 +82,7 @@ const RegisterTutor = () => {
 
       const response = await register('Tutor', updatedFormData)
       toast.info('Tutor registered successfully')
-      navigate('/')
+      // navigate('/')
     } catch (error) {
       console.error('Error submitting form:', error)
       toast.error(`Error submitting form: ${error.message}`)
