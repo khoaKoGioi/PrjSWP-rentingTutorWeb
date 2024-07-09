@@ -23,6 +23,10 @@ function NavList() {
     {
       title: 'Manage Request',
       path: '/admin-portal-tutor-request'
+    },
+    {
+      title: 'Revenue Manager',
+      path: '/admin-portal-transaction'
     }
   ]
 
@@ -56,6 +60,8 @@ function NavList() {
                 {link.title}
               </ListItem>
             </NavLink>
+
+
           ))}
         </ul>
       </MenuList>

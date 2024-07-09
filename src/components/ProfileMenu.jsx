@@ -48,7 +48,8 @@ function ProfileMenu() {
   const handleMenuItemClick = (action) => {
     if (action === 'logout') {
       logout()
-      window.location.reload()
+      
+      navigate('/')
     } else if (action === 'profile') {
       navigate('/profile') // Navigate to the profile page
     } else if (action === 'request') {

@@ -46,7 +46,9 @@ const AdminPortal = () => {
 
     if (searchTerm.trim() !== '') {
       filteredUsers = filteredUsers.filter(
-        (user) => user.userName && user.userName.toLowerCase().includes(searchTerm.toLowerCase())
+        (user) =>
+          (user.userName && user.userName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (user.fullName && user.fullName.toLowerCase().includes(searchTerm.toLowerCase()))
       )
     }
 
