@@ -36,7 +36,7 @@ const ClassManagement = () => {
   }
 
   useEffect(() => {
-    if (token && role == 'Tutor') {
+    if (role == 'Tutor') {
       fetchClasses()
     }
   }, [token, role])

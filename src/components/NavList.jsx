@@ -17,16 +17,8 @@ function NavList() {
       path: '/admin-portal'
     },
     {
-      title: 'Manage Tutor',
-      path: '/admin-portal-tutor'
-    },
-    {
       title: 'Manage Class',
       path: '/admin-portal-class'
-    },
-    {
-      title: 'Manage Student',
-      path: '/admin-portal-student'
     },
     {
       title: 'Manage Request',
