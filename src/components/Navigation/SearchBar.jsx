@@ -17,11 +17,14 @@ const SearchBar = () => {
   const fetchSuggestions = async (searchQuery) => {
     try {
       const tutorResponse = await axios.get(`http://localhost:5000/api/students/searchTutorByTutorName/${searchQuery}`)
-      const classResponse = await axios.get(`http://localhost:5000/api/students/searchClassByTutorName/${searchQuery}`)
+      // const classResponse = await axios.get(`http://localhost:5000/api/students/searchClassByTutorName/${searchQuery}`)
       const classByName = await axios.get(`http://localhost:5000/api/students/searchClassByClassName/${searchQuery}`)
+      const classBySubject = await axios.get(`http://localhost:5000/api/students/searchClassBySubject/${searchQuery}`)
 
       const tutorSuggestions = tutorResponse.data.data
-      const classSuggestions = [...classByName.data.data, ...classResponse.data.data]
+      const classSuggestions = [...classByName.data.data, ...classBySubject.data.classroom].filter(
+        (classItem) => classItem.isActive == 1
+      ) //...classResponse.data.data
 
       setSuggestions([...classSuggestions, ...tutorSuggestions])
     } catch (error) {
@@ -64,11 +67,17 @@ const SearchBar = () => {
             <li key={index} className='px-4 py-2 cursor-pointer hover:bg-gray-100 text-black'>
               {suggestion.className ? (
                 <a href={`/classDetail/${suggestion.classID}`} className='block'>
-                  {suggestion.className}
+                  <div className='flex justify-between'>
+                    <span>{suggestion.className}</span>
+                    <span className='text-gray-500'>{suggestion.subject}</span>
+                  </div>
                 </a>
               ) : (
                 <a href={`/tutor-profile/${suggestion.userID}`} className='block'>
-                  {suggestion.fullName}
+                  <div className='flex justify-between'>
+                    <span>{suggestion.fullName}</span>
+                    <span className='text-gray-500'>{suggestion.rating ? suggestion.rating + '/5' : 'No Rating'}</span>
+                  </div>
                 </a>
               )}
             </li>

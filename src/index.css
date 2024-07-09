@@ -14,7 +14,7 @@
 }
 
 /* ChatBox.css */
-.chat-box {
+/* .chat-box {
   position: fixed;
   bottom: 38px;
   right: 20px;
@@ -98,7 +98,7 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-}
+} */
 /*
 const otherClasses = [
     {
