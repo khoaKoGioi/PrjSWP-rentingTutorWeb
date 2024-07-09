@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import NavListRegister from './Navigation/NavListRegister.jsx'
 import ProfileMenu from './ProfileMenu'
-import NavListMenu from './NavListMenu.jsx'
 import { List, ListItem, Menu, MenuHandler, MenuList, Typography } from '@material-tailwind/react'
 import AuthContext from '../contexts/JWTAuthContext' // Import AuthContext
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -60,8 +59,6 @@ function NavList() {
                 {link.title}
               </ListItem>
             </NavLink>
-
-
           ))}
         </ul>
       </MenuList>
@@ -92,8 +89,6 @@ function NavList() {
           </ListItem>
         </NavLink>
       </Typography>
-
-      <NavListMenu />
 
       {isAuthenticated ? (
         <ProfileMenu />

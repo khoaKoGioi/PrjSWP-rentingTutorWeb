@@ -8,9 +8,10 @@ const AdminPortal = () => {
   const [allUsers, setAllUsers] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedRole, setSelectedRole] = useState('User') // Default selection is 'User'
+  const token = localStorage.getItem('token')
   const role = localStorage.getItem('role')
 
-  if (role !== 'Admin') {
+  if (!token || role !== 'Admin') {
     return <AccessDeniedPage />
   }
 
