@@ -3,6 +3,8 @@ import io from 'socket.io-client'
 import { FaComments, FaTimes } from 'react-icons/fa'
 import AuthContext from '../contexts/JWTAuthContext'
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const socket = io('http://localhost:5000') // Ensure the URL matches your server
 
@@ -87,9 +89,9 @@ const ChatBox = forwardRef((props, ref) => {
 
         const filteredUsers = response.data.data.filter((fetchedUser) => {
           if (user.role === 'Admin') {
-            return !fetchedUser.isActive && fetchedUser.role !== 'Admin'
+            return fetchedUser.active == 1 && fetchedUser.role !== 'Admin'
           } else {
-            return !fetchedUser.isActive && (fetchedUser.role === filterRole || fetchedUser.role === 'Admin')
+            return fetchedUser.active == 1 && (fetchedUser.role === filterRole || fetchedUser.role === 'Admin')
           }
         })
 
@@ -122,6 +124,11 @@ const ChatBox = forwardRef((props, ref) => {
   const handleSendMessage = async () => {
     if (!selectedUser) return // Ensure a user is selected before sending a message
 
+    if (!newMessage.trim()) {
+      toast.error('Message cannot be empty!')
+      return
+    }
+
     const message = {
       senderID: user.userID,
       receiverID: selectedUser.userID,
@@ -139,6 +146,12 @@ const ChatBox = forwardRef((props, ref) => {
     )
     socket.emit('sendMessage', message)
     setNewMessage('')
+  }
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSendMessage()
+    }
   }
 
   const toggleChatBox = () => {
@@ -162,69 +175,73 @@ const ChatBox = forwardRef((props, ref) => {
 
   return (
     <div
-      className={`chat-box ${
-        isOpen ? 'open' : ''
-      } fixed bottom-0 right-0 mb-4 mr-4 w-80 h-96 bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform ${
+      className={`fixed bottom-9 right-5 w-80 h-96 border border-gray-300 rounded-lg bg-white shadow-lg transition-transform transform ${
         isOpen ? 'translate-y-0' : 'translate-y-full'
-      }`}
+      } flex flex-col`}
     >
       <div
-        className='chat-header bg-blue-500 text-white p-3 flex justify-between items-center cursor-pointer'
+        className='text-white bg-gradient-to-r from-orange-500 to-orange-800 p-2 cursor-pointer text-center rounded-t-lg flex items-center justify-between'
         onClick={toggleChatBox}
       >
         {isOpen ? <FaTimes size={20} /> : <FaComments size={20} />}
-        <span className='font-bold ml-2'>{selectedUser ? `${selectedUser.fullName} Chat` : 'Select a User'}</span>
+        <span className='font-bold'>{selectedUser ? `${selectedUser.fullName} Chat` : 'Select a User'}</span>
       </div>
       {isOpen && (
-        <div className='chat-content flex flex-col p-3 h-full'>
-          <div className='messages flex-1 overflow-y-auto mb-3 space-y-3'>
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`message p-2 rounded-lg ${
-                  msg.senderID === user.userID ? 'self bg-blue-100 text-right' : 'bg-gray-100 text-left'
-                }`}
-              >
-                <strong>{msg.senderType}</strong>: {msg.messageText}
-                <span className='block text-xs text-gray-500'>{new Date(msg.timestamp).toLocaleTimeString()}</span>
-              </div>
-            ))}
+        <div className='flex flex-col h-full overflow-hidden'>
+          <div className='flex-1 overflow-y-auto p-2 space-y-2'>
+            {messages.length === 0 ? (
+              <div className='flex-1 flex items-center justify-center text-gray-500'>No messages yet.</div>
+            ) : (
+              messages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`p-2 rounded-lg ${
+                    msg.senderID === user.userID ? 'bg-green-100 self-end' : 'bg-gray-100 self-start'
+                  }`}
+                >
+                  <strong>{msg.senderType}</strong>: {msg.messageText}
+                  <span className='block text-xs text-gray-500'>{new Date(msg.timestamp).toLocaleTimeString()}</span>
+                </div>
+              ))
+            )}
           </div>
-          <div className='input-box flex'>
+          <div className='flex p-2 border-t border-gray-300'>
             <input
               type='text'
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
               placeholder='Type a message'
-              className='flex-1 border p-3 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='flex-1 p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
             />
-            <button onClick={handleSendMessage} className='bg-blue-500 text-white p-3 rounded-r-lg hover:bg-blue-600'>
+            <button
+              onClick={handleSendMessage}
+              className='bg-gradient-to-r from-orange-500 to-orange-800 text-white p-2 rounded-r-lg hover:bg-blue-600'
+            >
               Send
             </button>
           </div>
-          {/* Toggle user list button */}
-          <div className='toggle-user-list flex left-4 bottom-4 mt-3'>
+          <div className='flex justify-center mt-2'>
             <button
               onClick={toggleUserList}
-              className='bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none'
+              className='bg-gradient-to-r from-orange-500 to-orange-800 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none'
             >
               {isSelectOpen ? 'Close' : 'Select User'}
             </button>
           </div>
         </div>
       )}
-      {/* User list section */}
       <div
-        className={`user-list ${
+        className={`absolute bottom-32 right-4 bg-white shadow-lg rounded-lg overflow-hidden p-3 max-h-60 w-60 border ${
           isSelectOpen ? 'block' : 'hidden'
-        } absolute bottom-32 right-4 bg-white shadow-lg rounded-lg overflow-hidden p-3 max-h-60 w-60 border`}
+        }`}
       >
         <h3 className='text-lg font-semibold mb-3'>Select a User</h3>
         <ul className='divide-y divide-gray-200 max-h-60 overflow-y-auto'>
           {users.map((user) => (
             <li
               key={user.userID}
-              className='flex items-center justify-start cursor-pointer hover:bg-gray-100 p-2'
+              className='flex items-center cursor-pointer hover:bg-gradient-to-r hover:from-orange-500 hover:to-orange-800 p-2'
               onClick={() => handleUserSelect(user)}
             >
               <img
@@ -237,13 +254,14 @@ const ChatBox = forwardRef((props, ref) => {
                 className='w-8 h-8 rounded-full object-cover mr-2'
               />
               <div>
-                <p className='text-sm'>{user.fullName}</p>
+                <p className='text-sm text-black'>{user.fullName}</p>
                 <p className='text-xs text-gray-500'>{user.role}</p>
               </div>
             </li>
           ))}
         </ul>
       </div>
+      <ToastContainer />
     </div>
   )
 })
