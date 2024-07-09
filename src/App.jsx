@@ -34,11 +34,14 @@ const App = () => {
           <Route path='/Classlist/ClassDetail' element={<ClassList />} />
           <Route path='/classDetail/:id' element={<ClassDetail />} />
           <Route path='/manage-classes' element={<ClassManagement />} />
+
           <Route path='/admin-portal' element={<AdminPortal />} />
           <Route path='/admin-portal-student' element={<AdminPortalStudent />} />
           <Route path='/admin-portal-tutor' element={<AdminPortalTutor />} />
           <Route path='/admin-portal-class' element={<AdminPortalClass />} />
+          
           <Route path='/admin-feedback' element={<FeedbackManagement />} />
+          
           <Route path='/tutor-profile/:id' element={<ViewTutorProfile />} />
           <Route path='/view-tutor-request' element={<TutorRequest />} />
           <Route path='/unauthorized' element={<AccessDeniedPage />} />
