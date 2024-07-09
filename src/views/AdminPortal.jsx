@@ -7,8 +7,10 @@ const AdminPortal = () => {
   const [users, setUsers] = useState([])
   const [allUsers, setAllUsers] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedRole, setSelectedRole] = useState('User') // Default selection is 'User'
   const role = localStorage.getItem('role')
-  if (role != 'Admin') {
+
+  if (role !== 'Admin') {
     return <AccessDeniedPage />
   }
 
@@ -29,15 +31,30 @@ const AdminPortal = () => {
     const value = e.target.value
     setSearchTerm(value)
 
-    if (value.trim() !== '') {
-      const filteredUsers = allUsers.filter(
-        (user) => user.userName && user.userName.toLowerCase().includes(value.toLowerCase())
+    filterUsers(value, selectedRole)
+  }
+
+  const handleRoleChange = (e) => {
+    const value = e.target.value
+    setSelectedRole(value)
+
+    filterUsers(searchTerm, value)
+  }
+
+  const filterUsers = (searchTerm, role) => {
+    let filteredUsers = allUsers
+
+    if (searchTerm.trim() !== '') {
+      filteredUsers = filteredUsers.filter(
+        (user) => user.userName && user.userName.toLowerCase().includes(searchTerm.toLowerCase())
       )
-      setUsers(filteredUsers)
-    } else {
-      // Reset users list if search term is empty
-      setUsers(allUsers)
     }
+
+    if (role !== 'User') {
+      filteredUsers = filteredUsers.filter((user) => user.role && user.role.toLowerCase() === role.toLowerCase())
+    }
+
+    setUsers(filteredUsers)
   }
 
   const toggleActiveStatus = (id, isActive) => {
@@ -79,6 +96,15 @@ const AdminPortal = () => {
             className='border border-gray-400 p-2 rounded-lg flex-grow max-w-xl focus:outline-none focus:ring-2 focus:ring-purple-500'
             placeholder='Search by username'
           />
+          <select
+            value={selectedRole}
+            onChange={handleRoleChange}
+            className='ml-4 border border-gray-400 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500'
+          >
+            <option value='User'>User</option>
+            <option value='Student'>Student</option>
+            <option value='Tutor'>Tutor</option>
+          </select>
         </div>
         <table className='mx-auto min-w-full bg-white shadow-md rounded-lg overflow-hidden'>
           <thead className='bg-gradient-to-t from-yellow-700 to-yellow-300 text-black'>
