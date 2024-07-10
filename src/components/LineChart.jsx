@@ -1,8 +1,21 @@
 import { useTheme } from "@mui/material/styles";
 import ReactEcharts from "echarts-for-react";
 
+const getDaysOfWeek = () => {
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const today = new Date().getDay();
+  const days = [];
+  
+  for (let i = 6; i >= 0; i--) {
+    days.push(daysOfWeek[(today - i + 7) % 7]);
+  }
+  
+  return days;
+};
+
 export default function LineChart({ height, color = [] }) {
   const theme = useTheme();
+  const daysOfWeek = getDaysOfWeek();
 
   const option = {
     grid: { top: "10%", bottom: "10%", left: "5%", right: "5%" },
@@ -22,7 +35,7 @@ export default function LineChart({ height, color = [] }) {
     },
     xAxis: {
       type: "category",
-      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      data: daysOfWeek,
       axisLine: { show: true },
       axisTick: { show: false },
       axisLabel: {
@@ -38,7 +51,7 @@ export default function LineChart({ height, color = [] }) {
       splitLine: {
         lineStyle: { color: theme.palette.text.secondary, opacity: 0.15 }
       },
-      axisLabel: { showcolor: theme.palette.text.secondary, fontSize: 11, fontFamily: "roboto" }
+      axisLabel: { color: theme.palette.text.secondary, fontSize: 11, fontFamily: "roboto" }
     },
     series: [
       {

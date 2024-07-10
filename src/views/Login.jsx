@@ -4,14 +4,18 @@ import { Input, Checkbox, Typography } from '@material-tailwind/react'
 import { MegaMenuWithHover } from '../components/MegaMenuWithHover.jsx'
 import AuthContext from '../contexts/JWTAuthContext'
 import { useNavigate } from 'react-router-dom'
-
+import axios from "axios";
+import { RecoveryContext } from '../App';
 const Login = () => {
   const navigate = useNavigate()
+  const { setOTP, setEmail } = useContext(RecoveryContext);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     rememberMe: true
   })
+  
+
   const [errorMessage, setErrorMessage] = useState('') // Error state
 
   const { login } = useContext(AuthContext) // Consume login function from AuthContext
@@ -34,6 +38,29 @@ const Login = () => {
       setErrorMessage(error.message || 'Invalid email or password') // Set error message
     }
   }
+  const handleForgotPassword = (e) => {
+    e.preventDefault();
+    // Navigate to reset page with email as parameter
+    navigate(`/reset-password?email=${formData.email}`);
+  };
+
+  const handleForgotPasswordnew = (e) => {
+    if (formData.email) {
+      const OTP = Math.floor(Math.random() * 9000 + 1000);
+      console.log(OTP);
+      setOTP(OTP);
+      setEmail(formData.email);
+      axios
+        .post("http://localhost:5000/send_recovery_email", {
+          OTP,
+          recipient_email: formData.email,
+        })
+        navigate(`/OTP-page`);
+        
+      return;
+    }
+    return alert("Please enter your email");
+  };
 
   return (
     <div className='min-h-screen bg-gray-50 flex flex-col justify-center items-center py-12 sm:px-6 lg:px-8 px-6'>
@@ -104,14 +131,15 @@ const Login = () => {
               onChange={handleChange}
             />
 
-            {/* <div className='text-sm leading-5'>
+            <div className='text-sm leading-5'>
               <a
                 href='#'
+                onClick={handleForgotPasswordnew}
                 className='font-medium text-blue-500 hover:text-blue-500 focus:outline-none focus:underline transition ease-in-out duration-150'
               >
                 Forgot your password?
               </a>
-            </div> */}
+            </div> 
           </div>
 
           {errorMessage && (

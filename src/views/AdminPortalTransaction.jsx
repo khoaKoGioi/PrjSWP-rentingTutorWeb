@@ -13,12 +13,13 @@ const AdminPortalTransaction = () => {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/getPayment')
-        setPayments(response.data)
+        const response = await axios.get('http://localhost:5000/api/getPaymentInfo')
+        setPayments(response.data.data)
       } catch (error) {
         console.error('Error fetching payments:', error)
       }
     }
+    
     fetchPayments()
   }, [])
 
