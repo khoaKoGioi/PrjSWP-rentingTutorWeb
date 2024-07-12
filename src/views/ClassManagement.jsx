@@ -272,6 +272,31 @@ const ClassManagement = () => {
     }
   }
 
+  const handleUnenrollStudent = async (classID, studentID) => {
+    try {
+      await axios.post(`http://localhost:5000/api/students/unEnrollClass/${classID}`, { studentID })
+      toast('Student unenrolled successfully!')
+      fetchClasses()
+    } catch (error) {
+      console.error('Error unenrolling student:', error)
+      toast.error('There was an error unenrolling the student.')
+    }
+  }
+
+  const renderUnenrollButton = (classID, studentID) => {
+    if (studentID) {
+      return (
+        <button
+          onClick={() => handleUnenrollStudent(classID, studentID)}
+          className='bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 mr-2'
+        >
+          Unenroll
+        </button>
+      )
+    }
+    return null
+  }
+
   return (
     <div className='container mx-auto p-4 pt-16'>
       <header>
@@ -293,6 +318,7 @@ const ClassManagement = () => {
                 <p className='text-sm'>Subject: {cls.subject}</p>
               </div>
               <div>
+                {renderUnenrollButton(cls.classID, cls.studentID)}
                 <button
                   onClick={() => handleOpenUpdateModal(cls)}
                   className='bg-yellow-600 text-white px-2 py-1 rounded hover:bg-yellow-700 mr-2'

@@ -3,8 +3,10 @@ import io from 'socket.io-client'
 import { FaComments, FaTimes } from 'react-icons/fa'
 import AuthContext from '../contexts/JWTAuthContext'
 import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { Height } from '@mui/icons-material'
 
 const socket = io('http://localhost:5000') // Ensure the URL matches your server
 
@@ -78,22 +80,52 @@ const ChatBox = forwardRef((props, ref) => {
     // Fetch users (tutors or students) from the server
     axios
       .get('http://localhost:5000/api/admin/getUser')
-      .then((response) => {
+      .then(async (response) => {
         let filterRole = ''
+        let id = ''
+
+        const token = localStorage.getItem('token')
+        if (!token) {
+          console.log('User is not logged in')
+          return
+        }
+        const decodedToken = jwtDecode(token)
+        const responseClass = await axios.get('http://localhost:5000/api/admin/classList')
+        let userClasses = responseClass.data.data
+        let filteredUsers = response.data.data
 
         if (user.role === 'Tutor') {
           filterRole = 'Student'
+          id = decodedToken.user.tutorID
+          const requestResponse = await axios.get(`http://localhost:5000/api/tutors/viewRequest/${id}`)
+          const requests = requestResponse.data.data
+          const studentIDsInClasses = userClasses
+            .filter((cls) => cls.tutorID == id)
+            .map((cls) => cls.studentID)
+            .filter((studentID) => studentID !== null)
+
+          const studentIDsInRequests = requests.map((req) => req.studentID).filter((studentID) => studentID !== null)
+          filteredUsers = filteredUsers.filter(
+            (user) => studentIDsInClasses.includes(user.studentID) || studentIDsInRequests.includes(user.studentID)
+            //  || user.role == 'Admin'
+          )
         } else if (user.role === 'Student') {
           filterRole = 'Tutor'
-        }
+          id = decodedToken.user.studentID
 
-        const filteredUsers = response.data.data.filter((fetchedUser) => {
-          if (user.role === 'Admin') {
-            return fetchedUser.active == 1 && fetchedUser.role !== 'Admin'
-          } else {
-            return fetchedUser.active == 1 && (fetchedUser.role === filterRole || fetchedUser.role === 'Admin')
-          }
-        })
+          const requestResponse = await axios.get(`http://localhost:5000/api/students/viewRequest/${id}`)
+          const requests = requestResponse.data.data
+          const tutorIDsInClasses = userClasses
+            .filter((cls) => cls.studentID == id)
+            .map((cls) => cls.tutorID)
+            .filter((tutorID) => tutorID !== null)
+
+          const tutorIDsInRequests = requests.map((req) => req.tutorID).filter((tutorID) => tutorID !== null)
+          filteredUsers = filteredUsers.filter(
+            (user) => tutorIDsInClasses.includes(user.tutorID) || tutorIDsInRequests.includes(user.tutorID)
+            //  || user.role == 'Admin'
+          )
+        }
 
         setUsers(filteredUsers)
         if (filteredUsers.length > 0) {
@@ -259,6 +291,7 @@ const ChatBox = forwardRef((props, ref) => {
               </div>
             </li>
           ))}
+          <div className='h-20'></div>
         </ul>
       </div>
     </div>
