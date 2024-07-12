@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
@@ -25,6 +25,7 @@ const ClassDetail = () => {
   const [enrollError, setEnrollError] = useState('')
   const [rating, setRating] = useState('0')
 
+  const chatBoxRef = useRef()
   useEffect(() => {
     if (id) {
       fetchClass()
@@ -95,6 +96,9 @@ const ClassDetail = () => {
         })
         setIsEnrolled(true)
         toast.success('Successfully enrolled in the class')
+        if (chatBoxRef.current) {
+          chatBoxRef.current.refreshUsers()
+        }
       } else if (decodedToken.user.role == 'Tutor') {
         const tutorId = decodedToken.user.tutorID
         if (tutorId == classData.tutorID) {
@@ -334,7 +338,11 @@ const ClassDetail = () => {
           </div>
         </div>
       )}
-      <ChatBox />
+      <div className='w-full md:w-1/4'>
+        <div className='sticky top-24'>
+          <ChatBox ref={chatBoxRef} />
+        </div>
+      </div>
       <ToastContainer />
     </div>
   )

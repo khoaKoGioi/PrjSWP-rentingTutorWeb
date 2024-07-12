@@ -62,6 +62,9 @@ const ViewTutorProfile = () => {
         })
         toast.info('Request message sent!')
 
+        if (chatBoxRef.current) {
+          await chatBoxRef.current.refreshUsers()
+        }
         // Send the request message to the ChatBox
         await chatBoxRef.current.sendMessage(requestMessage, tutor)
 

@@ -51,6 +51,64 @@ const ChatBox = forwardRef((props, ref) => {
       } catch (error) {
         console.error('Error sending message:', error)
       }
+    },
+    refreshUsers: async () => {
+      // Fetch users (tutors or students) from the server again
+      axios
+        .get('http://localhost:5000/api/admin/getUser')
+        .then(async (response) => {
+          let filterRole = ''
+          let id = ''
+
+          const token = localStorage.getItem('token')
+          if (!token) {
+            console.log('User is not logged in')
+            return
+          }
+          const decodedToken = jwtDecode(token)
+          const responseClass = await axios.get('http://localhost:5000/api/admin/classList')
+          let userClasses = responseClass.data.data
+          let filteredUsers = response.data.data
+
+          if (user.role === 'Tutor') {
+            filterRole = 'Student'
+            id = decodedToken.user.tutorID
+            const requestResponse = await axios.get(`http://localhost:5000/api/tutors/viewRequest/${id}`)
+            const requests = requestResponse.data.data
+            const studentIDsInClasses = userClasses
+              .filter((cls) => cls.tutorID == id)
+              .map((cls) => cls.studentID)
+              .filter((studentID) => studentID !== null)
+
+            const studentIDsInRequests = requests.map((req) => req.studentID).filter((studentID) => studentID !== null)
+            filteredUsers = filteredUsers.filter(
+              (user) => studentIDsInClasses.includes(user.studentID) || studentIDsInRequests.includes(user.studentID)
+            )
+          } else if (user.role === 'Student') {
+            filterRole = 'Tutor'
+            id = decodedToken.user.studentID
+
+            const requestResponse = await axios.get(`http://localhost:5000/api/students/viewRequest/${id}`)
+            const requests = requestResponse.data.data
+            const tutorIDsInClasses = userClasses
+              .filter((cls) => cls.studentID == id)
+              .map((cls) => cls.tutorID)
+              .filter((tutorID) => tutorID !== null)
+
+            const tutorIDsInRequests = requests.map((req) => req.tutorID).filter((tutorID) => tutorID !== null)
+            filteredUsers = filteredUsers.filter(
+              (user) => tutorIDsInClasses.includes(user.tutorID) || tutorIDsInRequests.includes(user.tutorID)
+            )
+          }
+
+          setUsers(filteredUsers)
+          if (filteredUsers.length > 0) {
+            setSelectedUser(filteredUsers[0])
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching users:', error)
+        })
     }
   }))
 
