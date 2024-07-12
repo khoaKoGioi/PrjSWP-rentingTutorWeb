@@ -5,7 +5,7 @@ import { jwtDecode } from 'jwt-decode'
 import { Button, Card, CardBody, Typography } from '@material-tailwind/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faStar, faStarHalfAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
-import { FaStar } from 'react-icons/fa'
+import { faFlag } from '@fortawesome/free-solid-svg-icons'
 import { CircularImg } from '../components/CircularImg.jsx'
 import BreadcrumbsWithIcon from '../components/BreadCrumb.jsx'
 import MegaMenuWithHover from '../components/MegaMenuWithHover.jsx'
@@ -24,6 +24,7 @@ const ClassDetail = () => {
   const [feedbacks, setFeedbacks] = useState([])
   const [enrollError, setEnrollError] = useState('')
   const [rating, setRating] = useState('0')
+  const [isReportHovered, setIsReportHovered] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -200,7 +201,23 @@ const ClassDetail = () => {
 
       <div className='container mx-auto p-4 flex flex-col md:flex-row gap-8'>
         <div className='w-full md:w-3/4 mb-4 flex flex-col gap-4'>
-          <Card className='shadow-lg w-full'>
+          <Card className='shadow-lg w-full relative'>
+            <div
+              className='absolute top-4 right-4 cursor-pointer hover:text-red-500'
+              onMouseEnter={() => setIsReportHovered(true)}
+              onMouseLeave={() => setIsReportHovered(false)}
+            >
+              <FontAwesomeIcon
+                icon={faFlag}
+                className='h-6 w-6 text-black-500'
+                onClick={() => alert('Report functionality to be implemented')}
+              />
+              {isReportHovered && (
+                <span className='absolute right-0 top-full mt-2 w-12 bg-gray-700 text-white text-center text-xs rounded-md py-1'>
+                  Report
+                </span>
+              )}
+            </div>
             <CardBody className='flex flex-col md:flex-row items-start md:items-center gap-5 p-6'>
               <div className='w-full md:w-1/2'>
                 <div className='relative cursor-pointer' onClick={() => setShowVideo(true)}>
