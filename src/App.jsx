@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/JWTAuthContext'
+import { createContext,useState } from "react";
 
 import HomePage from './views/HomePage'
 import Login from './views/Login'
@@ -18,14 +19,28 @@ import AccessDeniedPage from './components/AccessDeniedPage'
 import ViewTutorProfile from './views/ViewTutorProfile'
 import AdminTutorRequests from './views/AdminTutorRequest'
 import AdminPortalTransaction from './views/AdminPortalTransaction'
-
+import Reset from './views/Reset'
+import OTPinput from './views/OTPInput'
+export const RecoveryContext = createContext();
 const App = () => {
+  const [email, setEmail] = useState();
+  const [otp, setOTP] = useState();
+
   return (
     <AuthProvider>
+       <RecoveryContext.Provider
+      value={{ otp, setOTP, setEmail, email }}
+    >
+
+    
       <Router>
+        
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/reset-password' element={<Reset/>} />
+          <Route path='/OTP-page' element={<OTPinput/>} />
+
           <Route path='/register-student' element={<RegisterStudent />} />
           <Route path='/register-tutor' element={<RegisterTutor />} />
           <Route path='/Classlist' element={<ClassList />} />
@@ -56,6 +71,7 @@ const App = () => {
           />
         </Routes>
       </Router>
+    </RecoveryContext.Provider>  
     </AuthProvider>
   )
 }

@@ -24,7 +24,8 @@ import { v4 } from 'uuid'
 import { jwtDecode } from 'jwt-decode'
 import axios from 'axios'
 import ChatBox from '../components/ChatBox'
-
+import { useNavigate } from 'react-router-dom'
+import { RecoveryContext } from "../App"
 const UserProfile = () => {
   const token = localStorage.getItem('token')
   const { user } = useContext(AuthContext)
@@ -33,7 +34,8 @@ const UserProfile = () => {
   const avatarInputRef = useRef(null)
   const identityCardInputRef = useRef(null)
   const degreesInputRef = useRef(null)
-
+  const navigate = useNavigate();
+  const { setEmail } = useContext(RecoveryContext);
   useEffect(() => {
     if (user) {
       setUserData(user)
@@ -141,7 +143,12 @@ const UserProfile = () => {
     setUserData({ ...userData, [name]: files[0] })
     console.log(userData)
   }
-
+  const handleResetPassword = (e) => {
+    e.preventDefault();
+    setEmail(userData.email);
+    // Navigate to reset page with email as parameter
+    navigate(`/reset-password`);
+  };
   const renderRatingStars = () => {
     const rating = parseFloat(userData.rating) || 0
     const fullStars = Math.floor(rating)
@@ -211,8 +218,11 @@ const UserProfile = () => {
               </label>
             </div>
           </div>
+          
         </div>
+
         <div className='w-full'>
+
           <div className='flex items-center mb-4'>
             <FaRegUser className='mr-2 text-gray-600' />
             <label className='flex-1'>
@@ -391,8 +401,14 @@ const UserProfile = () => {
             </>
           )}
           <button
+            onClick={handleResetPassword}
+            className='w-full bg-green-500 text-white mb-2 py-2 px-4 rounded-md shadow-sm hover:bg-green-600 transition duration-300'
+          >
+            Reset Password
+          </button>
+          <button
             onClick={handleUpdate}
-            className='w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 transition duration-300'
+            className='w-full bg-blue-500 text-white mt-2 py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 transition duration-300'
           >
             Update
           </button>

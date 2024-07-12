@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import { Button, Input, Collapse, IconButton } from '@material-tailwind/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import SearchBar from './Navigation/SearchBar'
-import ChatBox from './ChatBox'
 
 export function MegaMenuWithHover() {
   const [openNav, setOpenNav] = useState(false)
