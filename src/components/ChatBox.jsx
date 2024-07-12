@@ -3,6 +3,7 @@ import io from 'socket.io-client'
 import { FaComments, FaTimes } from 'react-icons/fa'
 import AuthContext from '../contexts/JWTAuthContext'
 import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -80,11 +81,21 @@ const ChatBox = forwardRef((props, ref) => {
       .get('http://localhost:5000/api/admin/getUser')
       .then((response) => {
         let filterRole = ''
+        let id = ''
+
+        const token = localStorage.getItem('token')
+        if (!token) {
+          console.log('User is not logged in')
+          return
+        }
+        const decodedToken = jwtDecode(token)
 
         if (user.role === 'Tutor') {
           filterRole = 'Student'
+          id = decodedToken.user.tutorID
         } else if (user.role === 'Student') {
           filterRole = 'Tutor'
+          id = decodedToken.user.studentID
         }
 
         const filteredUsers = response.data.data.filter((fetchedUser) => {
