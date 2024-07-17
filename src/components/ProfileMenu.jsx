@@ -24,8 +24,9 @@ const profileMenuItems = [
     action: 'request'
   },
   {
-    label: 'Inbox',
-    icon: InboxArrowDownIcon
+    label: 'Complaint',
+    icon: InboxArrowDownIcon,
+    action: 'complaint'
   },
   {
     label: 'Help',
@@ -51,7 +52,9 @@ function ProfileMenu() {
       
       navigate('/')
     } else if (action === 'profile') {
-      navigate('/profile') // Navigate to the profile page
+      navigate('/profile') 
+    } else if (action === 'complaint') {
+      navigate('/complaint')  
     } else if (action === 'request') {
       navigate('/view-tutor-request') // Navigate to the profile page
     } else if (action === 'logout') {

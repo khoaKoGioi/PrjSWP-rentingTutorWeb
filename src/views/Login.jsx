@@ -76,7 +76,7 @@ const Login = () => {
         <p className='mt-2 text-center text-sm leading-5 text-blue-500 max-w'>
           Or
           <a
-            href='/register'
+            href='/register-student'
             className='font-medium text-blue-500 hover:text-blue-500 focus:outline-none focus:underline transition ease-in-out duration-150'
           >
             {' '}

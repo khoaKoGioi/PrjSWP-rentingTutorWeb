@@ -9,6 +9,7 @@ import RegisterTutor from './views/RegisterTutor'
 import ClassList from './views/ClassList'
 import ClassDetail from './views/ClassDetail'
 import UserProfile from './views/UserProfile'
+import Complaint from './views/Complaint'
 import AuthGuard from './auth/AuthGuard'
 import ClassManagement from './views/ClassManagement'
 import AdminPortal from './views/AdminPortal'
@@ -19,6 +20,8 @@ import AccessDeniedPage from './components/AccessDeniedPage'
 import ViewTutorProfile from './views/ViewTutorProfile'
 import AdminTutorRequests from './views/AdminTutorRequest'
 import AdminPortalTransaction from './views/AdminPortalTransaction'
+import AdminPortalComplaints from './views/AdminPortalComplaints';
+
 import Reset from './views/Reset'
 import OTPinput from './views/OTPInput'
 export const RecoveryContext = createContext();
@@ -43,6 +46,7 @@ const App = () => {
 
           <Route path='/register-student' element={<RegisterStudent />} />
           <Route path='/register-tutor' element={<RegisterTutor />} />
+          <Route path='/complaint' element={<Complaint />} />
           <Route path='/Classlist' element={<ClassList />} />
           <Route path='/Classlist/ClassDetail' element={<ClassList />} />
           <Route path='/classDetail/:id' element={<ClassDetail />} />
@@ -50,7 +54,7 @@ const App = () => {
 
           <Route path='/admin-portal' element={<AdminPortal />} />
           <Route path='/admin-portal-class' element={<AdminPortalClass />} />
-          
+          <Route path='/admin-portal-complaints' element={<AdminPortalComplaints />} />
           <Route path='/admin-feedback' element={<FeedbackManagement />} />
           
           <Route path='/tutor-profile/:id' element={<ViewTutorProfile />} />

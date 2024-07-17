@@ -26,6 +26,10 @@ function NavList() {
     {
       title: 'Revenue Manager',
       path: '/admin-portal-transaction'
+    },
+    {
+      title: 'Complaints Manager',
+      path: '/admin-portal-complaints'
     }
   ]
 

@@ -205,12 +205,17 @@ const UserProfile = () => {
           />
           <div className='ml-6 flex-1'>
             <div className='flex items-center'>
-              <FaUser className='mr-2 text-gray-600' />
+              
               <label className='flex-1'>
-                <span className='block text-sm font-medium text-gray-700'>Username</span>
+              <span className='block text-sm font-medium text-gray-700'>
+                  <div className='flex items-center'>
+                  <FaUser className='mr-2 text-gray-600' />
+                  Username
+                  </div>
+                  </span>
                 <input
                   type='text'
-                  name='username'
+                  name='userName'
                   value={userData.userName || ''}
                   onChange={handleChange}
                   className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2'
@@ -224,9 +229,14 @@ const UserProfile = () => {
         <div className='w-full'>
 
           <div className='flex items-center mb-4'>
-            <FaRegUser className='mr-2 text-gray-600' />
+            
             <label className='flex-1'>
-              <span className='block text-sm font-medium text-gray-700'>Full Name</span>
+              <span className='block text-sm font-medium text-gray-700'>
+              <div className='flex items-center'>
+              <FaRegUser className='mr-2 text-gray-600' />  
+                Full Name
+              </div>  
+                </span>
               <input
                 type='text'
                 name='fullName'
@@ -237,9 +247,16 @@ const UserProfile = () => {
             </label>
           </div>
           <div className='flex items-center mb-4'>
-            <FaEnvelope className='mr-2 text-gray-600' />
+            
+
             <label className='flex-1'>
-              <span className='block text-sm font-medium text-gray-700'>Email</span>
+              <span className='block text-sm font-medium text-gray-700'>
+              <div className='flex items-center'>
+               <FaEnvelope className='mr-2 text-gray-600' /> 
+                Email
+                </div>   
+                </span>
+
               <input
                 type='email'
                 name='email'
@@ -250,9 +267,14 @@ const UserProfile = () => {
             </label>
           </div>
           <div className='flex items-center mb-4'>
-            <FaPhone className='mr-2 text-gray-600' />
+            
             <label className='flex-1'>
-              <span className='block text-sm font-medium text-gray-700'>Phone Number</span>
+              <span className='block text-sm font-medium text-gray-700'>
+              <div className='flex items-center'>
+                <FaPhone className='mr-2 text-gray-600' />
+                Phone Number
+                </div>
+                </span>
               <input
                 type='text'
                 name='phone'
@@ -263,9 +285,14 @@ const UserProfile = () => {
             </label>
           </div>
           <div className='flex items-center mb-4'>
-            <FaRegAddressCard className='mr-2 text-gray-600' />
+            
             <label className='flex-1'>
-              <span className='block text-sm font-medium text-gray-700'>Address</span>
+              <span className='block text-sm font-medium text-gray-700'>
+              <div className='flex items-center'>
+                <FaRegAddressCard className='mr-2 text-gray-600' />
+                Address
+                </div>
+                </span>
               <input
                 type='text'
                 name='address'
@@ -276,9 +303,14 @@ const UserProfile = () => {
             </label>
           </div>
           <div className='flex items-center mb-4'>
-            <FaBirthdayCake className='mr-2 text-gray-600' />
+           
             <label className='flex-1'>
-              <span className='block text-sm font-medium text-gray-700'>Date of Birth</span>
+              <span className='block text-sm font-medium text-gray-700'>
+              <div className='flex items-center'>
+                 <FaBirthdayCake className='mr-2 text-gray-600' />
+                Date of Birth
+                </div> 
+                </span>
               <input
                 type='date'
                 name='dob'
@@ -291,9 +323,14 @@ const UserProfile = () => {
           {userData.role === 'Student' && (
             <>
               <div className='flex items-center mb-4'>
-                <FaSchool className='mr-2 text-gray-600' />
+                
                 <label className='flex-1'>
-                  <span className='block text-sm font-medium text-gray-700'>School</span>
+                  <span className='block text-sm font-medium text-gray-700'>
+                  <div className='flex items-center'>
+                    <FaSchool className='mr-2 text-gray-600' />
+                    School
+                    </div>
+                    </span>
                   <input
                     type='text'
                     name='school'
