@@ -80,7 +80,7 @@ const ClassCard = ({
           <Button onClick={handleCardClick}>Enroll</Button>
           <Typography color='blue-gray' className='flex items-center gap-1.5 font-normal'>
             <Typography>Price per hour:</Typography>
-            {`$${price}`}
+            {`${price} VND`}
           </Typography>
         </CardFooter>
       )}

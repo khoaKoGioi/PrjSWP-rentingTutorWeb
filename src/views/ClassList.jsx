@@ -206,10 +206,13 @@ const ClassList = () => {
                       Tutor: {item.tutorFullName}
                     </Typography>
                     <Typography tag='h3' className='mt-2'>
+                      Type: {item.type}
+                    </Typography>
+                    <Typography tag='h3' className='mt-2'>
                       Duration: {item.length}
                     </Typography>
                     <Typography tag='h3' className='mt-2'>
-                      Price: ${item.price}
+                      Price per hour: {item.price} VND
                     </Typography>
                   </CardBody>
                 </Card>
