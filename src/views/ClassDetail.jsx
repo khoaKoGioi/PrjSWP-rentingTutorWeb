@@ -247,9 +247,9 @@ const ClassDetail = () => {
                   {classData.description}
                 </Typography>
                 <Typography tag='h3' className='mb-2 blue'>
-
                   <Link to={`/tutor-profile/${classData.userID}`} className='block'>
-                    <strong>Tutor:</strong>  <span style={{ fontWeight: 'bold', color: 'blue' }}> {classData.tutorFullName} </span>
+                    <strong>Tutor:</strong>{' '}
+                    <span style={{ fontWeight: 'bold', color: 'black' }}> {classData.tutorFullName} </span>
                   </Link>
                 </Typography>
                 <Typography tag='h3' className='mb-2'>
