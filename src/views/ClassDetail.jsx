@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { Button, Card, CardBody, Typography } from '@material-tailwind/react'
@@ -25,6 +25,7 @@ const ClassDetail = () => {
   const [enrollError, setEnrollError] = useState('')
   const [rating, setRating] = useState('0')
   const [isReportHovered, setIsReportHovered] = useState(false)
+  const navigate = useNavigate()
 
   const chatBoxRef = useRef()
   useEffect(() => {
@@ -146,6 +147,10 @@ const ClassDetail = () => {
     }
   }
 
+  const handleReportClick = () => {
+    navigate('/complaint')
+  }
+
   const handleCloseFeedbackForm = () => {
     setShowFeedbackForm(false)
   }
@@ -211,11 +216,7 @@ const ClassDetail = () => {
               onMouseEnter={() => setIsReportHovered(true)}
               onMouseLeave={() => setIsReportHovered(false)}
             >
-              <FontAwesomeIcon
-                icon={faFlag}
-                className='h-6 w-6 text-black-500'
-                onClick={() => alert('Report functionality to be implemented')}
-              />
+              <FontAwesomeIcon icon={faFlag} className='h-6 w-6 text-black-500' onClick={handleReportClick} />
               {isReportHovered && (
                 <span className='absolute right-0 top-full mt-2 w-12 bg-gray-700 text-white text-center text-xs rounded-md py-1'>
                   Report

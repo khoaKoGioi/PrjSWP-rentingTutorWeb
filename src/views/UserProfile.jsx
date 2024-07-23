@@ -25,7 +25,7 @@ import { jwtDecode } from 'jwt-decode'
 import axios from 'axios'
 import ChatBox from '../components/ChatBox'
 import { useNavigate } from 'react-router-dom'
-import { RecoveryContext } from "../App"
+import { RecoveryContext } from '../App'
 const UserProfile = () => {
   const token = localStorage.getItem('token')
   const { user } = useContext(AuthContext)
@@ -34,8 +34,8 @@ const UserProfile = () => {
   const avatarInputRef = useRef(null)
   const identityCardInputRef = useRef(null)
   const degreesInputRef = useRef(null)
-  const navigate = useNavigate();
-  const { setEmail } = useContext(RecoveryContext);
+  const navigate = useNavigate()
+  const { setEmail } = useContext(RecoveryContext)
   useEffect(() => {
     if (user) {
       setUserData(user)
@@ -73,6 +73,24 @@ const UserProfile = () => {
   const handleUpdate = async () => {
     try {
       const updates = {}
+
+      // Age validation
+      const today = new Date()
+      const dob = new Date(userData.dateOfBirth)
+      let age = today.getFullYear() - dob.getFullYear()
+      const monthDifference = today.getMonth() - dob.getMonth()
+      if ((monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) && age > 0) {
+        age--
+      }
+
+      if (userData.role === 'Student' && age < 6) {
+        toast.error('Student must be at least 6 years old.')
+        return
+      }
+      if (userData.role === 'Tutor' && age < 18) {
+        toast.error('Tutor must be at least 18 years old.')
+        return
+      }
 
       // Check for avatar changes
       if (userData.avatar !== originalData.avatar) {
@@ -119,7 +137,7 @@ const UserProfile = () => {
       localStorage.setItem('token', data.token)
       setUserData(data.user)
       toast.info('Profile updated successfully!')
-      window.location.reload()
+      // window.location.reload()
     } catch (error) {
       console.error('Failed to update profile:', error)
       toast.error('Failed to update profile. Please try again.')
@@ -144,11 +162,14 @@ const UserProfile = () => {
     console.log(userData)
   }
   const handleResetPassword = (e) => {
-    e.preventDefault();
-    setEmail(userData.email);
+    e.preventDefault()
+    setEmail(userData.email)
     // Navigate to reset page with email as parameter
-    navigate(`/reset-password`);
-  };
+    navigate(`/reset-password`)
+  }
+  const handleDateChange = (e) => {
+    setUserData({ ...userData, dateOfBirth: e.target.value })
+  }
   const renderRatingStars = () => {
     const rating = parseFloat(userData.rating) || 0
     const fullStars = Math.floor(rating)
@@ -205,14 +226,13 @@ const UserProfile = () => {
           />
           <div className='ml-6 flex-1'>
             <div className='flex items-center'>
-              
               <label className='flex-1'>
-              <span className='block text-sm font-medium text-gray-700'>
+                <span className='block text-sm font-medium text-gray-700'>
                   <div className='flex items-center'>
-                  <FaUser className='mr-2 text-gray-600' />
-                  Username
+                    <FaUser className='mr-2 text-gray-600' />
+                    Username
                   </div>
-                  </span>
+                </span>
                 <input
                   type='text'
                   name='userName'
@@ -223,20 +243,17 @@ const UserProfile = () => {
               </label>
             </div>
           </div>
-          
         </div>
 
         <div className='w-full'>
-
           <div className='flex items-center mb-4'>
-            
             <label className='flex-1'>
               <span className='block text-sm font-medium text-gray-700'>
-              <div className='flex items-center'>
-              <FaRegUser className='mr-2 text-gray-600' />  
-                Full Name
-              </div>  
-                </span>
+                <div className='flex items-center'>
+                  <FaRegUser className='mr-2 text-gray-600' />
+                  Full Name
+                </div>
+              </span>
               <input
                 type='text'
                 name='fullName'
@@ -247,15 +264,13 @@ const UserProfile = () => {
             </label>
           </div>
           <div className='flex items-center mb-4'>
-            
-
             <label className='flex-1'>
               <span className='block text-sm font-medium text-gray-700'>
-              <div className='flex items-center'>
-               <FaEnvelope className='mr-2 text-gray-600' /> 
-                Email
-                </div>   
-                </span>
+                <div className='flex items-center'>
+                  <FaEnvelope className='mr-2 text-gray-600' />
+                  Email
+                </div>
+              </span>
 
               <input
                 type='email'
@@ -267,14 +282,13 @@ const UserProfile = () => {
             </label>
           </div>
           <div className='flex items-center mb-4'>
-            
             <label className='flex-1'>
               <span className='block text-sm font-medium text-gray-700'>
-              <div className='flex items-center'>
-                <FaPhone className='mr-2 text-gray-600' />
-                Phone Number
+                <div className='flex items-center'>
+                  <FaPhone className='mr-2 text-gray-600' />
+                  Phone Number
                 </div>
-                </span>
+              </span>
               <input
                 type='text'
                 name='phone'
@@ -285,14 +299,13 @@ const UserProfile = () => {
             </label>
           </div>
           <div className='flex items-center mb-4'>
-            
             <label className='flex-1'>
               <span className='block text-sm font-medium text-gray-700'>
-              <div className='flex items-center'>
-                <FaRegAddressCard className='mr-2 text-gray-600' />
-                Address
+                <div className='flex items-center'>
+                  <FaRegAddressCard className='mr-2 text-gray-600' />
+                  Address
                 </div>
-                </span>
+              </span>
               <input
                 type='text'
                 name='address'
@@ -303,19 +316,18 @@ const UserProfile = () => {
             </label>
           </div>
           <div className='flex items-center mb-4'>
-           
             <label className='flex-1'>
               <span className='block text-sm font-medium text-gray-700'>
-              <div className='flex items-center'>
-                 <FaBirthdayCake className='mr-2 text-gray-600' />
-                Date of Birth
-                </div> 
-                </span>
+                <div className='flex items-center'>
+                  <FaBirthdayCake className='mr-2 text-gray-600' />
+                  Date of Birth
+                </div>
+              </span>
               <input
                 type='date'
                 name='dateOfBirth'
-                value={formatDate(userData.dateOfBirth) || ''}
-                onChange={handleChange}
+                value={formatDate(userData.dateOfBirth) || '1999-01-01'}
+                onChange={handleDateChange}
                 className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2'
               />
             </label>
@@ -323,14 +335,13 @@ const UserProfile = () => {
           {userData.role === 'Student' && (
             <>
               <div className='flex items-center mb-4'>
-                
                 <label className='flex-1'>
                   <span className='block text-sm font-medium text-gray-700'>
-                  <div className='flex items-center'>
-                    <FaSchool className='mr-2 text-gray-600' />
-                    School
+                    <div className='flex items-center'>
+                      <FaSchool className='mr-2 text-gray-600' />
+                      School
                     </div>
-                    </span>
+                  </span>
                   <input
                     type='text'
                     name='school'

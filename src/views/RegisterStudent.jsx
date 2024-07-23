@@ -72,6 +72,20 @@ const Register = () => {
         return // Exit the function if the email exists
       }
 
+      // Age validation
+      const today = new Date()
+      const dob = new Date(formData.dateOfBirth)
+      let age = today.getFullYear() - dob.getFullYear()
+      const monthDifference = today.getMonth() - dob.getMonth()
+      if ((monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) && age > 0) {
+        age--
+      }
+
+      if (age < 6) {
+        toast.error('Student must be at least 6 years old.')
+        return
+      }
+
       const avatarURL = formData.avatar ? await uploadFileToFirebase(formData.avatar) : null
 
       const updatedFormData = {
@@ -106,7 +120,7 @@ const Register = () => {
             className='font-medium text-blue-600 hover:text-blue-500 focus:outline-none focus:underline transition ease-in-out duration-150'
           >
             {' '}
-            login to your account
+            Log in to your account
           </a>
         </p>
       </div>

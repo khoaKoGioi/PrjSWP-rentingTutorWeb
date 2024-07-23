@@ -15,8 +15,8 @@ import axios from 'axios'
 
 const RegisterTutor = () => {
   const navigate = useNavigate()
-  const { register, logout  } = useContext(AuthContext)
-  
+  const { register, logout } = useContext(AuthContext)
+
   const [formData, setFormData] = useState({
     fullName: '',
     userName: '',
@@ -67,6 +67,20 @@ const RegisterTutor = () => {
       if (emailExists) {
         toast.error('Email is already registered')
         return // Exit the function if the email exists
+      }
+
+      // Age validation
+      const today = new Date()
+      const dob = new Date(formData.dateOfBirth)
+      let age = today.getFullYear() - dob.getFullYear()
+      const monthDifference = today.getMonth() - dob.getMonth()
+      if ((monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) && age > 0) {
+        age--
+      }
+
+      if (age < 18) {
+        toast.error('Tutor must be at least 18 years old.')
+        return
       }
 
       const avatarURL = formData.avatar ? await uploadFileToFirebase(formData.avatar) : null
@@ -170,7 +184,7 @@ const RegisterTutor = () => {
 
             <div className='mt-6 w-full'>
               <label className='block text-sm font-medium leading-5 text-gray-700'>Upload Degree</label>
-              <small className='text-red-500 block'>You can upload up to 4 degrees.</small>
+              <small className='text-red-500 block'>*Please upload pictures of your degree.</small>
               <input type='file' name='degreeFile' onChange={handleFileChange} />
             </div>
 
@@ -189,8 +203,9 @@ const RegisterTutor = () => {
             <Password value={formData.password} onChange={handleChange} />
             <div className='mt-6'>
               <p className='text-red-500 text-sm'>
-                Please note that your credentials will be viewed and need to be approved in order to successfully create an account.
-              <br/>
+                Please note that your credentials will be viewed and need to be approved in order to successfully create
+                an account.
+                <br />
                 We will send you an email about your tutor's account approval as soon as possible.
               </p>
             </div>

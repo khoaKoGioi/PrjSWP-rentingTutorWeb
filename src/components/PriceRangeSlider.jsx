@@ -16,7 +16,7 @@ const PriceRangeSlider = ({ onChange }) => {
       minValue={0}
       maxValue={5000}
       defaultValue={[0, 5000]}
-      formatOptions={{ style: 'currency', currency: 'USD' }}
+      formatOptions={{ style: 'currency', currency: 'VND' }}
       className='max-w-md block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-inherit mb-4'
       onChange={handleChange}
     />
