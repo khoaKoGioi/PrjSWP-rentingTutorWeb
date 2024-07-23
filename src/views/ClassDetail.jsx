@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { Button, Card, CardBody, Typography } from '@material-tailwind/react'
@@ -25,6 +25,7 @@ const ClassDetail = () => {
   const [enrollError, setEnrollError] = useState('')
   const [rating, setRating] = useState('0')
   const [isReportHovered, setIsReportHovered] = useState(false)
+  const navigate = useNavigate()
 
   const chatBoxRef = useRef()
   useEffect(() => {
@@ -146,6 +147,10 @@ const ClassDetail = () => {
     }
   }
 
+  const handleReportClick = () => {
+    navigate('/complaint')
+  }
+
   const handleCloseFeedbackForm = () => {
     setShowFeedbackForm(false)
   }
@@ -211,11 +216,7 @@ const ClassDetail = () => {
               onMouseEnter={() => setIsReportHovered(true)}
               onMouseLeave={() => setIsReportHovered(false)}
             >
-              <FontAwesomeIcon
-                icon={faFlag}
-                className='h-6 w-6 text-black-500'
-                onClick={() => alert('Report functionality to be implemented')}
-              />
+              <FontAwesomeIcon icon={faFlag} className='h-6 w-6 text-black-500' onClick={handleReportClick} />
               {isReportHovered && (
                 <span className='absolute right-0 top-full mt-2 w-12 bg-gray-700 text-white text-center text-xs rounded-md py-1'>
                   Report
@@ -245,9 +246,10 @@ const ClassDetail = () => {
                 <Typography tag='h3' className='mb-4' style={{ wordWrap: 'break-word' }}>
                   {classData.description}
                 </Typography>
-                <Typography tag='h3' className='mb-2'>
+                <Typography tag='h3' className='mb-2 blue'>
+
                   <Link to={`/tutor-profile/${classData.userID}`} className='block'>
-                    <strong>Tutor:</strong> {classData.tutorFullName}
+                    <strong>Tutor:</strong>  <span style={{ fontWeight: 'bold', color: 'blue' }}> {classData.tutorFullName} </span>
                   </Link>
                 </Typography>
                 <Typography tag='h3' className='mb-2'>
@@ -266,7 +268,7 @@ const ClassDetail = () => {
                   <strong>Type:</strong> {classData.type}
                 </Typography>
                 <Typography tag='h3' className='mb-2'>
-                  <strong>Price:</strong> ${classData.price}
+                  <strong>Price per hour:</strong> ${classData.price}
                 </Typography>
                 <div className='flex gap-4'>
                   <Button className='w-50' onClick={handleEnrollNow} disabled={isEnrolled || showFeedbackForm}>

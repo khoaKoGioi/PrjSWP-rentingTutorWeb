@@ -69,6 +69,20 @@ const RegisterTutor = () => {
         return // Exit the function if the email exists
       }
 
+      // Age validation
+      const today = new Date()
+      const dob = new Date(formData.dateOfBirth)
+      let age = today.getFullYear() - dob.getFullYear()
+      const monthDifference = today.getMonth() - dob.getMonth()
+      if ((monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) && age > 0) {
+        age--
+      }
+
+      if (age < 18) {
+        toast.error('Tutor must be at least 18 years old.')
+        return
+      }
+
       const avatarURL = formData.avatar ? await uploadFileToFirebase(formData.avatar) : null
       const credentialURL = formData.credentialFile ? await uploadFileToFirebase(formData.credentialFile) : null
       const degreeURL = formData.degreeFile ? await uploadFileToFirebase(formData.degreeFile) : null
@@ -170,7 +184,7 @@ const RegisterTutor = () => {
 
             <div className='mt-6 w-full'>
               <label className='block text-sm font-medium leading-5 text-gray-700'>Upload Degree</label>
-              <small className='text-red-500 block'>You can upload up to 4 degrees.</small>
+              <small className='text-red-500 block'>*Please upload pictures of your degree.</small>
               <input type='file' name='degreeFile' onChange={handleFileChange} />
             </div>
 
