@@ -78,8 +78,6 @@ const AdminPortalClass = () => {
               <th className='p-4 text-left'>TutorID</th>
               <th className='p-4 text-left'>StudentID</th>
               <th className='p-4 text-left'>Subscription type</th>
-              <th className='p-4 text-left'>Length</th>
-              <th className='p-4 text-left'>Available</th>
               <th className='p-4 text-left'>Type</th>
               <th className='p-4 text-left'>Description</th>
               <th className='p-4 text-left'>Price</th>
@@ -97,8 +95,6 @@ const AdminPortalClass = () => {
                 <td className='p-4'>{classItem.tutorID}</td>
                 <td className='p-4'>{classItem.studentID}</td>
                 <td className='p-4'>{classItem.paymentID}</td>
-                <td className='p-4'>{classItem.length}</td>
-                <td className='p-4'>{classItem.available}</td>
                 <td className='p-4'>{classItem.type}</td>
                 <td className='p-4 break-after-column break-word'>{classItem.description}</td>
                 <td className='p-4'>{classItem.price}</td>
