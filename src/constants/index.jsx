@@ -24,37 +24,37 @@ export const testimonials = [
     user: 'John Doe',
     company: 'Stellar Solutions',
     image: user1,
-    text: 'I am extremely satisfied with the services provided. The team was responsive, professional, and delivered results beyond my expectations.'
+    text: 'Choosing a tutor through this platform was an excellent decision. The process was seamless, and the tutor we hired exceeded our expectations with their expertise and dedication.'
   },
   {
     user: 'Jane Smith',
     company: 'Blue Horizon Technologies',
     image: user2,
-    text: "I couldn't be happier with the outcome of our project. The team's creativity and problem-solving skills were instrumental in bringing our vision to life"
+    text: "I couldn't be happier with the tutor we found here. The platform made it easy to find someone with the right skills and experience, and our tutor's teaching methods have made a significant impact on our learning."
   },
   {
     user: 'David Johnson',
     company: 'Quantum Innovations',
     image: user3,
-    text: 'Working with this company was a pleasure. Their attention to detail and commitment to excellence are commendable. I would highly recommend them to anyone looking for top-notch service.'
+    text: 'The experience of hiring a tutor through this platform was outstanding. The tutor was professional, knowledgeable, and very effective in helping us achieve our academic goals.'
   },
   {
     user: 'Ronee Brown',
     company: 'Fusion Dynamics',
     image: user4,
-    text: 'Working with the team at XYZ Company was a game-changer for our project. Their attention to detail and innovative solutions helped us achieve our goals faster than we thought possible. We are grateful for their expertise and professionalism!'
+    text: 'This platform was a game-changer for us. The tutor we found was incredibly skilled and helped us progress much faster than we anticipated. We are very grateful for their support and expertise.'
   },
   {
     user: 'Michael Wilson',
     company: 'Visionary Creations',
     image: user5,
-    text: 'I am amazed by the level of professionalism and dedication shown by the team. They were able to exceed our expectations and deliver outstanding results.'
+    text: 'I am amazed by the quality of tutors available on this platform. Our tutor was dedicated, professional, and truly invested in our success. Highly recommend!'
   },
   {
     user: 'Emily Davis',
     company: 'Synergy Systems',
     image: user6,
-    text: 'The team went above and beyond to ensure our project was a success. Their expertise and dedication are unmatched. I look forward to working with them again in the future.'
+    text: 'The platform made it easy to find a highly qualified tutor who was perfect for our needs. The tutor expertise and commitment were unmatched. Looking forward to using this service again!'
   }
 ]
 

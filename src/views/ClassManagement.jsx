@@ -205,12 +205,12 @@ const ClassManagement = () => {
       }
       const decodedToken = jwtDecode(token)
       const tutorID = decodedToken.user.tutorID
+      //xac minh thanh toan voi may chu
       const paymentVerificationResponse = await axios.post(`http://localhost:5000/api/checkPayment/${orderID}`, {
         tutorID
       })
 
       if (paymentVerificationResponse.data.success) {
-        console.log(pendingClassData)
         const response = await axios.post(`${apiBaseUrl}/createClasses`, pendingClassData)
         setClasses([...classes, response.data])
 
