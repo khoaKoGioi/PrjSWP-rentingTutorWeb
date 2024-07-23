@@ -313,7 +313,7 @@ const UserProfile = () => {
                 </span>
               <input
                 type='date'
-                name='dob'
+                name='dateOfBirth'
                 value={formatDate(userData.dateOfBirth) || ''}
                 onChange={handleChange}
                 className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2'
@@ -341,9 +341,14 @@ const UserProfile = () => {
                 </label>
               </div>
               <div className='flex items-center mb-4'>
-                <FaGraduationCap className='mr-2 text-gray-600' />
+                
                 <label className='flex-1'>
-                  <span className='block text-sm font-medium text-gray-700'>Grade</span>
+                  <span className='block text-sm font-medium text-gray-700'>
+                  <div className='flex items-center'>
+                    <FaGraduationCap className='mr-2 text-gray-600' />
+                    Grade
+                    </div>
+                    </span>
                   <input
                     type='text'
                     name='grade'
@@ -358,9 +363,16 @@ const UserProfile = () => {
           {userData.role === 'Tutor' && (
             <>
               <div className='flex items-center mb-4'>
-                <FaBriefcase className='mr-2 text-gray-600' />
+                
                 <label className='flex-1'>
-                  <span className='block text-sm font-medium text-gray-700'>Workplace</span>
+                
+                  <span className='block text-sm font-medium text-gray-700'>
+                  <div className='flex items-center'>  
+                    <FaBriefcase className='mr-2 text-gray-600' />
+                    Workplace
+
+                    </div>
+                  </span>
                   <input
                     type='text'
                     name='workplace'
@@ -371,9 +383,14 @@ const UserProfile = () => {
                 </label>
               </div>
               <div className='flex items-center mb-4'>
-                <FaFileAlt className='mr-2 text-gray-600' />
+                
                 <label className='flex-1'>
-                  <span className='block text-sm font-medium text-gray-700'>Description</span>
+                  <span className='block text-sm font-medium text-gray-700'>
+                  <div className='flex items-center'>  
+                    <FaFileAlt className='mr-2 text-gray-600' />
+                    Description
+                    </div>
+                    </span>
                   <textarea
                     name='description'
                     value={userData.description || ''}
@@ -389,29 +406,9 @@ const UserProfile = () => {
                 </div>
                 <div className='mt-1'>{renderRatingStars()}</div>
               </div>
-              <div className='flex flex-col mb-4'>
-                <div className='flex items-center'>
-                  <FaFileAlt className='mr-2 text-gray-600' />
-                  <span className='block text-sm font-medium text-gray-700'>Identity Card</span>
-                </div>
-                <img
-                  src={
-                    userData.identityCard instanceof File
-                      ? URL.createObjectURL(userData.identityCard) // Convert File to URL
-                      : userData.identityCard || null
-                  }
-                  alt='Identity Card'
-                  className='mt-1 w-full h-auto max-h-60 object-cover border border-gray-300 rounded-md shadow-sm'
-                />
-                <input
-                  type='file'
-                  ref={identityCardInputRef}
-                  // style={{ display: 'none' }}
-                  name='identityCard'
-                  accept='image/*'
-                  onChange={handleFileChange}
-                />
-              </div>
+
+              
+
               <div className='flex flex-col mb-4'>
                 <div className='flex items-center'>
                   <FaFileAlt className='mr-2 text-gray-600' />

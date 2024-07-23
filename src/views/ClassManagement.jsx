@@ -458,7 +458,7 @@ const ClassManagement = () => {
                 </select>
               </div>
               <div className='mb-4'>
-                <label className='block mb-2'>Price</label>
+                <label className='block mb-2'>Price per hour</label>
                 <input
                   type='number'
                   name='price'
@@ -582,7 +582,7 @@ const ClassManagement = () => {
                 </select>
               </div>
               <div className='mb-4'>
-                <label className='block mb-2'>Price</label>
+                <label className='block mb-2'>Price per hour</label>
                 <input
                   type='number'
                   name='price'
