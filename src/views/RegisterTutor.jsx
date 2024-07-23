@@ -15,8 +15,8 @@ import axios from 'axios'
 
 const RegisterTutor = () => {
   const navigate = useNavigate()
-  const { register, logout  } = useContext(AuthContext)
-  
+  const { register, logout } = useContext(AuthContext)
+
   const [formData, setFormData] = useState({
     fullName: '',
     userName: '',
@@ -83,7 +83,7 @@ const RegisterTutor = () => {
       const response = await register('Tutor', updatedFormData)
       toast.info('Tutor registeration request created successfully')
       logout()
-      //navigate('/')
+      navigate('/')
     } catch (error) {
       console.error('Error submitting form:', error)
       toast.error(`Error submitting form: ${error.message}`)
@@ -189,8 +189,9 @@ const RegisterTutor = () => {
             <Password value={formData.password} onChange={handleChange} />
             <div className='mt-6'>
               <p className='text-red-500 text-sm'>
-                Please note that your credentials will be viewed and need to be approved in order to successfully create an account.
-              <br/>
+                Please note that your credentials will be viewed and need to be approved in order to successfully create
+                an account.
+                <br />
                 We will send you an email about your tutor's account approval as soon as possible.
               </p>
             </div>

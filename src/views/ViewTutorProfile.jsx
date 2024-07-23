@@ -91,13 +91,13 @@ const ViewTutorProfile = () => {
           />
         </div>
       </div>
-      <div className='flex flex-col items-center p-6 bg-white shadow-lg rounded-lg max-w-2xl mx-auto'>
+      <div className='flex flex-col items-center p-6 bg-white shadow-lg rounded-lg max-w-3xl mx-auto'>
         <div className='font-extrabold bg-gradient-to-r mb-7 from-orange-500 to-orange-800 bg-clip-text text-transparent text-2xl py-5'>
-          {/*eslint-disable-next-line react/no-unescaped-entities */}
-          {tutor.fullName}'s Profile
+          {/* eslint-disable-next-line react/no-unescaped-entities */}
+          {tutor.fullName}'s Tutor Profile
         </div>
-        <div className='flex items-center w-full mb-4'>
-          <div className='w-32 h-32 flex-shrink-0'>
+        <div className='flex items-start w-full mb-4 gap-5'>
+          <div className='w-72 h-72 flex-shrink-0 mr-6'>
             <img
               className='rounded-full w-full h-full object-cover'
               src={
@@ -108,22 +108,28 @@ const ViewTutorProfile = () => {
               alt='Tutor Avatar'
             />
           </div>
-          <div className='ml-6 flex-1'>
+          <div className='flex-1'>
             <div className='mb-4'>
               <h2 className='flex items-center'>
-                <FaUser className='mr-2 text-gray-600' /> {tutor.fullName}
+                <FaUser className='mr-2 text-gray-600' />
+                <p className='mr-2 text-gray-600'>Fullname: </p> {tutor.fullName}
               </h2>
             </div>
-            <div className='mb-4 flex items-center'>
+            <div className='mb-4 flex items-start'>
               <FaInfoCircle className='mr-2 text-gray-600' />
-              <p>{tutor.description}</p>
+              <p className='mr-2 text-gray-600'>Description:</p>
+              <textarea className='break-words w-full border p-2' value={tutor.description} rows='3' />
             </div>
             <div className='mb-4 flex items-center'>
               <FaBook className='mr-2 text-gray-600' />
+              <p className='mr-2 text-gray-600'>Subject: </p>
               <p>{tutor.subjects}</p>
             </div>
-            <div className='mb-4 flex items-center'>
-              <FaCertificate className='mr-2 text-gray-600' />
+            <div className='mb-4 items-center'>
+              <div className='flex'>
+                <FaCertificate className='mr-2 mt-1 text-gray-600' />
+                <p className='mr-2 text-gray-600 mb-3'>Certificate: </p>
+              </div>
               <div className='flex-shrink-0'>
                 <a href={tutor.degrees} target='_blank' rel='noopener noreferrer'>
                   <img
@@ -143,7 +149,7 @@ const ViewTutorProfile = () => {
         </div>
         <button
           onClick={handleRequestClick}
-          className='w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 transition duration-300 mb-4'
+          className='w-52 bg-g text-black border-orange-400 border-x-4 border-y-4 py-2 px-4 rounded-lg shadow-sm hover:bg-orange-400 transition duration-200 mb-4'
         >
           Send Request
         </button>
