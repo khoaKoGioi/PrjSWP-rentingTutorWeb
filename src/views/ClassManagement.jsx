@@ -147,6 +147,11 @@ const ClassManagement = () => {
         toast.error(validationError)
         return
       }
+      const priceValidate = parseInt(formData.price)
+      if (priceValidate < 10000 || priceValidate > 50000) {
+        toast.error('Please fill in the price field from 10 000 VND to 50 000 VND.')
+        return
+      }
 
       const token = localStorage.getItem('token')
       if (!token) {
@@ -459,6 +464,9 @@ const ClassManagement = () => {
               </div>
               <div className='mb-4'>
                 <label className='block mb-2'>Price per hour</label>
+                <p className='text-sm text-gray-600'>
+                  Please note that price of the classes range from 10 000 VND to 50 000 VND
+                </p>
                 <input
                   type='number'
                   name='price'
