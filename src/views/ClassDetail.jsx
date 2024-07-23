@@ -333,7 +333,7 @@ const ClassDetail = () => {
                       <Typography variant='paragraph'>{feedback.message}</Typography>
                     </div>
                   </div>
-                  <Typography variant='paragraph'>{feedback.message}</Typography>
+                  {/* <Typography variant='paragraph'>{feedback.message}</Typography> */}
                 </Card>
               ))}
             </CardBody>

@@ -251,6 +251,7 @@ const ChatBox = forwardRef((props, ref) => {
 
   const handleUserSelect = (user) => {
     setSelectedUser(user)
+    setMessages(messages)
     setIsOpen(true) // Ensure the chat box is open after selecting a user
     setIsSelectOpen(false) // Close the user list after selecting a user
   }
