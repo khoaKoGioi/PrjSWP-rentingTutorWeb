@@ -247,9 +247,9 @@ const ClassDetail = () => {
                   {classData.description}
                 </Typography>
                 <Typography tag='h3' className='mb-2 blue'>
-
                   <Link to={`/tutor-profile/${classData.userID}`} className='block'>
-                    <strong>Tutor:</strong>  <span style={{ fontWeight: 'bold', color: 'blue' }}> {classData.tutorFullName} </span>
+                    <strong>Tutor:</strong>{' '}
+                    <span style={{ fontWeight: 'bold', color: 'blue' }}> {classData.tutorFullName} </span>
                   </Link>
                 </Typography>
                 <Typography tag='h3' className='mb-2'>
@@ -268,7 +268,7 @@ const ClassDetail = () => {
                   <strong>Type:</strong> {classData.type}
                 </Typography>
                 <Typography tag='h3' className='mb-2'>
-                  <strong>Price per hour:</strong> ${classData.price}
+                  <strong>Price per hour:</strong> {classData.price} VND
                 </Typography>
                 <div className='flex gap-4'>
                   <Button className='w-50' onClick={handleEnrollNow} disabled={isEnrolled || showFeedbackForm}>
