@@ -330,9 +330,10 @@ const ClassDetail = () => {
                       <Typography tag='h3' className='text-gray-500'>
                         {renderStars(feedback.rating)} {/* Render stars for feedback rating */}
                       </Typography>
+                      <Typography variant='paragraph'>{feedback.message}</Typography>
                     </div>
                   </div>
-                  <Typography variant='paragraph'>{feedback.message}</Typography>
+                  
                 </Card>
               ))}
             </CardBody>
